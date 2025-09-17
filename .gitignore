@@ -86,3 +86,12 @@ Makefile
 # ---- Package Managers ----
 node_modules/
 Pods/
+
+# ---- Import Lybraries ----
+import/sdl
+import/sdl_image
+import/sdl_mixer
+import/sdl_ttf
+
+# ---- CMAKE generation folder ----
+out/
