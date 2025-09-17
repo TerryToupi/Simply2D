@@ -1,41 +1,88 @@
-# Prerequisites
-*.d
+# ---- OS / General ----
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+*.swp
+*.swo
+*.tmp
+*.log
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# ---- Visual Studio ----
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-# Precompiled Headers
-*.gch
-*.pch
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
 
-# Linker files
-*.ilk
+# NuGet
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+.nuget/
 
-# Debugger Files
-*.pdb
+# VS profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# Others
+*.dbmdl
+*.bak
+*.ldf
+*.mdf
 
-# Fortran module files
-*.mod
-*.smod
+# ---- Visual Studio Code ----
+.vscode/
+.history/
+*.code-workspace
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# Local env
+.env
+.env.*.local
+.env.local
 
-# Executables
-*.exe
-*.out
-*.app
+# ---- Xcode ----
+# Build artifacts
+build/
+DerivedData/
+*.ipa
+*.xcuserstate
+*.xcworkspace/xcuserdata/
 
-# debug information files
-*.dwo
+# User settings
+xcuserdata/
+*.xcuserdatad
+*.xccheckout
+*.moved-aside
+
+# SwiftPM
+.build/
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+
+# Archives
+*.xcarchive
+
+# ---- CMake / Make ----
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# ---- Other IDEs ----
+.idea/
+*.iml
+
+# ---- Package Managers ----
+node_modules/
+Pods/
