@@ -19,3 +19,5 @@ set(CPM_USE_NAMED_CACHE_DIRECTORIES ON)
 include(cmake/CPM.cmake)
 
 add_subdirectory(import)
+add_subdirectory(core) 
+add_subdirectory(app)

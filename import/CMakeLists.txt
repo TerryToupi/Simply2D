@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.30)
 project(CoreLibraries)
 
 add_library(${PROJECT_NAME} INTERFACE)
-add_library(Core::External ALIAS ${PROJECT_NAME})
+add_library(Core::Import ALIAS ${PROJECT_NAME})
 
 CPMAddPackage(
     NAME SDL 
@@ -46,8 +46,9 @@ CPMAddPackage(
 )
 
 target_link_libraries(${PROJECT_NAME}
-    INTERFACE SDL
-    INTERFACE SDL_mixer
-    INTERFACE SDL_image
-    INTERFACE SDL_ttf
+    INTERFACE
+        SDL3::SDL3
+        SDL3_mixer::SDL3_mixer
+        SDL3_image::SDL3_image
+        SDL3_ttf::SDL3_ttf
 )
