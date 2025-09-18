@@ -17,7 +17,14 @@ target_sources(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC
-        ${CORE_FOLDER_PATH}
+        "${CORE_FOLDER_PATH}/Include"
+    PRIVATE
+        "${CORE_FOLDER_PATH}"
+)
+
+target_precompile_headers(${PROJECT_NAME}
+    PRIVATE 
+        ${CORE_FOLDER_PATH}/pch.h
 )
 
 target_compile_features(${PROJECT_NAME}
