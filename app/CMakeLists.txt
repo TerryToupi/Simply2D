@@ -21,6 +21,12 @@ target_compile_features(${PROJECT_NAME}
         cxx_std_20
 )
 
+source_group(
+    TREE ${APP_FOLDER_PATH}
+    PREFIX "app"
+    FILES ${APP_FILES}
+)
+
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         Core::Source

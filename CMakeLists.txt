@@ -17,6 +17,7 @@ set(CPM_SOURCE_CACHE "${CMAKE_CURRENT_SOURCE_DIR}/import" CACHE PATH "")
 set(CPM_USE_NAMED_CACHE_DIRECTORIES ON)
 # including CPM to the main project
 include(cmake/CPM.cmake)
+include(cmake/utils.cmake)
 
 add_subdirectory(import)
 add_subdirectory(core) 

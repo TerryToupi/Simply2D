@@ -52,3 +52,19 @@ target_link_libraries(${PROJECT_NAME}
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
 )
+
+# Organizing all of the imported targets
+# to appear under the "import" filter view
+# in any IDE making the code cleaner
+organize_target(SDL3::SDL3 "import")
+organize_target(SDL3_mixer::SDL3_mixer "import")
+organize_target(SDL3_image::SDL3_image "import")
+organize_target(SDL3_ttf::SDL3_ttf "import")
+organize_target(freetype "import")
+organize_target(harfbuzz "import")
+organize_target(plutosvg "import")
+organize_target(plutovg "import")
+organize_target(SDL_uclibc "import")
+organize_target(SDL3_test "import")
+organize_target(tiff "import")
+organize_target(xmp_shared "import")
