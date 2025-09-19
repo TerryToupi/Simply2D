@@ -1,12 +1,19 @@
 #include <app.h>
+#include <sampleApp.h>
 
 int main()
 {
     core::ApplicationSpecifications specs;
+    specs.renderer.name = "Simply2D Giorgos";
+    specs.renderer.vSync = true;
+    specs.renderer.borderless = false;
     specs.name = "GIORGOS";
-    specs.window.name = "GIORGOS WINDOW";
+    specs.version = "1.0";
+    specs.identifier = "com.terrytoupi.simply2D.giorgos";
 
-    core::Application app(specs);
-    app.run();
+    core::app().create(specs);
+    core::app().pushLayer<SampleApp>();
+    core::app().run();
+    core::app().destroy();
     return 0;
 }
