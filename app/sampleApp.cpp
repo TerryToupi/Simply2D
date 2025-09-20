@@ -19,8 +19,8 @@ void SampleApp::render()
 {
 	core::gfx().draw({
 			.target = SURFACE,
-			.loadOp = gfx::LoadOp::LOAD,
-			.storeOp = gfx::StoreOp::CLEAR,
+			.loadOp = gfx::LoadOp::CLEAR,
+			.storeOp = gfx::StoreOp::STORE,
 			.clearColor = {50, 0, 0, 255}
 		},Span<gfx::DrawCall>());
 }

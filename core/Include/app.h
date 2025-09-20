@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <layer.h>
+
+#include <assets.h>
 #include <renderer.h>
 
 namespace core
@@ -13,6 +15,7 @@ namespace core
 		std::string version = "1.0";
 		std::string identifier = "com.terrytoupi.simply2D-empty";
 		RendererSpecifications renderer;
+		AssetDatabaseSpecifications assets;
 	};
 
 	class Application
@@ -26,6 +29,10 @@ namespace core
 		std::shared_ptr<Renderer> GetRenderer()
 		{
 			return m_renderer;
+		}
+		std::shared_ptr<AssetDatabase> GetAssetDatabase()
+		{
+			return m_assetDatabase;
 		}
 
 		void create(const ApplicationSpecifications& specs = ApplicationSpecifications());
@@ -49,6 +56,7 @@ namespace core
 
 		ApplicationSpecifications m_specifications;
 		std::shared_ptr<Renderer> m_renderer;
+		std::shared_ptr<AssetDatabase> m_assetDatabase;
 
 		std::vector<std::unique_ptr<Layer>> m_layers;
 	};
@@ -57,9 +65,12 @@ namespace core
 	{
 		return Application::GetInstance();
 	}
-
 	static inline Renderer& gfx()
 	{
 		return *Application::GetInstance().GetRenderer();
+	}
+	static inline AssetDatabase& assetDatabase()
+	{
+		return *Application::GetInstance().GetAssetDatabase();
 	}
 }

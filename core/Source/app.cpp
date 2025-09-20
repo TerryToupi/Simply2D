@@ -21,6 +21,8 @@ namespace core
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
 
 		m_renderer = Renderer::Create(specs.renderer);
+		m_assetDatabase = AssetDatabase::Create(specs.assets);
+
 		m_running = true;
 	}
 
