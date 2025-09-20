@@ -37,7 +37,7 @@ namespace core
 				while (SDL_PollEvent(&event))
 				{
 					if (event.type == SDL_EVENT_QUIT)
-						Application::GetInstance().stop();
+						stop(); 
 				}
 			}
 
@@ -61,15 +61,12 @@ namespace core
 			for (const auto& layer : m_layers)
 				layer->destroy();
 		}
+
+		SDL_Quit();
 	} 
 
 	void Application::stop()
 	{
 		m_running = false;
 	} 
-
-	void Application::destroy()
-	{
-		SDL_Quit();
-	}
 }

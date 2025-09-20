@@ -31,7 +31,6 @@ namespace core
 		void create(const ApplicationSpecifications& specs = ApplicationSpecifications());
 		void run();
 		void stop();
-		void destroy();
 
 		template<typename TLayer>
 		requires(std::is_base_of_v<Layer, TLayer>)
@@ -50,6 +49,7 @@ namespace core
 
 		ApplicationSpecifications m_specifications;
 		std::shared_ptr<Renderer> m_renderer;
+
 		std::vector<std::unique_ptr<Layer>> m_layers;
 	};
 

@@ -56,8 +56,6 @@ namespace core
 			: m_specifications(specs) { }
 		virtual ~Renderer() = default;
 
-		virtual void beginFrame() = 0;
-		virtual void endFrame() = 0;
 		virtual void draw(const gfx::RenderDescriptor& desc, Span<gfx::DrawCall> calls) = 0;
 
 		virtual Handle<Texture> createTexture(const TextureDescriptor& desc) = 0;
@@ -65,5 +63,13 @@ namespace core
 
 	protected:
 		RendererSpecifications m_specifications;
+
+	private:
+		virtual void beginFrame() = 0;
+		virtual void endFrame() = 0;
+
+		friend class Application;
 	};
+
+		
 }

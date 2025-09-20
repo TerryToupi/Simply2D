@@ -5,7 +5,7 @@ int main()
 {
     core::ApplicationSpecifications specs;
     specs.renderer.name = "Simply2D Giorgos";
-    specs.renderer.vSync = true;
+    specs.renderer.vSync = false;
     specs.renderer.borderless = false;
     specs.name = "GIORGOS";
     specs.version = "1.0";
@@ -14,6 +14,5 @@ int main()
     core::app().create(specs);
     core::app().pushLayer<SampleApp>();
     core::app().run();
-    core::app().destroy();
     return 0;
 }

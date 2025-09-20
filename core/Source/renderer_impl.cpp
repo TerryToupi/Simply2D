@@ -2,6 +2,14 @@
 #include <Source/renderer_impl.h>
 #include <Include/app.h>
 
+#if defined(_WIN32) || defined(__ANDROID__)
+	#define GFX_PLATFORM SDL_WINDOW_VULKAN
+#elif defined(__APPLE__)
+	#define GFX_PLATFORM SDL_WINDOW_METAL 
+#else
+	#define GFX_PLATFORM 0
+#endif
+
 namespace core
 {
 	std::shared_ptr<Renderer> Renderer::Create(const RendererSpecifications& specs)
@@ -12,7 +20,7 @@ namespace core
 	RendererImpl::RendererImpl(const RendererSpecifications& specs)
 		:	Renderer(specs)
 	{
-		SDL_WindowFlags flags = SDL_WINDOW_OPENGL;
+		SDL_WindowFlags flags = GFX_PLATFORM;
 		if (m_specifications.borderless)
 			flags |= (SDL_WINDOW_BORDERLESS | SDL_WINDOW_FULLSCREEN);
 		else 
@@ -119,8 +127,14 @@ namespace core
 		
 		for (const auto& call : calls)
 		{
-			std::array<SDL_FRect, 1> src = { (float)call.src[0],(float)call.src[1], (float)call.src[2], (float)call.src[3] };
-			std::array<SDL_FRect, 1> dist = { (float)call.dist[0], (float)call.dist[1], (float)call.dist[2], (float)call.dist[3] };
+			std::array<SDL_FRect, 1> src = { 
+				(float)call.src[0],(float)call.src[1], 
+				(float)call.src[2], (float)call.src[3] 
+			};
+			std::array<SDL_FRect, 1> dist = { 
+				(float)call.dist[0], (float)call.dist[1], 
+				(float)call.dist[2], (float)call.dist[3] 
+			};
 			SDL_RenderTexture(m_rendererHandle, getTexture(call.texture), src.data(), dist.data());
 		}
 	}
