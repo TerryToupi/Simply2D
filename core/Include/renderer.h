@@ -70,6 +70,4 @@ namespace core
 
 		friend class Application;
 	};
-
-		
 }

@@ -21,10 +21,14 @@ namespace core
 		:	Renderer(specs)
 	{
 		SDL_WindowFlags flags = GFX_PLATFORM;
+
 		if (m_specifications.borderless)
 			flags |= (SDL_WINDOW_BORDERLESS | SDL_WINDOW_FULLSCREEN);
 		else 
 			flags |= SDL_WINDOW_RESIZABLE;
+
+		flags |= SDL_WINDOW_INPUT_FOCUS;
+		flags |= SDL_WINDOW_MOUSE_CAPTURE;
 		
 		if (!SDL_CreateWindowAndRenderer(m_specifications.name.c_str(),
 										 m_specifications.width,
