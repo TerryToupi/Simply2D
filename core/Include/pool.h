@@ -58,10 +58,6 @@ public:
 	 */
 	Handle<V> Insert(const U& data)
 	{
-		if (m_FreeList.empty()) {
-			Resize(m_Size * 2);
-		}
-
 		uint32_t index = m_FreeList.back();
 		m_FreeList.pop_back();
 
@@ -100,24 +96,6 @@ public:
 
 		m_Generation[handle.m_Index]++;
 		m_FreeList.emplace_back(handle.m_Index);
-	}
-
-private:
-	/**
-	 * @brief Resizes the pool to a new size, preserving all current objects.
-	 * @param newSize The new pool size.
-	 */
-	void Resize(uint32_t newSize)
-	{
-		m_Data.resize(newSize);
-		m_Generation.resize(newSize, 1);
-
-		// Add new entries to the free list.
-		for (uint32_t i = 0; i < (newSize - m_Size); i++) {
-			m_FreeList.emplace_back((newSize - 1) - i);
-		}
-
-		m_Size = newSize;
 	}
 
 private:

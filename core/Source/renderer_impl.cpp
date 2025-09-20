@@ -81,6 +81,8 @@ namespace core
 			format = SDL_PIXELFORMAT_RGBA32;
 		case TextureFormat::RGBA8_UNORM:
 			format = SDL_PIXELFORMAT_RGBA8888;
+        case TextureFormat::UNDEFINED:
+            format = SDL_PIXELFORMAT_RGBA8888;
 		}
 
 		return m_Textures.Insert(SDL_CreateTexture(
