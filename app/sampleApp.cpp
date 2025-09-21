@@ -2,15 +2,7 @@
 
 void SampleApp::start()
 {
-	m_texture1 = core::assetDatabase().loadTextureAsync("a.png").get();
-	m_texture2 = core::assetDatabase().loadTextureAsync("a.png").get();
-
-	//m_texture = core::gfx().createTexture({
-	//	.format = core::TextureFormat::RGBA8_UNORM,
-	//	.access = core::TextureAccess::READ_WRITE,
-	//	.width = 1920,
-	//	.height = 1080
-	//});
+	m_texture1 = core::assetDatabase().loadTextureAsync("/a.png");
 }
 
 void SampleApp::destroy()
@@ -27,6 +19,6 @@ void SampleApp::render()
 			.clearColor = {50, 0, 0, 255}
 		},
 		{
-			{.texture = m_texture1, .src = {50, 50, 50, 50}, .dist ={0, 0, 640, 480}}
+			{.texture = m_texture1, .src = {0, 0, 640, 480}, .dist ={0, 0, 640, 480}}
 		});
 }

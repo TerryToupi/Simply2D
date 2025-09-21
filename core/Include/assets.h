@@ -24,12 +24,12 @@ namespace core
             :   m_specifications(specs) {}
         virtual ~AssetDatabase() = default;
 
-        virtual std::future<Handle<Texture>> loadTextureAsync(const std::string&) = 0;
-        virtual std::future<Handle<Audio>>   loadAudioAsync(const std::string& path) = 0;
-        virtual std::future<Handle<Track>>   loadTrackAsync(const std::string& path) = 0;
-        virtual std::future<Handle<Font>>    loadFontAsync(const std::string& path) = 0;
+        virtual Handle<Texture> loadTextureAsync(const std::string& path) = 0;
+        virtual Handle<Audio>   loadAudioAsync(const std::string& path) = 0;
+        virtual Handle<Track>   loadTrackAsync(const std::string& path) = 0;
+        virtual Handle<Font>    loadFontAsync(const std::string& path) = 0;
         
-        virtual std::future<Handle<Texture>> createTexture(const TextureDescriptor&& desc) = 0;
+		virtual Handle<Texture> createTexture(const TextureDescriptor&& desc) = 0;
 
         virtual void remove(Handle<Texture> texture) = 0;
         virtual void remove(Handle<Audio> audio) = 0;

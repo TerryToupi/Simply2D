@@ -15,12 +15,12 @@ namespace core
         AssetDatabaseImpl(const AssetDatabaseSpecifications& specs);
         ~AssetDatabaseImpl();
 
-        virtual std::future<Handle<Texture>> loadTextureAsync(const std::string& path) override;
-        virtual std::future<Handle<Audio>>   loadAudioAsync(const std::string& path) override;
-        virtual std::future<Handle<Track>>   loadTrackAsync(const std::string& path) override;
-        virtual std::future<Handle<Font>>    loadFontAsync(const std::string& path) override;
+        virtual Handle<Texture> loadTextureAsync(const std::string& path) override;
+        virtual Handle<Audio>   loadAudioAsync(const std::string& path) override;
+        virtual Handle<Track>   loadTrackAsync(const std::string& path) override;
+        virtual Handle<Font>    loadFontAsync(const std::string& path) override;
 
-        virtual std::future<Handle<Texture>> createTexture(const TextureDescriptor&& desc) override;
+        virtual Handle<Texture> createTexture(const TextureDescriptor&& desc) override;
 
         virtual void remove(Handle<Texture> texture) override;
         virtual void remove(Handle<Audio> audio) override;
@@ -34,7 +34,7 @@ namespace core
 
     private: 
         Pool<SDL_Texture*, core::Texture>   m_texture{ 16u, "texture pool" };
-        Pool<MIX_Audio*, core:: Audio>      m_audio{ 8u, "audio pool" };
+        Pool<MIX_Audio*, core::Audio>       m_audio{ 8u, "audio pool" };
         Pool<MIX_Track*, core::Track>       m_track{ 4u, "tracks pool" };
         Pool<TTF_Font*, core::Font>         m_font{ 2u, "fonts pool" };
     };

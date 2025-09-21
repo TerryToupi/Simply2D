@@ -5,6 +5,8 @@
 #include <Source/renderingBackend.h>
 #include <Source/assetDataBase.h>
 
+#include <Source/mtJobSystem.h>
+
 namespace core
 { 
 	AssetDatabaseImpl::AssetDatabaseImpl(const AssetDatabaseSpecifications& specs)
@@ -17,20 +19,22 @@ namespace core
 	{
 	}
 
-	std::future<Handle<Texture>> AssetDatabaseImpl::loadTextureAsync(const std::string& path)
+	Handle<Texture> AssetDatabaseImpl::loadTextureAsync(const std::string& path)
 	{
-		return std::async(std::launch::async, [this, path]() -> Handle<Texture> 
+		Handle<Texture> handle = m_texture.generateHandle();
+
+		std::string fullPath = m_specifications.assetsPath + path;
+
+		JobSystem::Execute([this, fullPath, handle]() -> void
 			{
 				RendererImpl* renderer = (RendererImpl*)Application::GetInstance().GetRenderer().get();
 
-				SDL_Surface* cpuTexture = IMG_Load(path.c_str());
+				SDL_Surface* cpuTexture = IMG_Load(fullPath.c_str());
 				if (!cpuTexture)
 				{
 					SDL_LogError(SDL_LOG_CATEGORY_GPU, "[SDL gfx] failed to: %s", SDL_GetError());
-					return Handle<Texture>();
+					return;
 				}
-	
-				Handle<Texture> handle = m_texture.generateHandle();
 
 				renderer->enqueueTransfer([this, renderer, cpuTexture, handle]() -> void
 					{
@@ -41,34 +45,35 @@ namespace core
 						if (texture == nullptr)
 						{
 							SDL_LogError(SDL_LOG_CATEGORY_GPU, "[SDL gfx] failed to: %s", SDL_GetError());
+							this->m_texture.remove(handle);
 							return;
 						}
 
 						this->m_texture.insert(handle, texture);
 					});
-				
-				return handle;
 			});
+
+		return handle;
 	}
 
-	std::future<Handle<Audio>> AssetDatabaseImpl::loadAudioAsync(const std::string& path)
+	Handle<Audio> AssetDatabaseImpl::loadAudioAsync(const std::string& path)
 	{
-		return std::future<Handle<Audio>>();
+		return Handle<Audio>();
 	}
 
-	std::future<Handle<Track>> AssetDatabaseImpl::loadTrackAsync(const std::string& path)
+	Handle<Track> AssetDatabaseImpl::loadTrackAsync(const std::string& path)
 	{
-		return std::future<Handle<Track>>();
+		return Handle<Track>();
 	}
 
-	std::future<Handle<Font>> AssetDatabaseImpl::loadFontAsync(const std::string& path)
+	Handle<Font> AssetDatabaseImpl::loadFontAsync(const std::string& path)
 	{
-		return std::future<Handle<Font>>();
+		return Handle<Font>();
 	}
 
-	std::future<Handle<Texture>> AssetDatabaseImpl::createTexture(const TextureDescriptor&& desc)
+	Handle<Texture> AssetDatabaseImpl::createTexture(const TextureDescriptor&& desc)
 	{
-		return std::future<Handle<Texture>>();
+		return Handle<Texture>();
 	}
 
 	void AssetDatabaseImpl::remove(Handle<Texture> texture)
@@ -111,44 +116,4 @@ namespace core
 	{
 		return std::make_shared<AssetDatabaseImpl>(specs);
 	}
-
-	//std::future<Asset*> AssetDatabaseImpl::LoadAsync(const std::string& path, AssetType type)
-	//{
- //       return std::async(std::launch::async, [this, path, type]() -> Asset* 
- //           {
-	//			std::lock_guard<std::mutex> lock(m_assetsMutex);
-
-	//			if (m_assets.find(path) != m_assets.end()) 
-	//			{
-	//				m_assets[path]->refCount++;
-	//				return m_assets[path];
-	//			}
-
-	//			Asset* asset = new Asset();
-	//			asset->type = type;
-	//			asset->refCount = 1;
-
-	//			switch (type) {
-	//			case AssetType::TEXTURE:
-	//				asset->resource = reinterpret_cast<void*>(IMG_Load(path.c_str()));
-	//				break;
-	//			case AssetType::AUDIO:
-	//				// load audio via SDL_mixer
-	//				break;
-	//			case AssetType::FONT:
-	//				// load font via SDL_ttf
-	//				break;
-	//			default:
-	//				asset->resource = nullptr;
-	//				break;
-	//			}
-
-	//			m_assets[path] = asset;
-	//			return asset;
- //           });
-	//}
-
-	//void AssetDatabaseImpl::Unload(const std::string& path)
-	//{
-	//}
 }

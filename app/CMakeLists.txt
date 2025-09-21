@@ -11,6 +11,11 @@ add_executable(${PROJECT_NAME}
     ${APP_FILES}
 )
 
+target_compile_definitions(${PROJECT_NAME}
+    PUBLIC
+        ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/Assets"
+)
+
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         ${APP_FOLDER_PATH}

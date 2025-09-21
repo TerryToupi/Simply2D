@@ -23,6 +23,8 @@ public:
         std::lock_guard<std::mutex> lock(m_Mutex);
 
         uint16_t index = m_FreeList.back();
+        m_FreeList.pop_back();
+
         return { index, m_Generation[index] }; 
     }
 
@@ -43,10 +45,7 @@ public:
         std::lock_guard<std::mutex> lock(m_Mutex);
 
         if (handle.index() == m_FreeList.back())
-        {
-            m_FreeList.pop_back();
             m_Data[handle.index()] = data;
-        }
     }
 
     U* get(const Handle<V>& handle) 
