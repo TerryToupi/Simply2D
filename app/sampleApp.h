@@ -10,5 +10,6 @@ public:
 	void render() override;
 
 private:
-	Handle<Texture> m_texture;
+	Handle<core::Texture> m_texture1;
+	Handle<core::Texture> m_texture2;
 };

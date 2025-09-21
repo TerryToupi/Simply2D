@@ -2,11 +2,12 @@
 
 #include <string>
 #include <memory>
+
 #include <handle.h>
 #include <span.h>
-#include <texture.h>
+#include <resources.h>
 
-namespace gfx
+namespace core
 {
 	// Drawing
 	struct DrawCall
@@ -35,10 +36,7 @@ namespace gfx
 		StoreOp storeOp = StoreOp::STORE;
 		int clearColor[4] = { 0, 0, 0, 255 };
 	};
-}
 
-namespace core
-{
 	struct RendererSpecifications
 	{
 		std::string name = "Simply2D";
@@ -56,18 +54,12 @@ namespace core
 			: m_specifications(specs) { }
 		virtual ~Renderer() = default;
 
-		virtual void draw(const gfx::RenderDescriptor& desc, Span<gfx::DrawCall> calls) = 0;
+		virtual void draw(const RenderDescriptor& desc, Span<DrawCall> calls) = 0;
 
-		virtual Handle<Texture> createTexture(const TextureDescriptor& desc) = 0;
-		virtual void destroyTexture(Handle<Texture> texture) = 0;
+		//virtual Handle<Texture> createTexture(const TextureDescriptor& desc) = 0;
+		//virtual void destroyTexture(Handle<Texture> texture) = 0;
 
 	protected:
 		RendererSpecifications m_specifications;
-
-	private:
-		virtual void beginFrame() = 0;
-		virtual void endFrame() = 0;
-
-		friend class Application;
 	};
 }

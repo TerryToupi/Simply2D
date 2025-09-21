@@ -1,6 +1,11 @@
 #pragma once
 
 #include <assets.h>
+#include <pool.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_mixer/SDL_mixer.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 namespace core
 {
@@ -10,11 +15,27 @@ namespace core
         AssetDatabaseImpl(const AssetDatabaseSpecifications& specs);
         ~AssetDatabaseImpl();
 
-        virtual std::future<Asset*> LoadAsync(const std::string& path, AssetType type) override;
-        virtual void Unload(const std::string& path) override;
+        virtual std::future<Handle<Texture>> loadTextureAsync(const std::string& path) override;
+        virtual std::future<Handle<Audio>>   loadAudioAsync(const std::string& path) override;
+        virtual std::future<Handle<Track>>   loadTrackAsync(const std::string& path) override;
+        virtual std::future<Handle<Font>>    loadFontAsync(const std::string& path) override;
+
+        virtual std::future<Handle<Texture>> createTexture(const TextureDescriptor&& desc) override;
+
+        virtual void remove(Handle<Texture> texture) override;
+        virtual void remove(Handle<Audio> audio) override;
+        virtual void remove(Handle<Track> track) override;
+        virtual void remove(Handle<Font> font) override;
+
+        SDL_Texture*    getTexture(Handle<Texture> texture);
+        MIX_Audio*      getAudio(Handle<Audio> audio);
+        MIX_Track*      getTrack(Handle<Track> track);
+        TTF_Font*       getFont(Handle<Font> font);
 
     private: 
-        std::unordered_map<std::string, Asset*> m_assets;
-        std::mutex m_assetsMutex;
+        Pool<SDL_Texture*, core::Texture>   m_texture{ 16u, "texture pool" };
+        Pool<MIX_Audio*, core:: Audio>      m_audio{ 8u, "audio pool" };
+        Pool<MIX_Track*, core::Track>       m_track{ 4u, "tracks pool" };
+        Pool<TTF_Font*, core::Font>         m_font{ 2u, "fonts pool" };
     };
 }

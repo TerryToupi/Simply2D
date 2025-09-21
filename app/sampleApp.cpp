@@ -2,25 +2,31 @@
 
 void SampleApp::start()
 {
-	m_texture = core::gfx().createTexture({
-		.format = TextureFormat::RGBA8_UNORM,
-		.access = TextureAccess::READ_WRITE,
-		.width = 1920,
-		.height = 1080
-	});
+	m_texture1 = core::assetDatabase().loadTextureAsync("a.png").get();
+	m_texture2 = core::assetDatabase().loadTextureAsync("a.png").get();
+
+	//m_texture = core::gfx().createTexture({
+	//	.format = core::TextureFormat::RGBA8_UNORM,
+	//	.access = core::TextureAccess::READ_WRITE,
+	//	.width = 1920,
+	//	.height = 1080
+	//});
 }
 
 void SampleApp::destroy()
 {
-	core::gfx().destroyTexture(m_texture);
+	//core::gfx().destroyTexture(m_texture);
 }
 
 void SampleApp::render()
 {
 	core::gfx().draw({
 			.target = SURFACE,
-			.loadOp = gfx::LoadOp::CLEAR,
-			.storeOp = gfx::StoreOp::STORE,
+			.loadOp = core::LoadOp::CLEAR,
+			.storeOp = core::StoreOp::STORE,
 			.clearColor = {50, 0, 0, 255}
-		},Span<gfx::DrawCall>());
+		},
+		{
+			{.texture = m_texture1, .src = {50, 50, 50, 50}, .dist ={0, 0, 640, 480}}
+		});
 }

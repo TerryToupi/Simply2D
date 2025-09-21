@@ -18,3 +18,6 @@
 #include <stdexcept>
 #include <mutex>
 #include <future>
+#include <thread>
+#include <atomic>
+#include <condition_variable>

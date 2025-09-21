@@ -1,109 +1,98 @@
-/**
- * @file pool.hpp
- * @brief Generic object pool with handle-based access and lifetime management.
- *
- * This file defines the @ref utils::Pool class template, providing efficient
- * storage, allocation, and deallocation for objects using lightweight handles.
- * The pool tracks object generations to prevent stale handle access and enables
- * fast insertion, removal, and retrieval operations.
- *
- * @date 2025-08-13
- * author Terry Toupi
- */
-
 #ifndef __POOL_HPP__
 #define __POOL_HPP__
 
 #include <vector>
+#include <mutex>
 #include <string>
 #include <handle.h>
 
 /**
- * @brief Generic pool for managing objects and tracking their lifetimes using handles.
- *
- * The Pool class enables fast allocation and deallocation of objects of type U.
- * Each object is identified by a handle of type V, which includes an index and generation for safe access.
- * Handles become invalid when their generation is incremented (i.e., after object removal).
- *
- * @tparam U Type of objects stored in the pool.
- * @tparam V Type used for handle generation.
+ * @brief Thread-safe pool for managing objects with handle-based access.
  */
 template<typename U, typename V>
 class Pool {
 public:
-	/**
-	 * @brief Constructs a pool with reserved capacity.
-	 * @param reserveSize Initial number of objects to reserve space for.
-	 * @param debugName Name for debugging purposes.
-	 */
-	Pool(uint32_t reserveSize, std::string debugName)
-		: m_DebugName(std::move(debugName)), m_Size(reserveSize)
-	{
-		m_Data.resize(m_Size);
-		m_Generation.resize(m_Size, 1);
+    explicit Pool(uint32_t reserveSize, std::string debugName = {})
+        : m_DebugName(std::move(debugName))
+    {
+        grow(reserveSize);
+    }
 
-		// Initialize free list in reverse order for efficient allocation.
-		for (uint32_t i = 0; i < m_Size; i++) {
-			m_FreeList.emplace_back((m_Size - 1) - i);
-		}
-	}
+    Handle<V> generateHandle()
+    {
+        std::lock_guard<std::mutex> lock(m_Mutex);
 
-	/**
-	 * @brief Inserts an object into the pool and returns a handle.
-	 *
-	 * If the pool is full, it will automatically resize.
-	 *
-	 * @param data The object to insert.
-	 * @return A handle identifying the inserted object.
-	 */
-	Handle<V> Insert(const U& data)
-	{
-		uint32_t index = m_FreeList.back();
-		m_FreeList.pop_back();
+        uint16_t index = m_FreeList.back();
+        return { index, m_Generation[index] }; 
+    }
 
-		m_Data[index] = std::move(data);
+    Handle<V> insert(const U& data) 
+    {
+        std::lock_guard<std::mutex> lock(m_Mutex);
 
-		return { index, m_Generation[index] };
-	}
+        uint16_t index = m_FreeList.back();
+        m_FreeList.pop_back();
 
-	/**
-	 * @brief Retrieves a pointer to the object identified by a handle.
-	 *
-	 * @param handle The handle for the object.
-	 * @return Pointer to the object, or nullptr if the handle is invalid or stale.
-	 */
-	U* Get(Handle<V> handle)
-	{
-		if (!handle.IsValid() || handle.m_Generation != m_Generation[handle.m_Index]) {
-			return nullptr;
-		}
+        m_Data[index] = data; // copy/move assignment
 
-		return &m_Data[handle.m_Index];
-	}
+        return { index, m_Generation[index] }; 
+    }
 
-	/**
-	 * @brief Removes the object identified by a handle from the pool.
-	 *
-	 * After removal, the handle becomes invalid and cannot be used to access the object.
-	 *
-	 * @param handle The handle for the object to remove.
-	 */
-	void Remove(Handle<V> handle)
-	{
-		if (handle.m_Index >= m_Size || m_Generation[handle.m_Index] != handle.m_Generation) {
-			return;
-		}
+    void insert(Handle<V> handle, const U& data)
+    {
+        std::lock_guard<std::mutex> lock(m_Mutex);
 
-		m_Generation[handle.m_Index]++;
-		m_FreeList.emplace_back(handle.m_Index);
-	}
+        if (handle.index() == m_FreeList.back())
+        {
+            m_FreeList.pop_back();
+            m_Data[handle.index()] = data;
+        }
+    }
+
+    U* get(const Handle<V>& handle) 
+    {
+        std::lock_guard<std::mutex> lock(m_Mutex);
+
+        if (!handle.IsValid() || handle.m_Index >= m_Size) return nullptr;
+        if (handle.m_Generation != m_Generation[handle.m_Index]) return nullptr;
+
+        return &m_Data[handle.m_Index];
+    }
+
+    void remove(const Handle<V>& handle) 
+    {
+        std::lock_guard<std::mutex> lock(m_Mutex);
+
+        if (!handle.IsValid() || handle.m_Index >= m_Size) return;
+        if (m_Generation[handle.m_Index] != handle.m_Generation) return;
+
+        m_Generation[handle.m_Index]++;
+        m_FreeList.push_back(handle.m_Index);
+    }
 
 private:
-	std::vector<U> m_Data;           /**< Storage for objects */
-	std::vector<uint16_t> m_Generation; /**< Generation tracking for handles */
-	std::vector<uint16_t> m_FreeList;   /**< List of available indices */
-	std::string m_DebugName;         /**< Pool name for debugging */
-	uint32_t m_Size;                 /**< Current pool size */
+    void grow(uint16_t newSize)
+    {
+        uint16_t oldSize = m_Size;
+        m_Size = newSize;
+
+        m_Data.resize(m_Size);
+        m_Generation.resize(m_Size, 1);
+
+        for (uint16_t i = oldSize; i < m_Size; ++i)
+        {
+            m_FreeList.push_back((m_Size - 1) - (i - oldSize));
+        }
+    }
+
+private:
+    std::vector<U> m_Data;
+    std::vector<uint16_t> m_Generation;
+    std::vector<uint16_t> m_FreeList;
+
+    std::mutex m_Mutex;
+    std::string m_DebugName;
+    uint16_t m_Size = 0;
 };
 
-#endif // !__POOL_HPP__
+#endif // __POOL_HPP__

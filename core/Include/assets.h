@@ -6,23 +6,10 @@
 #include <future>
 #include <mutex>
 
+#include <resources.h>
 
 namespace core
 {
-	enum class AssetType
-	{
-		TEXTURE,
-		AUDIO,
-		FONT,
-	};
-
-	struct Asset
-	{
-		void* resource = nullptr;       // SDL_Texture*, SDL_Surface*, Mix_Chunk*, etc
-		AssetType type = AssetType::TEXTURE;
-		std::atomic<int> refCount = 0;
-	};
-
     struct AssetDatabaseSpecifications
     {
         std::string assetsPath = "./";
@@ -37,9 +24,18 @@ namespace core
             :   m_specifications(specs) {}
         virtual ~AssetDatabase() = default;
 
-        virtual std::future<Asset*> LoadAsync(const std::string& path, AssetType type) = 0;
-        virtual void Unload(const std::string& path) = 0;
+        virtual std::future<Handle<Texture>> loadTextureAsync(const std::string&) = 0;
+        virtual std::future<Handle<Audio>>   loadAudioAsync(const std::string& path) = 0;
+        virtual std::future<Handle<Track>>   loadTrackAsync(const std::string& path) = 0;
+        virtual std::future<Handle<Font>>    loadFontAsync(const std::string& path) = 0;
         
+        virtual std::future<Handle<Texture>> createTexture(const TextureDescriptor&& desc) = 0;
+
+        virtual void remove(Handle<Texture> texture) = 0;
+        virtual void remove(Handle<Audio> audio) = 0;
+        virtual void remove(Handle<Track> track) = 0;
+        virtual void remove(Handle<Font> font) = 0;
+
     protected:
         AssetDatabaseSpecifications m_specifications;
     };

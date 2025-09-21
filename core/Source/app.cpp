@@ -1,7 +1,13 @@
 #include <pch.h>
 #include <Include/app.h>
-#include <Source/renderer_impl.h>
+
+#include <Source/renderingBackend.h>
+#include <Source/assetDataBase.h>
+#include <Source/mtJobSystem.h>
+
 #include <SDL3/SDL.h>
+#include <SDL3_Mixer/SDL_mixer.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 namespace core
 {
@@ -20,6 +26,13 @@ namespace core
 					  SDL_INIT_GAMEPAD))
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
 
+		if (!MIX_Init())
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
+
+		if (!TTF_Init()) 
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
+
+		JobSystem::Initialize();
 		m_renderer = Renderer::Create(specs.renderer);
 		m_assetDatabase = AssetDatabase::Create(specs.assets);
 
@@ -50,12 +63,14 @@ namespace core
 			}
 
 			// rendering
+			static_cast<RendererImpl*>(m_renderer.get())->beginFrame();
 			{
-				m_renderer->beginFrame();
+				static_cast<RendererImpl*>(m_renderer.get())->flushTransferQueue();
+
 				for (const auto& layer : m_layers)
 					layer->render();
-				m_renderer->endFrame();
 			}
+			static_cast<RendererImpl*>(m_renderer.get())->endFrame();
 		}
 
 		// Destroying Layer memory
@@ -63,7 +78,9 @@ namespace core
 			for (const auto& layer : m_layers)
 				layer->destroy();
 		}
-
+	
+		TTF_Quit();
+		MIX_Quit();
 		SDL_Quit();
 	} 
 
