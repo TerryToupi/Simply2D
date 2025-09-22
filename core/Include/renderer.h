@@ -9,6 +9,15 @@
 
 namespace core
 {
+	struct RendererSpecifications
+	{
+		std::string name = "Simply2D";
+		int width = 640;
+		int height = 480;
+		bool borderless = false;
+		bool vSync = true;
+	};
+
 	// Drawing
 	struct DrawCall
 	{
@@ -37,29 +46,27 @@ namespace core
 		int clearColor[4] = { 0, 0, 0, 255 };
 	};
 
-	struct RendererSpecifications
-	{
-		std::string name = "Simply2D";
-		int width = 640;
-		int height = 480;
-		bool borderless = false;
-		bool vSync = true;
-	};
-
 	class Renderer
 	{
 	public:
-		static std::shared_ptr<Renderer> Create(const RendererSpecifications& specs);
 		Renderer(const RendererSpecifications& specs = RendererSpecifications())
 			: m_specifications(specs) { }
 		virtual ~Renderer() = default;
 
 		virtual void draw(const RenderDescriptor& desc, Span<DrawCall> calls) = 0;
 
-		//virtual Handle<Texture> createTexture(const TextureDescriptor& desc) = 0;
-		//virtual void destroyTexture(Handle<Texture> texture) = 0;
+		virtual Handle<Texture> createTexture(const TextureDescriptor&& desc) = 0;
+		virtual Handle<Texture> createTexture(Handle<Image> image) = 0;
+		virtual void destroyTexture(Handle<Texture> texture) = 0;
+
+		virtual void textureSize(Handle<Texture> texture, int& width, int& height) = 0;
 
 	protected:
 		RendererSpecifications m_specifications;
+
+	private:
+		static std::shared_ptr<Renderer> Create(const RendererSpecifications& specs);
+		
+		friend class Application;
 	};
 }

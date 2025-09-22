@@ -15,27 +15,27 @@ namespace core
         AssetDatabaseImpl(const AssetDatabaseSpecifications& specs);
         ~AssetDatabaseImpl();
 
-        virtual Handle<Texture> loadTextureAsync(const std::string& path) override;
-        virtual Handle<Audio>   loadAudioAsync(const std::string& path) override;
-        virtual Handle<Track>   loadTrackAsync(const std::string& path) override;
-        virtual Handle<Font>    loadFontAsync(const std::string& path) override;
+        virtual void load(AssetType type, std::string path) override;
+        virtual Asset get(std::string path) override;
+        virtual void unload(std::string path) override;
 
-        virtual Handle<Texture> createTexture(const TextureDescriptor&& desc) override;
-
-        virtual void remove(Handle<Texture> texture) override;
-        virtual void remove(Handle<Audio> audio) override;
-        virtual void remove(Handle<Track> track) override;
-        virtual void remove(Handle<Font> font) override;
-
-        SDL_Texture*    getTexture(Handle<Texture> texture);
-        MIX_Audio*      getAudio(Handle<Audio> audio);
-        MIX_Track*      getTrack(Handle<Track> track);
-        TTF_Font*       getFont(Handle<Font> font);
+        SDL_Surface* getImage(Handle<Image> image);
+        MIX_Audio*   getAudio(Handle<Audio> audio);
+        TTF_Font*    getFont(Handle<Font> font);
 
     private: 
-        Pool<SDL_Texture*, core::Texture>   m_texture{ 16u, "texture pool" };
-        Pool<MIX_Audio*, core::Audio>       m_audio{ 8u, "audio pool" };
-        Pool<MIX_Track*, core::Track>       m_track{ 4u, "tracks pool" };
-        Pool<TTF_Font*, core::Font>         m_font{ 2u, "fonts pool" };
+        Handle<Image> loadImage(std::string path);
+        Handle<Audio> loadAudio(std::string path);
+        Handle<Font>  laodFont(std::string path);
+
+        void unloadImage(Handle<Image> image);
+        void unloadAudio(Handle<Audio> audio);
+        void unloadFont(Handle<Font> font);
+
+        Pool<SDL_Surface*, core::Image> m_images{ 16u, "texture pool" };
+        Pool<MIX_Audio*, core::Audio>   m_audio{ 16u, "audio pool" };
+        Pool<TTF_Font*, core::Font>     m_font{ 16u, "fonts pool" };
+
+        std::unordered_map<std::string, Asset> m_loadedAssets;
     };
 }

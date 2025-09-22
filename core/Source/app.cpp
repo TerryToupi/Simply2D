@@ -41,6 +41,8 @@ namespace core
 
 	void Application::run()
 	{
+		RendererImpl* renderer = static_cast<RendererImpl*>(m_renderer.get());
+
 		for (const auto& layer : m_layers)
 			layer->start();
 
@@ -63,14 +65,12 @@ namespace core
 			}
 
 			// rendering
-			static_cast<RendererImpl*>(m_renderer.get())->beginFrame();
+			renderer->beginFrame();
 			{
-				static_cast<RendererImpl*>(m_renderer.get())->flushTransferQueue();
-
 				for (const auto& layer : m_layers)
 					layer->render();
 			}
-			static_cast<RendererImpl*>(m_renderer.get())->endFrame();
+			renderer->endFrame();
 		}
 
 		// Destroying Layer memory

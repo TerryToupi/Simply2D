@@ -1,17 +1,11 @@
 #include <pch.h>
 
+#include <assert.h>
+
 #include <app.h>
 
 #include <Source/renderingBackend.h>
 #include <Source/assetDataBase.h>
-
-#if defined(_WIN32) || defined(__ANDROID__)
-	#define GFX_PLATFORM SDL_WINDOW_VULKAN
-#elif defined(__APPLE__)
-	#define GFX_PLATFORM SDL_WINDOW_METAL 
-#else
-	#define GFX_PLATFORM 0
-#endif
 
 namespace core
 {
@@ -23,7 +17,7 @@ namespace core
 	RendererImpl::RendererImpl(const RendererSpecifications& specs)
 		:	Renderer(specs)
 	{
-		SDL_WindowFlags flags = GFX_PLATFORM;
+		SDL_WindowFlags flags = 0;
 
 		if (m_specifications.borderless)
 			flags |= (SDL_WINDOW_BORDERLESS | SDL_WINDOW_FULLSCREEN);
@@ -53,16 +47,6 @@ namespace core
 		SDL_DestroyWindow(m_windowHandle);
 	}
 
-	SDL_Texture* RendererImpl::uploadCPUtextureToGPU(SDL_Surface* cpuTextue)
-	{
-		return SDL_CreateTextureFromSurface(m_rendererHandle, cpuTextue);
-	}
-
-	void RendererImpl::enqueueTransfer(const Transfer& func)
-	{
-		m_transferQueue.push_back(func);
-	}
-
 	void RendererImpl::beginFrame()
 	{
 		SDL_SetRenderTarget(m_rendererHandle, nullptr);
@@ -75,67 +59,17 @@ namespace core
 		SDL_RenderPresent(m_rendererHandle);
 	}
 
-	void RendererImpl::flushTransferQueue()
-	{ 
-		Transfer job;
-		while (m_transferQueue.pop_front(job))
-			job();
-	}
-
-	//Handle<Texture> RendererImpl::createTexture(const TextureDescriptor& desc)
-	//{
-	//	SDL_PixelFormat format = SDL_PIXELFORMAT_UNKNOWN;
-	//	SDL_TextureAccess access = SDL_TEXTUREACCESS_STATIC;
-	//	
-	//	switch (desc.access)
-	//	{
-	//	case TextureAccess::READ_ONLY:
-	//		access = SDL_TEXTUREACCESS_STATIC;
-	//	case TextureAccess::READ_WRITE:
-	//		access = SDL_TEXTUREACCESS_TARGET;
-	//	}
-
-	//	switch (desc.format)
-	//	{
-	//	case TextureFormat::RGBA32_FLOAT:
-	//		format = SDL_PIXELFORMAT_RGBA32;
-	//	case TextureFormat::RGBA8_UNORM:
-	//		format = SDL_PIXELFORMAT_RGBA8888;
- //       case TextureFormat::UNDEFINED:
- //           format = SDL_PIXELFORMAT_RGBA8888;
-	//	}
-
-	//	return m_Textures.insert(SDL_CreateTexture(
-	//		m_rendererHandle,
-	//		format,
-	//		access,
-	//		desc.width,
-	//		desc.height
-	//	));
-	//}
-
-	//void RendererImpl::destroyTexture(Handle<Texture> texture)
-	//{
-	//	SDL_Texture* tex = getTexture(texture);
-	//	if (tex != nullptr)
-	//		SDL_DestroyTexture(tex);
-
-	//	m_Textures.remove(texture);
-	//}
-
-	//SDL_Texture* RendererImpl::getTexture(Handle<Texture> texture)
-	//{
-	//	return *m_Textures.get(texture);
-	//}
-
 	void RendererImpl::draw(const RenderDescriptor& desc, Span<DrawCall> calls)
 	{
-		AssetDatabaseImpl* assets = (AssetDatabaseImpl*)(Application::GetInstance().GetAssetDatabase().get());
-
 		if (desc.target == SURFACE)
 			SDL_SetRenderTarget(m_rendererHandle, nullptr);
 		else
-			SDL_SetRenderTarget(m_rendererHandle, assets->getTexture(desc.target));
+		{
+			SDL_Texture* texture = getTexture(desc.target);
+			assert(texture);
+
+			SDL_SetRenderTarget(m_rendererHandle, texture);
+		}
 
 		if (desc.loadOp == LoadOp::CLEAR)
 		{
@@ -163,7 +97,102 @@ namespace core
 				(float)call.dist[0], (float)call.dist[1], 
 				(float)call.dist[2], (float)call.dist[3] 
 			};
-			SDL_RenderTexture(m_rendererHandle, assets->getTexture(call.texture), src.data(), dist.data());
+		
+			SDL_Texture* texture = getTexture(call.texture);
+			assert(texture);
+
+			if (!SDL_RenderTexture(m_rendererHandle, texture, src.data(), dist.data()))
+				SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed: %s", SDL_GetError());
+		}
+	}
+	Handle<Texture> RendererImpl::createTexture(const TextureDescriptor&& desc)
+	{
+		SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA8888;
+		SDL_TextureAccess access = SDL_TEXTUREACCESS_STATIC;
+
+		switch (desc.access)
+		{
+		case core::TextureAccess::READ_ONLY:
+			access = SDL_TEXTUREACCESS_STATIC;
+		case core::TextureAccess::READ_WRITE:
+			access = SDL_TEXTUREACCESS_TARGET;
+		case core::TextureAccess::UNDEFINED:
+			break;
+		default:
+			break;
+		}
+
+		switch (desc.format)
+		{
+		case core::TextureFormat::RGBA32_FLOAT:
+			format = SDL_PIXELFORMAT_RGBA32;
+		case core::TextureFormat::RGBA8_UNORM:
+			format = SDL_PIXELFORMAT_RGBA8888;
+		case core::TextureFormat::UNDEFINED:
+			break;
+		default:
+			break;
+		}
+
+		SDL_Texture* texture = SDL_CreateTexture(m_rendererHandle, format, access, desc.width, desc.height);
+		if (texture == nullptr)
+		{
+			SDL_LogError(SDL_LOG_CATEGORY_RENDER, "FAILED: %s ", SDL_GetError());
+			return Handle<Texture>();
+		}
+			
+		return m_textures.insert(texture);
+	}
+
+	Handle<Texture> RendererImpl::createTexture(Handle<Image> image)
+	{
+		AssetDatabaseImpl* assets = static_cast<AssetDatabaseImpl*>(Application::GetInstance().GetAssetDatabase().get());
+
+		SDL_Surface* surface = assets->getImage(image);
+		assert(surface);
+
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(m_rendererHandle, surface);
+		if (!texture)
+		{
+			SDL_LogError(SDL_LOG_CATEGORY_RENDER, "FAILED: %s ", SDL_GetError());
+			return Handle<Texture>();
+		}
+		
+		return m_textures.insert(texture);
+	}
+
+	SDL_Texture* RendererImpl::getTexture(Handle<Texture> texture)
+	{
+		return *m_textures.get(texture);
+	}
+
+	void RendererImpl::destroyTexture(Handle<Texture> texture)
+	{
+		SDL_Texture* tex = getTexture(texture);
+		SDL_DestroyTexture(tex);
+		m_textures.remove(texture);
+	}
+
+	void RendererImpl::textureSize(Handle<Texture> texture, int& width, int& height)
+	{
+		if (texture == SURFACE)
+		{
+			int m_width, m_height;
+			SDL_GetWindowSize(m_windowHandle, &m_width, &m_height);
+			width = m_width;
+			height = m_height;
+			return;
+		}
+		else
+		{
+			SDL_Texture* tex = getTexture(texture);
+			assert(tex);
+
+			float m_width, m_height;
+			SDL_GetTextureSize(tex, &m_width, &m_height);
+			width = (int)m_width;
+			height = (int)m_height;
+			return;
 		}
 	}
 }

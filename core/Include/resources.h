@@ -8,7 +8,7 @@ namespace core
 {
 	// ------------ TEXTURE ----------------------------
 	class Texture;
-	#define SURFACE Handle<core::Texture>().unpack(UINT_MAX)
+	#define SURFACE Handle<core::Texture>(UINT_MAX)
 
 	enum class TextureFormat : unsigned int
 	{
@@ -20,22 +20,23 @@ namespace core
 	enum class TextureAccess : unsigned int
 	{
 		READ_ONLY = UINT_BIT_SHIFT(0),
-		READ_WRITE = UINT_BIT_SHIFT(1)
+		READ_WRITE = UINT_BIT_SHIFT(1),
+		UNDEFINED = UINT_BIT_SHIFT(2),
 	};
 
 	struct TextureDescriptor 
 	{
 		TextureFormat format = TextureFormat::UNDEFINED;
-		TextureAccess access = TextureAccess::READ_ONLY;
+		TextureAccess access = TextureAccess::UNDEFINED;
 		int width = 0;
 		int height = 0;
 	};
 
+	// ------------ IMAGE ----------------------------
+	class Image;
+		
 	// ------------ AUDIO ---------------------------- 
 	class Audio;
-
-	// ----------- TRACK ----------------------------
-	class Track;
 
 	// ----------- FONT ------------------------------
 	class Font;

@@ -8,6 +8,7 @@ class Handle
 {
 public:
 	Handle() : m_Index(0), m_Generation(0) {}
+	Handle(uint32_t packed) : m_Index(static_cast<uint16_t>(packed >> 16)), m_Generation(static_cast<uint16_t>(packed & 0xFFFF)) {}
 
 	bool IsValid() const { return m_Generation != 0; }
 
@@ -21,12 +22,12 @@ public:
 	uint16_t generation() const { return m_Generation; }
 
 	uint32_t pack() const { return (static_cast<uint32_t>(m_Index) << 16) | m_Generation; }
-	Handle<T> unpack(uint32_t packedValue)
-	{
-		m_Index = static_cast<uint16_t>(packedValue >> 16);
-		m_Generation = static_cast<uint16_t>(packedValue & 0xFFFF);
-		return *this;
-	}
+	//Handle<T> unpack(uint32_t packedValue)
+	//{
+	//	m_Index = static_cast<uint16_t>(packedValue >> 16);
+	//	m_Generation = static_cast<uint16_t>(packedValue & 0xFFFF);
+	//	return *this;
+	//}
 
 private:
 	Handle(uint32_t index, uint32_t generation) : m_Index(index), m_Generation(generation) {}

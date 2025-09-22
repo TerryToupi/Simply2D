@@ -22,25 +22,23 @@ namespace core
 
 		virtual void draw(const RenderDescriptor& desc, Span<DrawCall> calls) override;
 
-		//virtual Handle<Texture> createTexture(const TextureDescriptor& desc) override;
-		//virtual void destroyTexture(Handle<Texture> texture) override;
-		//SDL_Texture* getTexture(Handle<Texture> texture);
+		virtual Handle<Texture> createTexture(const TextureDescriptor&& desc) override;
+		virtual Handle<Texture> createTexture(Handle<Image> image) override;
+		virtual void destroyTexture(Handle<Texture> texture) override;
+		
+		virtual void textureSize(Handle<Texture> texture, int& width, int& height) override;
 
-		SDL_Texture* uploadCPUtextureToGPU(SDL_Surface* cpuTextue);
-		void enqueueTransfer(const Transfer& func);
-
+		SDL_Texture* getTexture(Handle<Texture> texture);
+		
 	private:
 		void beginFrame();
 		void endFrame();
-		void flushTransferQueue();
 
 	private:
 		SDL_Window* m_windowHandle{};
 		SDL_Renderer* m_rendererHandle{};
 
-		Pool<SDL_Texture*, Texture> m_Textures{ 16u, "Texture Resources" };
-
-		MTRingQueue<Transfer, 256> m_transferQueue;
+		Pool<SDL_Texture*, Texture> m_textures{ 16u, "Texture Resources" };
 
 		friend class Application;
 	};
