@@ -16,23 +16,8 @@ void SampleApp::start()
 
 	auto image2 = core::assetDatabase().get("b.png");
 	m_texture3 = core::gfx().createTexture(Handle<core::Image>(image2.hanlde));
-}
 
-void SampleApp::destroy()
-{
-	for (auto& [path, type] : m_assets)
-		core::assetDatabase().unload(path);
-
-	core::gfx().destroyTexture(m_texture1);
-	core::gfx().destroyTexture(m_texture2);
-	core::gfx().destroyTexture(m_texture3);
-}
-
-void SampleApp::render()
-{
-	int surfaceWidth = 0, surfaceHeight = 0;
-	core::gfx().textureSize(SURFACE, surfaceWidth, surfaceHeight);
-
+	// simulating static level creation
 	int texture2width = 0, texture2height = 0;
 	core::gfx().textureSize(m_texture2, texture2width, texture2height);
 
@@ -52,6 +37,22 @@ void SampleApp::render()
 		{.texture = m_texture3, .src = {0, 0, texture3width, texture3height}, .dist ={50, 600, 500, 500}},
 		{.texture = m_texture2, .src = {0, 0, texture2width, texture2height}, .dist ={600, 600, 500, 500}},
 	});
+}
+
+void SampleApp::destroy()
+{
+	for (auto& [path, type] : m_assets)
+		core::assetDatabase().unload(path);
+
+	core::gfx().destroyTexture(m_texture1);
+	core::gfx().destroyTexture(m_texture2);
+	core::gfx().destroyTexture(m_texture3);
+}
+
+void SampleApp::render()
+{
+	int surfaceWidth = 0, surfaceHeight = 0;
+	core::gfx().textureSize(SURFACE, surfaceWidth, surfaceHeight);
 
 	int size = 50 + 500 + 50 + 500 + 50;
 
