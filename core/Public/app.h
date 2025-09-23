@@ -60,17 +60,4 @@ namespace core
 
 		std::vector<std::unique_ptr<Layer>> m_layers;
 	};
-
-	static inline Application& app()
-	{
-		return Application::GetInstance();
-	}
-	static inline Renderer& gfx()
-	{
-		return *Application::GetInstance().GetRenderer();
-	}
-	static inline AssetDatabase& assetDatabase()
-	{
-		return *Application::GetInstance().GetAssetDatabase();
-	}
 }

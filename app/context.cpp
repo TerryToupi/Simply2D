@@ -1,4 +1,4 @@
-#include <app.h>
+#include <Simly2D.h>
 #include <sampleApp.h>
 
 int main()
@@ -12,8 +12,8 @@ int main()
     specs.version = "1.0";
     specs.identifier = "com.terrytoupi.simply2D.giorgos";
 
-    core::app().create(specs);
-    core::app().pushLayer<SampleApp>();
-    core::app().run();
+    Simply2D::app().create(specs);
+    Simply2D::app().pushLayer<SampleApp>();
+    Simply2D::app().run();
     return 0;
 }

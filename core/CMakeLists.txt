@@ -18,6 +18,7 @@ target_sources(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         "${CORE_FOLDER_PATH}/Include"
+        "${CORE_FOLDER_PATH}/Public"
     PRIVATE
         "${CORE_FOLDER_PATH}"
 )
