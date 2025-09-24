@@ -11,10 +11,10 @@ void SampleApp::start()
 		.height = 50 + 500 + 50 + 500 + 50,
 		});
 ;
-	auto setImage1 = Simply2D::assetDatabase().get("tileset1.bmp");
+	auto setImage1 = Simply2D::assetDatabase().get("images/tileset1.bmp");
 	m_set = new Simply2D::TileSet(16, 16, setImage1);
 
-	auto setImage2 = Simply2D::assetDatabase().get("tileset3.png");
+	auto setImage2 = Simply2D::assetDatabase().get("images/tileset3.png");
 	m_set1 = new Simply2D::TileSet(32, 32, setImage2);
 }
 
@@ -46,7 +46,7 @@ void SampleApp::render()
 	{
 		for (uint16_t row = 0; row < activeSet->getTileSetWidth(); row++)
 		{
-			Simply2D::Tile tile = activeSet->getTile(col * activeSet->getTileSetWidth() + row);
+			Simply2D::Tile tile = activeSet->getTile((col * activeSet->getTileSetWidth() + row));
 			calls.push_back({
 				.texture = tileSet, 
 				.src = {tile.x, tile.y, tileWidth, tileHeight}, 

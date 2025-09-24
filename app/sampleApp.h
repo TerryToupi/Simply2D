@@ -15,12 +15,12 @@ public:
 
 private:
 	std::unordered_map<std::string, Simply2D::AssetType> m_assets = {
-		{"a.png", Simply2D::AssetType::IMAGE},
-		{"b.png", Simply2D::AssetType::IMAGE},
-		{"a.wav", Simply2D::AssetType::AUDIO},
-		{"tileset1.bmp", Simply2D::AssetType::IMAGE},
-		{"tileset2.png", Simply2D::AssetType::IMAGE},
-		{"tileset3.png", Simply2D::AssetType::IMAGE}
+		{"images/a.png", Simply2D::AssetType::IMAGE},
+		{"images/b.png", Simply2D::AssetType::IMAGE},
+		{"images/a.wav", Simply2D::AssetType::AUDIO},
+		{"images/tileset1.bmp", Simply2D::AssetType::IMAGE},
+		{"images/tileset2.png", Simply2D::AssetType::IMAGE},
+		{"images/tileset3.png", Simply2D::AssetType::IMAGE}
 	};
 
 	Handle<Simply2D::Texture> m_texture1;

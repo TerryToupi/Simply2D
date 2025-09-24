@@ -17,7 +17,8 @@ namespace Simply2D
     {
         IMAGE,
         AUDIO,
-        FONT
+        FONT,
+        SCENE
     };
     
     struct Asset

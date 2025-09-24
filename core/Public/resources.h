@@ -6,10 +6,6 @@
 
 namespace Simply2D
 {
-	// ------------ TEXTURE ----------------------------
-	class Texture;
-	#define SURFACE Handle<Simply2D::Texture>(UINT_MAX)
-
 	enum class TextureFormat : unsigned int
 	{
 		RGBA32_FLOAT = UINT_BIT_SHIFT(0),  /**< 32-bit float RGBA */
@@ -32,12 +28,17 @@ namespace Simply2D
 		int height = 0;
 	};
 
-	// ------------ IMAGE ----------------------------
+	#define SURFACE Handle<Simply2D::Texture>(UINT_MAX)
+
+	// ------------ TEXTURE ---------------------------
+	class Texture;
+
+	// ------------ IMAGE -----------------------------
 	class Image;
 		
-	// ------------ AUDIO ---------------------------- 
+	// ------------ AUDIO -----------------------------
 	class Audio;
 
-	// ----------- FONT ------------------------------
+	// ------------ FONT ------------------------------
 	class Font;
 }
