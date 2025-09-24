@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 
-namespace core 
+namespace Simply2D 
 {
 	namespace JobSystem
 	{

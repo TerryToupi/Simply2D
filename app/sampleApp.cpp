@@ -6,37 +6,13 @@ void SampleApp::start()
 		Simply2D::assetDatabase().load(type, path);
 
 	m_texture1 = Simply2D::gfx().createTexture({
-		.access = core::TextureAccess::READ_WRITE,
+		.access = Simply2D::TextureAccess::READ_WRITE,
 		.width = 50 + 500 + 50 + 500 + 50,
 		.height = 50 + 500 + 50 + 500 + 50,
 		});
-
-	auto image = Simply2D::assetDatabase().get("a.png");
-	m_texture2 = Simply2D::gfx().createTexture(Handle<core::Image>(image.hanlde));
-
-	auto image2 = Simply2D::assetDatabase().get("b.png");
-	m_texture3 = Simply2D::gfx().createTexture(Handle<core::Image>(image2.hanlde));
-
-	// simulating static level creation
-	int texture2width = 0, texture2height = 0;
-	Simply2D::gfx().textureSize(m_texture2, texture2width, texture2height);
-
-	int texture3width = 0, texture3height = 0;
-	Simply2D::gfx().textureSize(m_texture3, texture3width, texture3height);
-
-	Simply2D::gfx().draw(
-	{
-		.target = m_texture1,
-		.loadOp = core::LoadOp::CLEAR,
-		.storeOp = core::StoreOp::STORE,
-		.clearColor = {0, 0, 0, 255}
-	},
-	{
-		{.texture = m_texture2, .src = {0, 0, texture2width, texture2height}, .dist ={50, 50, 500, 500}},
-		{.texture = m_texture3, .src = {0, 0, texture3width, texture3height}, .dist ={600, 50, 500, 500}},
-		{.texture = m_texture3, .src = {0, 0, texture3width, texture3height}, .dist ={50, 600, 500, 500}},
-		{.texture = m_texture2, .src = {0, 0, texture2width, texture2height}, .dist ={600, 600, 500, 500}},
-	});
+;
+	auto setImage = Simply2D::assetDatabase().get("tileset1.bmp");
+	m_set1 = new Simply2D::TileSet(16, 16, setImage);
 }
 
 void SampleApp::destroy()
@@ -44,9 +20,9 @@ void SampleApp::destroy()
 	for (auto& [path, type] : m_assets)
 		Simply2D::assetDatabase().unload(path);
 
-	Simply2D::gfx().destroyTexture(m_texture1);
-	Simply2D::gfx().destroyTexture(m_texture2);
-	Simply2D::gfx().destroyTexture(m_texture3);
+	//Simply2D::gfx().destroyTexture(m_texture1);
+	//Simply2D::gfx().destroyTexture(m_texture2);
+	//Simply2D::gfx().destroyTexture(m_texture3);
 }
 
 void SampleApp::render()
@@ -54,16 +30,29 @@ void SampleApp::render()
 	int surfaceWidth = 0, surfaceHeight = 0;
 	Simply2D::gfx().textureSize(SURFACE, surfaceWidth, surfaceHeight);
 
-	int size = 50 + 500 + 50 + 500 + 50;
+	Handle<Simply2D::Texture> tileSet = m_set1->texture();
+	uint16_t tileWidth = m_set1->getTileWidth();
+	uint16_t tileHeight = m_set1->getTileHeight();
+
+	uint16_t tileScale = tileWidth * 2;
+
+	std::vector<Simply2D::DrawCall> calls;
+	for (uint16_t row = 0; row < m_set1->getTileSetWidth(); ++row)
+	{
+		for (uint16_t col = 0; col < m_set1->getTileSetHeight(); ++col)
+		{
+			Simply2D::Tile tile = m_set1->getTile(row, col);
+			calls.push_back({
+				.texture = tileSet, .src = {tile.x, tile.y, tileWidth, tileHeight}, .dist = {col * tileScale, row * tileScale, tileScale, tileScale}
+				});
+		}
+	}
 
 	Simply2D::gfx().draw(
-	{
-		.target = SURFACE,
-		.loadOp = core::LoadOp::CLEAR,
-		.storeOp = core::StoreOp::STORE,
-		.clearColor = {50, 0, 0, 255}
-	},
-	{
-		{.texture = m_texture1, .src = {0, 0, size, size}, .dist ={0, 0, surfaceWidth, surfaceHeight}},
-	});
+		{
+			.target = SURFACE,
+			.loadOp = Simply2D::LoadOp::CLEAR,
+			.storeOp = Simply2D::StoreOp::STORE,
+			.clearColor = {50, 0, 0, 255}
+		}, Span(calls.data(), calls.size()));
 }

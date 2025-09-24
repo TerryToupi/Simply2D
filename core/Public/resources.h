@@ -4,11 +4,11 @@
 
 #define UINT_BIT_SHIFT(x) (1u << x)
 
-namespace core
+namespace Simply2D
 {
 	// ------------ TEXTURE ----------------------------
 	class Texture;
-	#define SURFACE Handle<core::Texture>(UINT_MAX)
+	#define SURFACE Handle<Simply2D::Texture>(UINT_MAX)
 
 	enum class TextureFormat : unsigned int
 	{

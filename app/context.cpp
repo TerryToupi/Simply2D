@@ -3,7 +3,7 @@
 
 int main()
 {
-    core::ApplicationSpecifications specs;
+    Simply2D::ApplicationSpecifications specs;
     specs.renderer.name = "Simply2D Giorgos";
     specs.renderer.vSync = false;
     specs.renderer.borderless = false;

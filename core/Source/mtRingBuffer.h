@@ -6,7 +6,7 @@
 #include <condition_variable>    // to use std::condition_variable
 #include <sstream>
 
-namespace core
+namespace Simply2D
 {
 	// Fixed size very simple thread safe ring buffer
 	template <typename T, size_t capacity>

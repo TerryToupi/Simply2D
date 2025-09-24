@@ -9,7 +9,7 @@
 #include <SDL3_Mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
-namespace core
+namespace Simply2D
 {
 	void Application::create(const ApplicationSpecifications& specs)
 	{

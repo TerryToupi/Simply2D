@@ -1,6 +1,6 @@
 #pragma once
 
-namespace core
+namespace Simply2D
 {
 	class Layer
 	{

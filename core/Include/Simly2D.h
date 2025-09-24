@@ -7,22 +7,23 @@
 #include <layer.h>
 #include <handle.h>
 #include <assets.h>
+#include <tileSet.h>
 #include <app.h>
 
 namespace Simply2D
 {
-	static inline core::Application& app()
+	static inline Simply2D::Application& app()
 	{
-		return core::Application::GetInstance();
+		return Simply2D::Application::GetInstance();
 	}
 
-	static inline core::Renderer& gfx()
+	static inline Simply2D::Renderer& gfx()
 	{
-		return *core::Application::GetInstance().GetRenderer();
+		return *Simply2D::Application::GetInstance().GetRenderer();
 	}
 
-	static inline core::AssetDatabase& assetDatabase()
+	static inline Simply2D::AssetDatabase& assetDatabase()
 	{
-		return *core::Application::GetInstance().GetAssetDatabase();
+		return *Simply2D::Application::GetInstance().GetAssetDatabase();
 	}
 }

@@ -7,7 +7,7 @@
 #include <SDL3_mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
-namespace core
+namespace Simply2D
 {
     class AssetDatabaseImpl final : public AssetDatabase
     {
@@ -32,9 +32,9 @@ namespace core
         void unloadAudio(Handle<Audio> audio);
         void unloadFont(Handle<Font> font);
 
-        Pool<SDL_Surface*, core::Image> m_images{ 16u, "texture pool" };
-        Pool<MIX_Audio*, core::Audio>   m_audio{ 16u, "audio pool" };
-        Pool<TTF_Font*, core::Font>     m_font{ 16u, "fonts pool" };
+        Pool<SDL_Surface*, Simply2D::Image> m_images { 16u, "texture pool" };
+        Pool<MIX_Audio*, Simply2D::Audio>   m_audio  { 16u, "audio pool" };
+        Pool<TTF_Font*, Simply2D::Font>     m_font   { 16u, "fonts pool" };
 
         std::unordered_map<std::string, Asset> m_loadedAssets;
     };

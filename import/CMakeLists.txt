@@ -34,8 +34,6 @@ CPMAddPackage(
     OPTIONS
         "SDLIMAGE_VENDORED ON"
         "SDLIMAGE_AVIF OFF"
-        "SDLIMAGE_BMP OFF"
-        "SDLIMAGE_JPEG OFF"
         "SDLIMAGE_WEBP OFF"
 )
 

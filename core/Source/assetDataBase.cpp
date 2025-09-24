@@ -7,7 +7,7 @@
 
 #include <Source/mtJobSystem.h>
 
-namespace core
+namespace Simply2D
 { 
 	AssetDatabaseImpl::AssetDatabaseImpl(const AssetDatabaseSpecifications& specs)
 		:	AssetDatabase(specs)
@@ -28,13 +28,13 @@ namespace core
 
 		switch (type)
 		{
-		case core::AssetType::IMAGE:
+		case Simply2D::AssetType::IMAGE:
 			handle = loadImage(fullPath).pack();
 			break;
-		case core::AssetType::AUDIO:
+		case Simply2D::AssetType::AUDIO:
 			handle = loadAudio(fullPath).pack();
 			break;
-		case core::AssetType::FONT:
+		case Simply2D::AssetType::FONT:
 			handle = laodFont(fullPath).pack();
 			break;
 		default:
@@ -58,14 +58,14 @@ namespace core
 		Asset asset = m_loadedAssets.at(path);
 		switch (asset.type)
 		{
-		case core::AssetType::IMAGE:
-			unloadImage(Handle<Image>(asset.hanlde));
+		case Simply2D::AssetType::IMAGE:
+			unloadImage(Handle<Image>(asset.handle));
 			break;
-		case core::AssetType::AUDIO:
-			unloadAudio(Handle<Audio>(asset.hanlde));
+		case Simply2D::AssetType::AUDIO:
+			unloadAudio(Handle<Audio>(asset.handle));
 			break;
-		case core::AssetType::FONT:
-			unloadFont(Handle<Font>(asset.hanlde));
+		case Simply2D::AssetType::FONT:
+			unloadFont(Handle<Font>(asset.handle));
 			break;
 		default:
 			break;

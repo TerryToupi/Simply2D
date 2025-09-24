@@ -7,7 +7,7 @@
 #include <assets.h>
 #include <renderer.h>
 
-namespace core
+namespace Simply2D
 {
 	struct ApplicationSpecifications
 	{

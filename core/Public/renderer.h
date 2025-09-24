@@ -7,7 +7,7 @@
 #include <span.h>
 #include <resources.h>
 
-namespace core
+namespace Simply2D
 {
 	struct RendererSpecifications
 	{

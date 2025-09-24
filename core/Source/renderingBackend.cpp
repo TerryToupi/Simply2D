@@ -7,7 +7,7 @@
 #include <Source/renderingBackend.h>
 #include <Source/assetDataBase.h>
 
-namespace core
+namespace Simply2D
 {
 	std::shared_ptr<Renderer> Renderer::Create(const RendererSpecifications& specs)
 	{
@@ -112,11 +112,11 @@ namespace core
 
 		switch (desc.access)
 		{
-		case core::TextureAccess::READ_ONLY:
+		case Simply2D::TextureAccess::READ_ONLY:
 			access = SDL_TEXTUREACCESS_STATIC;
-		case core::TextureAccess::READ_WRITE:
+		case Simply2D::TextureAccess::READ_WRITE:
 			access = SDL_TEXTUREACCESS_TARGET;
-		case core::TextureAccess::UNDEFINED:
+		case Simply2D::TextureAccess::UNDEFINED:
 			break;
 		default:
 			break;
@@ -124,11 +124,11 @@ namespace core
 
 		switch (desc.format)
 		{
-		case core::TextureFormat::RGBA32_FLOAT:
+		case Simply2D::TextureFormat::RGBA32_FLOAT:
 			format = SDL_PIXELFORMAT_RGBA32;
-		case core::TextureFormat::RGBA8_UNORM:
+		case Simply2D::TextureFormat::RGBA8_UNORM:
 			format = SDL_PIXELFORMAT_RGBA8888;
-		case core::TextureFormat::UNDEFINED:
+		case Simply2D::TextureFormat::UNDEFINED:
 			break;
 		default:
 			break;

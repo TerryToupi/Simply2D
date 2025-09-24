@@ -2,7 +2,7 @@
 #include <Source/mtJobSystem.h>
 #include <Source/mtRingBuffer.h>
 
-namespace core
+namespace Simply2D
 {
 	namespace JobSystem
 	{

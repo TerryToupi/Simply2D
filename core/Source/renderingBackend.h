@@ -10,7 +10,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 
-namespace core
+namespace Simply2D
 {
 	class RendererImpl final : public Renderer
 	{

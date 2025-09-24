@@ -6,7 +6,7 @@
 
 #include <resources.h>
 
-namespace core
+namespace Simply2D
 {
     struct AssetDatabaseSpecifications
     {
@@ -23,7 +23,7 @@ namespace core
     struct Asset
     {
         AssetType type;
-        uint32_t hanlde;
+        uint32_t handle;
     };
     
     class AssetDatabase
