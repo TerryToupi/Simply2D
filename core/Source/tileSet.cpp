@@ -16,9 +16,9 @@ namespace Simply2D
 		m_tileSetWidth = width / m_tileWidth;
 		m_tileSetHeight = height / m_tileHeight;
 
-		for (uint16_t row = 0; row < m_tileSetWidth; ++row)
+		for (uint16_t col = 0; col < m_tileSetHeight; ++col)
 		{
-			for (uint16_t col = 0; col < m_tileSetHeight; ++col)
+			for (uint16_t row = 0; row < m_tileSetWidth; ++row)
 			{
 				uint16_t x = (row * m_tileWidth);
 				uint16_t y = (col * m_tileHeight);

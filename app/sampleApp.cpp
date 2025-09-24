@@ -11,8 +11,11 @@ void SampleApp::start()
 		.height = 50 + 500 + 50 + 500 + 50,
 		});
 ;
-	auto setImage = Simply2D::assetDatabase().get("tileset1.bmp");
-	m_set1 = new Simply2D::TileSet(16, 16, setImage);
+	auto setImage1 = Simply2D::assetDatabase().get("tileset1.bmp");
+	m_set = new Simply2D::TileSet(16, 16, setImage1);
+
+	auto setImage2 = Simply2D::assetDatabase().get("tileset3.png");
+	m_set1 = new Simply2D::TileSet(32, 32, setImage2);
 }
 
 void SampleApp::destroy()
@@ -30,26 +33,29 @@ void SampleApp::render()
 	int surfaceWidth = 0, surfaceHeight = 0;
 	Simply2D::gfx().textureSize(SURFACE, surfaceWidth, surfaceHeight);
 
-	Handle<Simply2D::Texture> tileSet = m_set1->texture();
-	uint16_t tileWidth = m_set1->getTileWidth();
-	uint16_t tileHeight = m_set1->getTileHeight();
+	Simply2D::TileSet* activeSet = m_set1;
+
+	Handle<Simply2D::Texture> tileSet = activeSet->texture();
+	uint16_t tileWidth = activeSet->getTileWidth();
+	uint16_t tileHeight = activeSet->getTileHeight();
 
 	uint16_t tileScale = tileWidth * 2;
 
 	std::vector<Simply2D::DrawCall> calls;
-	for (uint16_t row = 0; row < m_set1->getTileSetWidth(); ++row)
+	for (uint16_t col = 0; col < activeSet->getTileSetHeight(); col++)
 	{
-		for (uint16_t col = 0; col < m_set1->getTileSetHeight(); ++col)
+		for (uint16_t row = 0; row < activeSet->getTileSetWidth(); row++)
 		{
-			Simply2D::Tile tile = m_set1->getTile(row, col);
+			Simply2D::Tile tile = activeSet->getTile(col * activeSet->getTileSetWidth() + row);
 			calls.push_back({
-				.texture = tileSet, .src = {tile.x, tile.y, tileWidth, tileHeight}, .dist = {col * tileScale, row * tileScale, tileScale, tileScale}
-				});
+				.texture = tileSet, 
+				.src = {tile.x, tile.y, tileWidth, tileHeight}, 
+				.dist = {row * tileScale, col * tileScale, tileScale, tileScale}
+			});
 		}
 	}
 
-	Simply2D::gfx().draw(
-		{
+	Simply2D::gfx().draw({
 			.target = SURFACE,
 			.loadOp = Simply2D::LoadOp::CLEAR,
 			.storeOp = Simply2D::StoreOp::STORE,
