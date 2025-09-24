@@ -3,6 +3,8 @@
 #include <app.h>
 #include <tileLayers.h>
 
+#include <nlohmann/json.hpp>
+
 namespace Simply2D
 {
 	TileLayer::TileLayer(const TileLayerSpecifications& specs, std::shared_ptr<TileSet> tileSet)

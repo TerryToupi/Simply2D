@@ -41,6 +41,12 @@ CPMAddPackage(
     NAME SDL_ttf 
     GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
     GIT_TAG main
+) 
+
+CPMAddPackage(
+    NAME json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG develop 
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -49,6 +55,7 @@ target_link_libraries(${PROJECT_NAME}
         SDL3_mixer::SDL3_mixer
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
+        nlohmann_json
 )
 
 # Organizing all of the imported targets
