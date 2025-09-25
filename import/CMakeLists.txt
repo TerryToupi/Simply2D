@@ -44,7 +44,7 @@ CPMAddPackage(
 ) 
 
 CPMAddPackage(
-    NAME json
+    NAME nlohmann_json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
     GIT_TAG develop 
 )
@@ -73,3 +73,4 @@ organize_target(SDL_uclibc "import")
 organize_target(SDL3_test "import")
 organize_target(tiff "import")
 organize_target(xmp_shared "import")
+organize_target(nlohmann_json "import")
