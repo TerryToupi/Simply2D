@@ -1,9 +1,8 @@
 #pragma once
 
 #include <assets.h>
-
-#include <string>
-#include <unordered_map>
+#include <tileSet.h>
+#include <tileLayers.h>
 
 namespace Simply2D
 {
@@ -12,13 +11,14 @@ namespace Simply2D
 	class Scene
 	{
 	public:
-		void load()		{}
-		void activate() {}
-		void update()	{} 
-		void disable()	{}
-		void unload()	{}
+		virtual void load()		{}
+		virtual void update()	{} 
+		virtual void unload()	{}
+
+		void generateTileLayers(Asset sceneAsset);
 
 	protected:
-		std::unordered_map<std::string, Asset> m_assets;
+		std::shared_ptr<TileSet> m_tileset;
+		std::vector<std::shared_ptr<TileLayer>> m_layers;
 	};
 }

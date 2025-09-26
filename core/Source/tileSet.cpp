@@ -2,6 +2,7 @@
 
 #include <tileSet.h>
 #include <app.h>
+#include "tileLayers.h"
 
 namespace Simply2D
 {

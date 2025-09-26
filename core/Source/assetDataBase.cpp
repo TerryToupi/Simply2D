@@ -1,5 +1,9 @@
 #include <pch.h>
 
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+
 #include <app.h>
 
 #include <Source/renderingBackend.h>
@@ -37,6 +41,8 @@ namespace Simply2D
 		case Simply2D::AssetType::FONT:
 			handle = laodFont(fullPath).pack();
 			break;
+		case Simply2D::AssetType::SCENE:
+			handle = loadSerializable(fullPath).pack();
 		default:
 			break;
 		}
@@ -88,6 +94,11 @@ namespace Simply2D
 		return *m_font.get(font);
 	}
 
+	json* AssetDatabaseImpl::getSerializable(Handle<Serializable> text)
+	{
+		return m_serializables.get(text);
+	}
+
 	Handle<Image> AssetDatabaseImpl::loadImage(std::string path)
 	{
 		SDL_Surface* surface = IMG_Load(path.c_str());
@@ -124,6 +135,12 @@ namespace Simply2D
 		return m_font.insert(font);
 	}
 
+	Handle<Serializable> AssetDatabaseImpl::loadSerializable(std::string path)
+	{
+		std::ifstream file(path);
+		return m_serializables.insert(json::parse(file));
+	}
+
 	void AssetDatabaseImpl::unloadImage(Handle<Image> image)
 	{
 		SDL_Surface* surface = getImage(image);
@@ -152,6 +169,16 @@ namespace Simply2D
 
 		TTF_CloseFont(f);
 		m_font.remove(font);
+	}
+
+	void AssetDatabaseImpl::unloadSerializable(Handle<Serializable> text)
+	{ 
+		json* j = getSerializable(text); 
+		if (!j)
+			return;
+
+		j->clear();
+		m_serializables.remove(text);
 	}
 
 	std::shared_ptr<AssetDatabase> AssetDatabase::Create(const AssetDatabaseSpecifications& specs)

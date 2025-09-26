@@ -41,4 +41,7 @@ namespace Simply2D
 
 	// ------------ FONT ------------------------------
 	class Font;
+
+	// ----------- SERIALIZABLES ----------------------
+	class Serializable;
 }
