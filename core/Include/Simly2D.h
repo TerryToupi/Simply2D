@@ -8,6 +8,8 @@
 #include <handle.h>
 #include <assets.h>
 #include <tileSet.h>
+#include <tileLayers.h>
+#include <scene.h>
 #include <app.h>
 
 namespace Simply2D

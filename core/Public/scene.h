@@ -13,8 +13,10 @@ namespace Simply2D
 	public:
 		virtual void load()		{}
 		virtual void update()	{} 
+		virtual void render()	{}
 		virtual void unload()	{}
 
+	protected:
 		void generateTileLayers(Asset sceneAsset);
 
 	protected:

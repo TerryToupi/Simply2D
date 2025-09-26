@@ -6,7 +6,7 @@
 namespace Simply2D
 {
 	TileLayer::TileLayer(const TileLayerSpecifications& specs, std::shared_ptr<TileSet> tileSet)
-		:	m_specs(specs)
+		:	m_specs(specs), m_tileSet(tileSet)
 	{
 		m_texture = Application::GetInstance().GetRenderer()->createTexture({
 			.format = TextureFormat::RGBA8_UNORM,
@@ -23,7 +23,7 @@ namespace Simply2D
 
 	void TileLayer::putTile(const int id, const int x, const int y)
 	{
-		if (id > 0)
+		if (id != 0)
 		{
 			Tile tile = m_tileSet->getTile(id - 1);
 			uint16_t tileWidth = m_tileSet->getTileWidth();

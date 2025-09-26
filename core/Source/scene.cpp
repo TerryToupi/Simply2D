@@ -55,11 +55,8 @@ namespace Simply2D
 				for (unsigned w = 0; w < (*config)["layers"][i]["width"]; ++w)
 				{
 					uint16_t index = h * (*config)["layers"][i]["width"] + w;
-					m_layers.at(i)->putTile(
-						(*config)["layers"][i]["data"][index],
-						w * m_tileset->getTileWidth(),
-						h * m_tileset->getTileHeight()
-					);
+					uint16_t tileID = (*config)["layers"][i]["data"][index];
+					m_layers.at(i)->putTile(tileID, w, h);
 				}
 			}
 

@@ -6,6 +6,8 @@
 #include <iostream>
 #include <unordered_map>
 
+#include <level1.h>
+
 class SampleApp : public Simply2D::Layer
 {
 public:
@@ -29,4 +31,6 @@ private:
 
 	Simply2D::TileSet* m_set{};
 	Simply2D::TileSet* m_set1{};
+
+	level1 m_level;
 };
