@@ -18,11 +18,11 @@ namespace Simply2D
 		
 		// Generating the tileset
 		{
-			uint16_t tileWidth = (*config)["tilesets"][0]["tilewidth"];
-			uint16_t tileHeight = (*config)["tilesets"][0]["tileheight"];
+			uint16_t tileWidth = (uint16_t)(*config)["tilesets"][0]["tilewidth"];
+			uint16_t tileHeight = (uint16_t)(*config)["tilesets"][0]["tileheight"];
 	
 			std::string imagePath = "/images";
-			std::string configTilesetPath = (*config)["tilesets"][0]["image"];
+			std::string configTilesetPath = (std::string)(*config)["tilesets"][0]["image"];
 			std::size_t pos = configTilesetPath.find("images/");
 			if (pos != std::string::npos) 
 			{
@@ -44,9 +44,9 @@ namespace Simply2D
 		{
 			TileLayerSpecifications specs
 			{
-				.layerIndex = (*config)["layers"][i]["id"],
-				.width = (*config)["layers"][i]["width"],
-				.height = (*config)["layers"][i]["height"]
+				.layerIndex = (uint16_t)(*config)["layers"][i]["id"],
+				.width = (uint16_t)(*config)["layers"][i]["width"],
+				.height = (uint16_t)(*config)["layers"][i]["height"]
 			};
 			m_layers.push_back(std::make_shared<TileLayer>(specs, m_tileset));
 
@@ -54,8 +54,8 @@ namespace Simply2D
 			{
 				for (unsigned w = 0; w < (*config)["layers"][i]["width"]; ++w)
 				{
-					uint16_t index = h * (*config)["layers"][i]["width"] + w;
-					uint16_t tileID = (*config)["layers"][i]["data"][index];
+					uint16_t index = h * (uint16_t)(*config)["layers"][i]["width"] + w;
+					uint16_t tileID = (uint16_t)(*config)["layers"][i]["data"][index];
 					m_layers.at(i)->putTile(tileID, w, h);
 				}
 			}

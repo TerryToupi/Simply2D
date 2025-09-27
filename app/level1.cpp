@@ -13,8 +13,6 @@ void level1::update()
 
 void level1::render()
 {
-	std::vector<Simply2D::DrawCall> calls;
-
 	for (const auto& layer : m_layers)
 	{
 		int twidth = 0, theight = 0;

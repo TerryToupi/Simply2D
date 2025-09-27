@@ -61,32 +61,43 @@ namespace Simply2D
 
 	void RendererImpl::draw(const RenderDescriptor& desc, Span<DrawCall> calls)
 	{
-		if (desc.target == SURFACE)
-			SDL_SetRenderTarget(m_rendererHandle, nullptr);
-		else
-		{
-			SDL_Texture* texture = getTexture(desc.target);
-			assert(texture);
-
-			SDL_SetRenderTarget(m_rendererHandle, texture);
-		}
-
-		if (desc.loadOp == LoadOp::CLEAR)
-		{
-			SDL_SetRenderDrawColor(m_rendererHandle, desc.clearColor[0], desc.clearColor[1], desc.clearColor[2], desc.clearColor[3]);
-			SDL_RenderClear(m_rendererHandle);
-
-			if (desc.storeOp == StoreOp::CLEAR)
-				return;
-		}
-
-		if (desc.storeOp == StoreOp::CLEAR)
-		{
-			SDL_SetRenderDrawColor(m_rendererHandle, desc.clearColor[0], desc.clearColor[1], desc.clearColor[2], desc.clearColor[3]);
-			SDL_RenderClear(m_rendererHandle);
-			return;
-		}
-		
+        SDL_Texture* renderTarget = desc.target == SURFACE ? nullptr : getTexture(desc.target);
+        
+        SDL_SetRenderTarget(m_rendererHandle, renderTarget);
+        SDL_SetRenderDrawColor(m_rendererHandle,
+                               (uint8_t)desc.clearColor[0],
+                               (uint8_t)desc.clearColor[1],
+                               (uint8_t)desc.clearColor[2],
+                               (uint8_t)desc.clearColor[3]);
+        
+        if (desc.loadOp == LoadOp::CLEAR && desc.storeOp == StoreOp::CLEAR)
+        {
+            if (!SDL_RenderClear(m_rendererHandle))
+                SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed LOAD::CLEAR STORE::CLEAR : %s", SDL_GetError());
+            
+            return;
+        }
+        
+        if (desc.loadOp == LoadOp::CLEAR)
+        {
+            if (!SDL_RenderClear(m_rendererHandle))
+                SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed LOAD::CLEAR : %s", SDL_GetError());
+        }
+        
+        if (desc.storeOp == StoreOp::CLEAR)
+        {
+            if (!SDL_RenderClear(m_rendererHandle))
+                SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed STORE::STRE : %s", SDL_GetError());
+            
+            return;
+        }
+        
+        if (desc.loadOp == LoadOp::LOAD)
+        {
+            if (!SDL_SetRenderDrawBlendMode(m_rendererHandle, SDL_BLENDMODE_BLEND))
+                SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed setting blend mode : %s", SDL_GetError());
+        }
+        
 		for (const auto& call : calls)
 		{
 			std::array<SDL_FRect, 1> src = { 
@@ -100,14 +111,18 @@ namespace Simply2D
 		
 			SDL_Texture* texture = getTexture(call.texture);
 			assert(texture);
-
-			if (!SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND))
-				SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed: %s", SDL_GetError());
-
+            
+            if (desc.loadOp == LoadOp::LOAD)
+            {
+                if (!SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND))
+                    SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed: %s", SDL_GetError());
+            }
+            
 			if (!SDL_RenderTexture(m_rendererHandle, texture, src.data(), dist.data()))
 				SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed: %s", SDL_GetError());
 		}
 	}
+
 	Handle<Texture> RendererImpl::createTexture(const TextureDescriptor&& desc)
 	{
 		SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA8888;
