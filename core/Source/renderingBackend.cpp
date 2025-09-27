@@ -101,6 +101,9 @@ namespace Simply2D
 			SDL_Texture* texture = getTexture(call.texture);
 			assert(texture);
 
+			if (!SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND))
+				SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed: %s", SDL_GetError());
+
 			if (!SDL_RenderTexture(m_rendererHandle, texture, src.data(), dist.data()))
 				SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed: %s", SDL_GetError());
 		}

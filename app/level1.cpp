@@ -23,18 +23,20 @@ void level1::render()
 		int swidth = 0, sheight = 0;
 		Simply2D::gfx().textureSize(SURFACE, swidth, sheight);
 
-		calls.push_back(
-			{ layer->texture(), {0, 0, twidth, theight}, {0, 0, swidth, sheight} } 
-		);
+		//calls.push_back(
+		//	{ layer->texture(), {0, 0, twidth, theight}, {0, 0, swidth, sheight} } 
+		//);
+		Simply2D::gfx().draw(
+			{
+				.target = SURFACE,
+				.loadOp = Simply2D::LoadOp::LOAD,
+				.storeOp = Simply2D::StoreOp::STORE,
+				.clearColor = {0, 0, 0, 255}
+			}, 
+			{
+				{ layer->texture(), {0, 0, twidth, theight}, {0, 0, swidth, sheight} } 
+			});
 	}
-
-	Simply2D::gfx().draw(
-		{
-			.target = SURFACE,
-			.loadOp = Simply2D::LoadOp::LOAD,
-			.storeOp = Simply2D::StoreOp::STORE,
-			.clearColor = {0, 0, 0, 255}
-		}, Span<Simply2D::DrawCall>(calls.data(), calls.size()));
 }
 
 void level1::unload()
