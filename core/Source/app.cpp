@@ -33,8 +33,10 @@ namespace Simply2D
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
 
 		JobSystem::Initialize();
+
 		m_renderer = Renderer::Create(specs.renderer);
 		m_assetDatabase = AssetDatabase::Create(specs.assets);
+		m_sceneManager = SceneManager::Create();
 
 		m_running = true;
 	}

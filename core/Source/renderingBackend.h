@@ -15,8 +15,6 @@ namespace Simply2D
 	class RendererImpl final : public Renderer
 	{
 	public:
-		using Transfer = std::function<void()>;
-
 		RendererImpl(const RendererSpecifications& specs);
 		~RendererImpl();
 

@@ -10,11 +10,11 @@ using json = nlohmann::json;
 
 namespace Simply2D
 {
-	void Scene::generateTileLayers(Asset sceneAsset)
+	Scene::Scene(std::string level)
 	{
 		AssetDatabaseImpl* assets = (AssetDatabaseImpl*)(Application::GetInstance().GetAssetDatabase().get());
 
-		json* config = assets->getSerializable(Handle<Serializable>(sceneAsset.handle));
+		json* config = assets->getSerializable(Handle<Serializable>(assets->get(level).handle));
 		
 		// Generating the tileset
 		{
@@ -62,5 +62,20 @@ namespace Simply2D
 
 			m_layers.at(i)->generateTexture();
 		}
+	}
+
+	void SceneManager::setActive(uint8_t index)
+	{
+		m_activeIndex = index;
+	}
+
+	std::shared_ptr<Scene> SceneManager::get()
+	{
+		return m_scenes.at(m_activeIndex);
+	}
+
+	std::shared_ptr<SceneManager> SceneManager::Create()
+	{
+		return std::make_shared<SceneManager>();
 	}
 }

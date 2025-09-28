@@ -1,10 +1,12 @@
 #include "level1.h"
 
+level1::level1(std::string level)
+	:	Scene(level)
+{
+}
+
 void level1::load()
 {
-	Simply2D::assetDatabase().load(Simply2D::AssetType::SCENE, "scenes/level1/Level1.json");
-
-	generateTileLayers(Simply2D::assetDatabase().get("scenes/level1/Level1.json"));
 }
 
 void level1::update()
@@ -21,9 +23,6 @@ void level1::render()
 		int swidth = 0, sheight = 0;
 		Simply2D::gfx().textureSize(SURFACE, swidth, sheight);
 
-		//calls.push_back(
-		//	{ layer->texture(), {0, 0, twidth, theight}, {0, 0, swidth, sheight} } 
-		//);
 		Simply2D::gfx().draw(
 			{
 				.target = SURFACE,

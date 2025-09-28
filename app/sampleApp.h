@@ -16,20 +16,8 @@ public:
 	void render() override;
 
 private:
-	std::unordered_map<std::string, Simply2D::AssetType> m_assets = {
-		{"images/a.png", Simply2D::AssetType::IMAGE},
-		{"images/b.png", Simply2D::AssetType::IMAGE},
-		{"images/tileset1.bmp", Simply2D::AssetType::IMAGE},
-		{"images/tileset2.png", Simply2D::AssetType::IMAGE},
-		{"images/tileset3.png", Simply2D::AssetType::IMAGE}
+	std::unordered_map<std::string, Simply2D::AssetType> m_assets = 
+	{
+		{"scenes/level1/Level1.json", Simply2D::AssetType::SCENE},
 	};
-
-	Handle<Simply2D::Texture> m_texture1;
-	Handle<Simply2D::Texture> m_texture2;
-	Handle<Simply2D::Texture> m_texture3;
-
-	Simply2D::TileSet* m_set{};
-	Simply2D::TileSet* m_set1{};
-
-	level1 m_level;
 };
