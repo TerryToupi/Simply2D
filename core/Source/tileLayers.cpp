@@ -32,6 +32,7 @@ namespace Simply2D
 
 			m_calls.push_back({
 					.texture = tileset,
+					.blend = Blend::BLEND,
 					.src = {tile.x, tile.y, tileWidth, tileHeight},
 					.dist = {x * tileWidth, y * tileHeight, tileWidth, tileHeight}
 				});
@@ -44,7 +45,7 @@ namespace Simply2D
 
 		Application::GetInstance().GetRenderer()->draw({ 
 			.target = m_texture, 
-			.loadOp = LoadOp::CLEAR, 
+			.loadOp = LoadOp::LOAD, 
 			.storeOp = StoreOp::STORE 
 		}, calls);
 	}

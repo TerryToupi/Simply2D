@@ -92,11 +92,6 @@ namespace Simply2D
             return;
         }
         
-        if (desc.loadOp == LoadOp::LOAD)
-        {
-            if (!SDL_SetRenderDrawBlendMode(m_rendererHandle, SDL_BLENDMODE_BLEND))
-                SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed setting blend mode : %s", SDL_GetError());
-        }
         
 		for (const auto& call : calls)
 		{
@@ -111,12 +106,26 @@ namespace Simply2D
 		
 			SDL_Texture* texture = getTexture(call.texture);
 			assert(texture);
+
+			SDL_BlendMode mode; 
+			switch (call.blend)
+			{
+			case Blend::BLEND:
+				mode = SDL_BLENDMODE_BLEND;
+				break;
+			case Blend::ADD:
+				mode = SDL_BLENDMODE_ADD;
+				break;
+			case Blend::MOD: 
+				mode = SDL_BLENDMODE_MOD;
+				break;
+			case Blend::NONE:
+				mode = SDL_BLENDMODE_NONE;
+				break;
+			}
             
-            if (desc.loadOp == LoadOp::LOAD)
-            {
-                if (!SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND))
-                    SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed: %s", SDL_GetError());
-            }
+			if (!SDL_SetTextureBlendMode(texture, mode))
+				SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed: %s", SDL_GetError());
             
 			if (!SDL_RenderTexture(m_rendererHandle, texture, src.data(), dist.data()))
 				SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed: %s", SDL_GetError());

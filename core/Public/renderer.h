@@ -19,9 +19,18 @@ namespace Simply2D
 	};
 
 	// Drawing
+	enum class Blend : unsigned int
+	{
+		BLEND = 0,
+		ADD = 1,
+		MOD = 2,
+		NONE = 3
+	};
+
 	struct DrawCall
 	{
 		Handle<Texture> texture;
+		Blend blend = Blend::BLEND;
 		int src[4] = { 0, 0, 0, 0 };
 		int dist[4] = { 0, 0, 0, 0 };
 	};

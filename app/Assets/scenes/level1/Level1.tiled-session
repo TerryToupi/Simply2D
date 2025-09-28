@@ -12,10 +12,10 @@
         },
         "Level1.json": {
             "scale": 1.5,
-            "selectedLayer": 0,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 676,
-                "y": 272.6666666666667
+                "x": 532.6666666666665,
+                "y": 356
             }
         },
         "Level1.json#tileset2": {

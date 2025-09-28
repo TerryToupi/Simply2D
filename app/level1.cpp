@@ -32,7 +32,7 @@ void level1::render()
 				.clearColor = {0, 0, 0, 255}
 			}, 
 			{
-				{ layer->texture(), {0, 0, twidth, theight}, {0, 0, swidth, sheight} } 
+				{ layer->texture(), Simply2D::Blend::BLEND, {0, 0, twidth, theight}, {0, 0, swidth, sheight} } 
 			});
 	}
 }
