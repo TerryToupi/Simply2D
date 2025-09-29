@@ -8,6 +8,7 @@ level1::level1(std::string level)
 
 void level1::load()
 {
+	Simply2D::Sprite s1 = createSprite("antonis");
 }
 
 void level1::update(float ts)
@@ -18,6 +19,9 @@ void level1::update(float ts)
 		std::cout << "[Time step] " << m_counter1 << std::endl;
 		m_counter1 = 0.0f;
 	}
+
+	Simply2D::Sprite s1 = getSprite("antonis");
+	auto& s1Name = s1.getComponent<Simply2D::Tag>();
 }
 
 void level1::render()

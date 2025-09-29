@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(CoreLibraries)
-
-add_library(${PROJECT_NAME} INTERFACE)
-add_library(Core::Import ALIAS ${PROJECT_NAME})
+project(ImportLibraries)
 
 CPMAddPackage(
     NAME SDL 
@@ -55,12 +52,26 @@ CPMAddPackage(
     GIT_TAG master
 )
 
-target_link_libraries(${PROJECT_NAME}
+# Libraries needed only by the engine
+add_library(CoreImport INTERFACE)
+add_library(Core::Import ALIAS CoreImport) 
+
+target_link_libraries(CoreImport
     INTERFACE
         SDL3::SDL3
         SDL3_mixer::SDL3_mixer
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
+        nlohmann_json
+        EnTT
+)
+
+# Libraries needed by the engine and the application
+add_library(GlobalImport INTERFACE)
+add_library(Global::Import ALIAS GlobalImport) 
+
+target_link_libraries(GlobalImport
+    INTERFACE
         nlohmann_json
         EnTT
 )

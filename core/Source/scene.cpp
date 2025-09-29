@@ -2,6 +2,7 @@
 
 #include <app.h>
 #include <scene.h>
+#include <sprites.h>
 
 #include <Source/assetDataBase.h>
 
@@ -62,6 +63,28 @@ namespace Simply2D
 
 			m_layers.at(i)->generateTexture();
 		}
+	}
+
+	Sprite Scene::createSprite(std::string name)
+	{
+		Sprite sprite = { m_spritesRegistry.create(), this };
+		auto& tag = sprite.addComponent<Tag>();
+		tag.tag = name;
+
+		return sprite;
+	}
+
+	Sprite Scene::getSprite(std::string_view name)
+	{
+		auto view = m_spritesRegistry.view<Tag>();
+		for (auto entity : view)
+		{
+			const auto& tag = view.get<Tag>(entity);
+			if (tag.tag == name)
+				return { entity, this };
+		}
+
+		return {};
 	}
 
 	void SceneManager::setActive(uint8_t index)

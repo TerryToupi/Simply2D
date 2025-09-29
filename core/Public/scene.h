@@ -4,22 +4,36 @@
 #include <tileSet.h>
 #include <tileLayers.h>
 
+#include <entt/entt.hpp>
+
 namespace Simply2D
 {
+	class Sprite;
+
 	class Scene
 	{
 	public:
 		Scene(std::string level);
 		virtual ~Scene() = default;
 
+	public:
+		// Scripting functions
 		virtual void load()				{}
 		virtual void update(float ts)	{} 
 		virtual void render()			{}
 		virtual void unload()			{}
 
+	public:
+		// API functions
+		Sprite createSprite(std::string name);
+		Sprite getSprite(std::string_view name);
+
 	protected:
+		entt::registry m_spritesRegistry;
 		std::shared_ptr<TileSet> m_tileset;
 		std::vector<std::shared_ptr<TileLayer>> m_layers;
+
+		friend class Sprite;
 	};
 
 	class SceneManager

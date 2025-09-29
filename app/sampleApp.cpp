@@ -7,6 +7,8 @@ void SampleApp::start()
 
 	Simply2D::sceneManager().pushScene<level1>("scenes/level1/Level1.json");
 	Simply2D::sceneManager().setActive(0);
+
+	Simply2D::sceneManager().get()->load();
 }
 
 void SampleApp::update(float ts)

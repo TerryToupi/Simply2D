@@ -9,6 +9,8 @@
 #include <assets.h>
 #include <tileSet.h>
 #include <tileLayers.h>
+#include <components.h>
+#include <sprites.h>
 #include <scene.h>
 #include <app.h>
 
