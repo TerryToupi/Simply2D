@@ -1,4 +1,5 @@
 #include "level1.h"
+#include <iostream>
 
 level1::level1(std::string level)
 	:	Scene(level)
@@ -9,8 +10,14 @@ void level1::load()
 {
 }
 
-void level1::update()
+void level1::update(float ts)
 {
+	m_counter1 += ts;
+	if (m_counter1 >= m_timer1)
+	{
+		std::cout << "[Time step] " << m_counter1 << std::endl;
+		m_counter1 = 0.0f;
+	}
 }
 
 void level1::render()

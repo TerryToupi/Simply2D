@@ -4,6 +4,7 @@
 #include <Source/renderingBackend.h>
 #include <Source/assetDataBase.h>
 #include <Source/mtJobSystem.h>
+#include <Source/gameTime.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_Mixer/SDL_mixer.h>
@@ -43,13 +44,27 @@ namespace Simply2D
 
 	void Application::run()
 	{
+		double oldTime = 0;
+		double currTime = 0;
+		float timeStep = 0;
+
 		RendererImpl* renderer = static_cast<RendererImpl*>(m_renderer.get());
 
+		// initialize all the app layers
 		for (const auto& layer : m_layers)
 			layer->start();
 
+		// setup timer
+		currTime = Clock::getTime();
+		timeStep = currTime - oldTime;
+		oldTime = currTime;
+
 		while (m_running)
 		{
+			currTime = Clock::getTime();
+			timeStep = std::min(0.1f, std::max(0.0001f, (float)(currTime - oldTime)));
+			oldTime = currTime;
+
 			// polling events
 			{
 				SDL_Event event;
@@ -63,7 +78,7 @@ namespace Simply2D
 			// updating layers
 			{
 				for (const auto& layer : m_layers)
-					layer->update();
+					layer->update(timeStep);
 			}
 
 			// rendering

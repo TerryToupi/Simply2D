@@ -12,6 +12,7 @@ class SampleApp : public Simply2D::Layer
 {
 public:
 	void start() override;
+	void update(float ts) override;
 	void destroy() override;
 	void render() override;
 

@@ -9,6 +9,11 @@ void SampleApp::start()
 	Simply2D::sceneManager().setActive(0);
 }
 
+void SampleApp::update(float ts)
+{
+	Simply2D::sceneManager().get()->update(ts);
+}
+
 void SampleApp::destroy()
 {
 }

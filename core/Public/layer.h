@@ -7,12 +7,9 @@ namespace Simply2D
 	public: 
 		virtual ~Layer() = default;
 
-		virtual void start() {}
-		
-		virtual void update() {}
-
-		virtual void render() {}
-
-		virtual void destroy() {}
+		virtual void start()			{}
+		virtual void update(float ts)	{}
+		virtual void render()			{}
+		virtual void destroy()			{}
 	};
 }

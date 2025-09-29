@@ -12,10 +12,10 @@ namespace Simply2D
 		Scene(std::string level);
 		virtual ~Scene() = default;
 
-		virtual void load()		{}
-		virtual void update()	{} 
-		virtual void render()	{}
-		virtual void unload()	{}
+		virtual void load()				{}
+		virtual void update(float ts)	{} 
+		virtual void render()			{}
+		virtual void unload()			{}
 
 	protected:
 		std::shared_ptr<TileSet> m_tileset;
