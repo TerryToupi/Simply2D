@@ -93,6 +93,7 @@ import/sdl_image
 import/sdl_mixer
 import/sdl_ttf
 import/nlohmann_json
+import/entt
 
 # ---- CMAKE generation folder ----
 out/

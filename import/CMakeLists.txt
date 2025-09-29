@@ -49,6 +49,12 @@ CPMAddPackage(
     GIT_TAG develop 
 )
 
+CPMAddPackage(
+    NAME EnTT
+    GIT_REPOSITORY https://github.com/skypjack/entt.git
+    GIT_TAG master
+)
+
 target_link_libraries(${PROJECT_NAME}
     INTERFACE
         SDL3::SDL3
@@ -56,6 +62,7 @@ target_link_libraries(${PROJECT_NAME}
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
         nlohmann_json
+        EnTT
 )
 
 # Organizing all of the imported targets
@@ -74,3 +81,4 @@ organize_target(SDL3_test "import")
 organize_target(tiff "import")
 organize_target(xmp_shared "import")
 organize_target(nlohmann_json "import")
+organize_target(EnTT, "import")
