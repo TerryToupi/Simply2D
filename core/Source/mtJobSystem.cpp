@@ -1,6 +1,7 @@
 #include <pch.h>
+
+#include <mtRingBuffer.h>
 #include <Source/mtJobSystem.h>
-#include <Source/mtRingBuffer.h>
 
 namespace Simply2D
 {

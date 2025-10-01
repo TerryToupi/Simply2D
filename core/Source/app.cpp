@@ -1,4 +1,5 @@
 #include <pch.h>
+
 #include <app.h>
 
 #include <Source/renderingBackend.h>
@@ -17,20 +18,20 @@ namespace Simply2D
 		m_specifications = specs;
 
 		if (!SDL_SetAppMetadata(m_specifications.name.c_str(),
-								m_specifications.version.c_str(),
-								m_specifications.identifier.c_str()))
+			m_specifications.version.c_str(),
+			m_specifications.identifier.c_str()))
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
 
-		if (!SDL_Init(SDL_INIT_VIDEO	| 
-					  SDL_INIT_EVENTS	| 
-					  SDL_INIT_AUDIO	|
-					  SDL_INIT_GAMEPAD))
+		if (!SDL_Init(SDL_INIT_VIDEO |
+			SDL_INIT_EVENTS |
+			SDL_INIT_AUDIO |
+			SDL_INIT_GAMEPAD))
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
 
 		if (!MIX_Init())
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
 
-		if (!TTF_Init()) 
+		if (!TTF_Init())
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
 
 		JobSystem::Initialize();
@@ -50,13 +51,9 @@ namespace Simply2D
 
 		RendererImpl* renderer = static_cast<RendererImpl*>(m_renderer.get());
 
-		// initialize all the app layers
-		for (const auto& layer : m_layers)
-			layer->start();
-
 		// setup timer
 		currTime = Clock::getTime();
-		timeStep = currTime - oldTime;
+		timeStep = std::min(0.1f, std::max(0.0001f, (float)(currTime - oldTime)));
 		oldTime = currTime;
 
 		while (m_running)
@@ -71,7 +68,7 @@ namespace Simply2D
 				while (SDL_PollEvent(&event))
 				{
 					if (event.type == SDL_EVENT_QUIT)
-						stop(); 
+						stop();
 				}
 			}
 
@@ -88,21 +85,23 @@ namespace Simply2D
 					layer->render();
 			}
 			renderer->endFrame();
+
+			// execute main thread jobs after scripting is done
+			// processing for this frame
+			{
+				std::function<void()> job;
+				while (m_mainThreadQueue.pop_front(job))
+					job();
+			}
 		}
 
-		// Destroying Layer memory
-		{
-			for (const auto& layer : m_layers)
-				layer->destroy();
-		}
-	
 		TTF_Quit();
 		MIX_Quit();
 		SDL_Quit();
-	} 
+	}
 
 	void Application::stop()
 	{
 		m_running = false;
-	} 
+	}
 }

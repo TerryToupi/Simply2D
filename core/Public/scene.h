@@ -18,10 +18,9 @@ namespace Simply2D
 
 	public:
 		// Scripting functions
-		virtual void load()				{}
+		virtual void event()			{}
 		virtual void update(float ts)	{} 
 		virtual void render()			{}
-		virtual void unload()			{}
 
 	public:
 		// API functions

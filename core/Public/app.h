@@ -7,6 +7,7 @@
 #include <assets.h>
 #include <renderer.h>
 #include <scene.h>
+#include <mtRingBuffer.h>
 
 namespace Simply2D
 {
@@ -48,7 +49,7 @@ namespace Simply2D
 		requires(std::is_base_of_v<Layer, TLayer>)
 		void pushLayer()
 		{
-			m_layers.push_back(std::make_unique<TLayer>());
+			m_layers.push_back(std::make_shared<TLayer>());
 		}
 
 	private:
@@ -57,6 +58,7 @@ namespace Simply2D
 		Application(const Application& app) = delete;
 		Application& operator=(const Application&) = delete;
 
+	private:
 		bool m_running = false;
 
 		ApplicationSpecifications m_specifications;
@@ -64,6 +66,10 @@ namespace Simply2D
 		std::shared_ptr<AssetDatabase> m_assetDatabase;
 		std::shared_ptr<SceneManager> m_sceneManager;
 
-		std::vector<std::unique_ptr<Layer>> m_layers;
+		std::vector<std::shared_ptr<Layer>> m_layers;
+
+		MTRingQueue<std::function<void()>, 256> m_mainThreadQueue;
+	
+		friend class Layer;
 	};
 }

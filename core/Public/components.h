@@ -4,7 +4,9 @@
 
 namespace Simply2D
 {
-	struct Tag
+	struct Component {};
+
+	struct Tag final : Component
 	{
 		std::string tag;
 
@@ -13,11 +15,4 @@ namespace Simply2D
 		Tag(std::string& tag)
 			:	tag(tag) { }
 	};
-
-	template<typename... Components>
-	struct ComponentGroup
-	{
-	};
-
-	using AllCopmonents = ComponentGroup<Tag>;
 }

@@ -1,5 +1,6 @@
 #include <Simly2D.h>
 #include <sampleApp.h>
+#include <sampleMenu.h>
 
 int main()
 {
@@ -13,7 +14,7 @@ int main()
     specs.identifier = "com.terrytoupi.simply2D.giorgos";
 
     Simply2D::app().create(specs);
-    Simply2D::app().pushLayer<SampleApp>();
+    Simply2D::app().pushLayer<Menu>();
     Simply2D::app().run();
     return 0;
 }

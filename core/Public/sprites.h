@@ -14,13 +14,13 @@ namespace Simply2D
 		Sprite(entt::entity handle, Scene* scene);
 		Sprite(const Sprite& other) = default;
 
-		template<typename TComponent, typename... Args>
+		template<std::derived_from<Component> TComponent, typename... Args>
 		TComponent& addComponent(Args&&... args)
 		{
 			return m_registeredScene->m_spritesRegistry.emplace<TComponent>(m_handle, std::forward<Args>(args)...);
 		}
 
-		template<typename TComponent>
+		template<std::derived_from<Component> TComponent>
 		TComponent& getComponent()
 		{
 			return m_registeredScene->m_spritesRegistry.get<TComponent>(m_handle);

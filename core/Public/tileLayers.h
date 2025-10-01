@@ -23,13 +23,11 @@ namespace Simply2D
 		~TileLayer();
 
 		void putTile(const int id = 0, const int x = 0, const int y = 0);
-		void generateTexture();
 		Handle<Texture> texture();
 
 	private:
 		TileLayerSpecifications m_specs;
 		std::shared_ptr<TileSet> m_tileSet;
-		std::vector<DrawCall> m_calls;
 		Handle<Texture> m_texture;
 	};
 }

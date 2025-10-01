@@ -30,24 +30,21 @@ namespace Simply2D
 			uint16_t tileHeight = m_tileSet->getTileHeight();
 			Handle<Texture> tileset = m_tileSet->texture();
 
-			m_calls.push_back({
-					.texture = tileset,
-					.blend = Blend::BLEND,
-					.src = {tile.x, tile.y, tileWidth, tileHeight},
-					.dist = {x * tileWidth, y * tileHeight, tileWidth, tileHeight}
-				});
+			Application::GetInstance().GetRenderer()->draw({
+				.target = m_texture, 
+				.loadOp = LoadOp::LOAD, 
+				.storeOp = StoreOp::STORE
+				},
+				{
+					{
+						.texture = tileset,
+						.blend = Blend::BLEND,
+						.src = {tile.x, tile.y, tileWidth, tileHeight},
+						.dist = {x * tileWidth, y * tileHeight, tileWidth, tileHeight}
+					}
+				}
+				);
 		}
-	}
-
-	void TileLayer::generateTexture()
-	{
-		Span<DrawCall> calls{ m_calls.data(), m_calls.size() };
-
-		Application::GetInstance().GetRenderer()->draw({ 
-			.target = m_texture, 
-			.loadOp = LoadOp::LOAD, 
-			.storeOp = StoreOp::STORE 
-		}, calls);
 	}
 
 	Handle<Texture> TileLayer::texture()

@@ -1,27 +1,24 @@
-#include "level1.h"
+#include <level1.h>
 #include <iostream>
 
 level1::level1(std::string level)
 	:	Scene(level)
 {
+	Simply2D::Sprite s1 = createSprite("antonis");
+	Simply2D::Sprite s2 = createSprite("kwstas");
+	Simply2D::Sprite s3 = createSprite("giwrgis");
 }
 
-void level1::load()
+level1::~level1()
 {
-	Simply2D::Sprite s1 = createSprite("antonis");
+}
+
+void level1::event()
+{
 }
 
 void level1::update(float ts)
 {
-	m_counter1 += ts;
-	if (m_counter1 >= m_timer1)
-	{
-		std::cout << "[Time step] " << m_counter1 << std::endl;
-		m_counter1 = 0.0f;
-	}
-
-	Simply2D::Sprite s1 = getSprite("antonis");
-	auto& s1Name = s1.getComponent<Simply2D::Tag>();
 }
 
 void level1::render()
@@ -47,6 +44,3 @@ void level1::render()
 	}
 }
 
-void level1::unload()
-{
-}

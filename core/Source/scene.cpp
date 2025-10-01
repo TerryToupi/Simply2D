@@ -15,6 +15,9 @@ namespace Simply2D
 	{
 		AssetDatabaseImpl* assets = (AssetDatabaseImpl*)(Application::GetInstance().GetAssetDatabase().get());
 
+		// assuring that the scene is loaded
+		assets->load(AssetType::SCENE, level);
+
 		json* config = assets->getSerializable(Handle<Serializable>(assets->get(level).handle));
 		
 		// Generating the tileset
@@ -60,8 +63,6 @@ namespace Simply2D
 					m_layers.at(i)->putTile(tileID, w, h);
 				}
 			}
-
-			m_layers.at(i)->generateTexture();
 		}
 	}
 
