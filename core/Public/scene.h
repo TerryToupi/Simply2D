@@ -9,31 +9,7 @@
 namespace Simply2D
 {
 	class Sprite;
-
-	class Scene
-	{
-	public:
-		Scene(std::string level);
-		virtual ~Scene() = default;
-
-	public:
-		// Scripting functions
-		virtual void event()			{}
-		virtual void update(float ts)	{} 
-		virtual void render()			{}
-
-	public:
-		// API functions
-		Sprite createSprite(std::string name);
-		Sprite getSprite(std::string_view name);
-
-	protected:
-		entt::registry m_spritesRegistry;
-		std::shared_ptr<TileSet> m_tileset;
-		std::vector<std::shared_ptr<TileLayer>> m_layers;
-
-		friend class Sprite;
-	};
+	class Scene;
 
 	class SceneManager
 	{
@@ -41,23 +17,60 @@ namespace Simply2D
 		SceneManager() = default;
 		~SceneManager() = default;
 
-		template<typename TScene>
-		requires(std::is_base_of_v<Scene, TScene>)
-		void pushScene(std::string level)
+		void event();
+		void update(float ts);
+		void render();
+		
+		template<std::derived_from<Scene> TScene>
+		void push(std::string level)
 		{
-			m_scenes.push_back(std::make_shared<TScene>(level));
-		}
-
-		void setActive(uint8_t index = 0);
-
-		std::shared_ptr<Scene> get();
+			m_scenes.push_back(std::make_shared<TScene>(level, this));
+		} 
 
 	private:
-		static std::shared_ptr<SceneManager> Create();
-
 		uint8_t m_activeIndex = 0;
 		std::vector<std::shared_ptr<Scene>> m_scenes;
 
-		friend class Application;
+		friend class Scene;
+	};
+
+	class Scene
+	{
+	public:
+		Scene(std::string level, SceneManager* manager);
+		virtual ~Scene() = default;
+
+		// Scripting functions
+		virtual void event()			{}
+		virtual void update(float ts)	{} 
+		virtual void render()			{}
+
+		template<typename TScene>
+		requires(std::is_base_of_v<Scene, TScene>)
+		void transition()
+		{
+			for (unsigned i = 0; i < m_manager->m_scenes.size(); ++i)
+			{
+				if (auto casted = dynamic_cast<TScene*>(m_manager->m_scenes.at(i).get()))
+				{
+					m_manager->m_activeIndex = i;
+					return;
+				}
+			}
+		}
+
+	public:
+		// API functions
+		Sprite createSprite(std::string name);
+		Sprite getSprite(std::string_view name);
+
+	protected:
+		SceneManager* m_manager;
+		entt::registry m_spritesRegistry;
+		std::shared_ptr<TileSet> m_tileset;
+		std::vector<std::shared_ptr<TileLayer>> m_layers;
+
+		friend class Sprite;
+		friend class SceneManager;
 	};
 }

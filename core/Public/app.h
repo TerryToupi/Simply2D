@@ -36,10 +36,6 @@ namespace Simply2D
 		{
 			return m_assetDatabase;
 		}
-		std::shared_ptr<SceneManager> GetSceneManager()
-		{
-			return m_sceneManager;
-		}
 
 		void create(const ApplicationSpecifications& specs = ApplicationSpecifications());
 		void run();
@@ -64,7 +60,6 @@ namespace Simply2D
 		ApplicationSpecifications m_specifications;
 		std::shared_ptr<Renderer> m_renderer;
 		std::shared_ptr<AssetDatabase> m_assetDatabase;
-		std::shared_ptr<SceneManager> m_sceneManager;
 
 		std::vector<std::shared_ptr<Layer>> m_layers;
 

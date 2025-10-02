@@ -1,8 +1,9 @@
 #pragma once
 
-#include <Simly2D.h>
+#include <Simply2D.h>
 
 #include <level1.h>
+#include <level2.h>
 
 class SampleApp final : public Simply2D::Layer
 {
@@ -15,6 +16,5 @@ public:
 	void render() override;
 
 private:
-	const float m_timer1 = 3.0f;
-	float m_counter1 = 0.0f;
+	Simply2D::SceneManager m_sceneManager;
 };

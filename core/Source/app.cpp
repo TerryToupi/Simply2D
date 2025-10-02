@@ -38,7 +38,6 @@ namespace Simply2D
 
 		m_renderer = Renderer::Create(specs.renderer);
 		m_assetDatabase = AssetDatabase::Create(specs.assets);
-		m_sceneManager = SceneManager::Create();
 
 		m_running = true;
 	}

@@ -1,4 +1,6 @@
-#include<Simly2D.h>
+#pragma once
+
+#include<Simply2D.h>
 
 class Menu final : public Simply2D::Layer
 {

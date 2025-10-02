@@ -1,27 +1,33 @@
 #include <level1.h>
-#include <iostream>
+#include <level2.h>
 
-level1::level1(std::string level)
-	:	Scene(level)
+Level1::Level1(std::string level, Simply2D::SceneManager* manager)
+	:	Scene(level, manager)
 {
 	Simply2D::Sprite s1 = createSprite("antonis");
 	Simply2D::Sprite s2 = createSprite("kwstas");
 	Simply2D::Sprite s3 = createSprite("giwrgis");
 }
 
-level1::~level1()
+Level1::~Level1()
 {
 }
 
-void level1::event()
+void Level1::event()
 {
 }
 
-void level1::update(float ts)
+void Level1::update(float ts)
 {
+	m_counter1 += ts;
+	if (m_counter1 >= m_timer1)
+	{
+		transition<Level2>();
+		m_counter1 = 0.0f;
+	}
 }
 
-void level1::render()
+void Level1::render()
 {
 	for (const auto& layer : m_layers)
 	{

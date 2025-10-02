@@ -30,9 +30,4 @@ namespace Simply2D
 	{
 		return *Simply2D::Application::GetInstance().GetAssetDatabase();
 	}
-
-	static inline Simply2D::SceneManager& sceneManager()
-	{
-		return *Simply2D::Application::GetInstance().GetSceneManager();
-	}
 }

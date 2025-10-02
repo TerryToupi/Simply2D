@@ -1,4 +1,4 @@
-#include <Simly2D.h>
+#include <Simply2D.h>
 #include <sampleApp.h>
 #include <sampleMenu.h>
 

@@ -11,7 +11,8 @@ using json = nlohmann::json;
 
 namespace Simply2D
 {
-	Scene::Scene(std::string level)
+	Scene::Scene(std::string level, SceneManager* manager)
+		:	m_manager(manager)
 	{
 		AssetDatabaseImpl* assets = (AssetDatabaseImpl*)(Application::GetInstance().GetAssetDatabase().get());
 
@@ -87,19 +88,19 @@ namespace Simply2D
 
 		return {};
 	}
-
-	void SceneManager::setActive(uint8_t index)
+ 
+	void SceneManager::event()
 	{
-		m_activeIndex = index;
+		m_scenes.at(m_activeIndex)->event();
 	}
 
-	std::shared_ptr<Scene> SceneManager::get()
+	void SceneManager::update(float ts)
 	{
-		return m_scenes.at(m_activeIndex);
+		m_scenes.at(m_activeIndex)->update(ts);
 	}
 
-	std::shared_ptr<SceneManager> SceneManager::Create()
+	void SceneManager::render()
 	{
-		return std::make_shared<SceneManager>();
+		m_scenes.at(m_activeIndex)->render();
 	}
 }
