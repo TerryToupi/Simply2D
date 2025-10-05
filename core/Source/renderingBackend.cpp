@@ -91,8 +91,7 @@ namespace Simply2D
             
             return;
         }
-        
-        
+
 		for (const auto& call : calls)
 		{
 			std::array<SDL_FRect, 1> src = { 
@@ -107,24 +106,19 @@ namespace Simply2D
 			SDL_Texture* texture = getTexture(call.texture);
 			assert(texture);
 
-			SDL_BlendMode mode; 
+			SDL_BlendMode mode = SDL_BLENDMODE_BLEND;
 			switch (call.blend)
 			{
-			case Blend::BLEND:
-				mode = SDL_BLENDMODE_BLEND;
-				break;
-			case Blend::ADD:
-				mode = SDL_BLENDMODE_ADD;
-				break;
-			case Blend::MOD: 
-				mode = SDL_BLENDMODE_MOD;
-				break;
-			case Blend::NONE:
-				mode = SDL_BLENDMODE_NONE;
-				break;
+				case Blend::BLEND:  mode = SDL_BLENDMODE_BLEND; break;
+				case Blend::ADD:	mode = SDL_BLENDMODE_ADD;	break;
+				case Blend::MOD:	mode = SDL_BLENDMODE_MOD;	break;
+				case Blend::NONE:	mode = SDL_BLENDMODE_NONE;	break;
 			}
             
 			if (!SDL_SetTextureBlendMode(texture, mode))
+				SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed: %s", SDL_GetError());
+
+			if (!SDL_SetTextureAlphaMod(texture, call.alpha))
 				SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Failed: %s", SDL_GetError());
             
 			if (!SDL_RenderTexture(m_rendererHandle, texture, src.data(), dist.data()))

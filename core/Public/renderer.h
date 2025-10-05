@@ -31,6 +31,7 @@ namespace Simply2D
 	{
 		Handle<Texture> texture;
 		Blend blend = Blend::BLEND;
+		uint8_t alpha = 255;
 		int src[4] = { 0, 0, 0, 0 };
 		int dist[4] = { 0, 0, 0, 0 };
 	};
@@ -52,7 +53,7 @@ namespace Simply2D
 		Handle<Texture> target = SURFACE;
 		LoadOp loadOp = LoadOp::CLEAR;
 		StoreOp storeOp = StoreOp::STORE;
-		int clearColor[4] = { 0, 0, 0, 255 };
+		uint8_t clearColor[4] = { 0, 0, 0, 255 };
 	};
 
 	class Renderer

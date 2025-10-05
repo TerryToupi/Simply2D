@@ -71,6 +71,8 @@ namespace Simply2D
 	{
 		Sprite sprite = { m_spritesRegistry.create(), this };
 		auto& tag = sprite.addComponent<Tag>();
+		auto& box = sprite.addComponent<BoundingBox>();
+
 		tag.tag = name;
 
 		return sprite;

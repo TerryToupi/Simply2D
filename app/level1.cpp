@@ -22,9 +22,10 @@ void Level1::update(float ts)
 	m_counter1 += ts;
 	if (m_counter1 >= m_timer1)
 	{
-		transition<Level2>();
 		m_counter1 = 0.0f;
 	}
+
+	Simply2D::Sprite antonis = getSprite("antonis");
 }
 
 void Level1::render()
@@ -45,7 +46,7 @@ void Level1::render()
 				.clearColor = {0, 0, 0, 255}
 			}, 
 			{
-				{ layer->texture(), Simply2D::Blend::BLEND, {0, 0, twidth, theight}, {0, 0, swidth, sheight} } 
+				{ layer->texture(), Simply2D::Blend::BLEND, 255, {0, 0, twidth, theight}, {0, 0, swidth, sheight} } 
 			});
 	}
 }
