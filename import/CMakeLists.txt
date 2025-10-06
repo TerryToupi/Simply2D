@@ -46,12 +46,6 @@ CPMAddPackage(
     GIT_TAG develop 
 )
 
-CPMAddPackage(
-    NAME EnTT
-    GIT_REPOSITORY https://github.com/skypjack/entt.git
-    GIT_TAG master
-)
-
 # Libraries needed only by the engine
 add_library(CoreImport INTERFACE)
 add_library(Core::Import ALIAS CoreImport) 
@@ -63,7 +57,6 @@ target_link_libraries(CoreImport
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
         nlohmann_json
-        EnTT
 )
 
 # Libraries needed by the engine and the application
@@ -73,7 +66,6 @@ add_library(Global::Import ALIAS GlobalImport)
 target_link_libraries(GlobalImport
     INTERFACE
         nlohmann_json
-        EnTT
 )
 
 # Organizing all of the imported targets
@@ -92,4 +84,3 @@ organize_target(SDL3_test "Import")
 organize_target(tiff "Import")
 organize_target(xmp_shared "Import")
 organize_target(nlohmann_json "Import")
-organize_target(EnTT, "Import")

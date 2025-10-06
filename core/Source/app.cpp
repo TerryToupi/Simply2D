@@ -6,6 +6,7 @@
 #include <Source/assetDataBase.h>
 #include <Source/mtJobSystem.h>
 #include <Source/gameTime.h>
+#include <Source/animatorManager.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_Mixer/SDL_mixer.h>
@@ -70,9 +71,13 @@ namespace Simply2D
 						stop();
 				}
 			}
-
+			
 			// updating layers
 			{
+				// updating the Animations
+				AnimatorManager::GetInstance().Progress(currTime);
+				
+				// update the scripting
 				for (const auto& layer : m_layers)
 					layer->update(timeStep);
 			}

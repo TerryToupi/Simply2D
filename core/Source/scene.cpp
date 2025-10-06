@@ -67,28 +67,15 @@ namespace Simply2D
 		}
 	}
 
-	Sprite Scene::createSprite(std::string name)
+	Sprite* Scene::createSprite(std::string name)
 	{
-		Sprite sprite = { m_spritesRegistry.create(), this };
-		auto& tag = sprite.addComponent<Tag>();
-		auto& box = sprite.addComponent<BoundingBox>();
-
-		tag.tag = name;
-
-		return sprite;
+		m_sprites[name] = new Sprite();
+		return m_sprites[name];
 	}
 
-	Sprite Scene::getSprite(std::string_view name)
+	Sprite* Scene::getSprite(std::string name)
 	{
-		auto view = m_spritesRegistry.view<Tag>();
-		for (auto entity : view)
-		{
-			const auto& tag = view.get<Tag>(entity);
-			if (tag.tag == name)
-				return { entity, this };
-		}
-
-		return {};
+		return m_sprites[name];
 	}
  
 	void SceneManager::event()

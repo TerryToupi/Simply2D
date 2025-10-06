@@ -4,10 +4,10 @@
 Level1::Level1(std::string level, Simply2D::SceneManager* manager)
 	:	Scene(level, manager)
 {
-	Simply2D::Sprite s1 = createSprite("antonis");
-	Simply2D::Sprite s2 = createSprite("kwstas");
-	Simply2D::Sprite s3 = createSprite("giwrgis");
-}
+	Simply2D::Sprite* s1 = createSprite("antonis");
+
+	m_animator.Start(&m_anim1, 0.0f, 0);
+ }
 
 Level1::~Level1()
 {
@@ -25,7 +25,7 @@ void Level1::update(float ts)
 		m_counter1 = 0.0f;
 	}
 
-	Simply2D::Sprite antonis = getSprite("antonis");
+	Simply2D::Sprite* antonis = getSprite("antonis");
 }
 
 void Level1::render()

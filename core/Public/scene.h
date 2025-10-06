@@ -4,7 +4,7 @@
 #include <tileSet.h>
 #include <tileLayers.h>
 
-#include <entt/entt.hpp>
+#include <unordered_map>
 
 namespace Simply2D
 {
@@ -61,14 +61,15 @@ namespace Simply2D
 
 	public:
 		// API functions
-		Sprite createSprite(std::string name);
-		Sprite getSprite(std::string_view name);
+		Sprite* createSprite(std::string name);
+		Sprite* getSprite(std::string name);
 
 	protected:
-		SceneManager* m_manager;
-		entt::registry m_spritesRegistry;
-		std::shared_ptr<TileSet> m_tileset;
+		SceneManager*							m_manager;
+		std::shared_ptr<TileSet>				m_tileset;
 		std::vector<std::shared_ptr<TileLayer>> m_layers;
+		
+		std::unordered_map<std::string, Sprite*> m_sprites;
 
 		friend class Sprite;
 		friend class SceneManager;
