@@ -52,3 +52,9 @@ macro(get_all_targets _result _root_dir)
         endif()
     endforeach()
 endmacro()
+
+# Decoy (stub) implementation for setup_target_libs
+function(setup_target_libs TARGET_NAME)
+    message(STATUS "Called setup_target_libs for target: ${TARGET_NAME}")
+    # No-op: This is a placeholder to satisfy CMake
+endfunction()

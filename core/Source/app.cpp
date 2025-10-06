@@ -7,6 +7,7 @@
 #include <Source/mtJobSystem.h>
 #include <Source/gameTime.h>
 #include <Source/animatorManager.h>
+#include <Source/memoryAllocator.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_Mixer/SDL_mixer.h>
@@ -40,6 +41,16 @@ namespace Simply2D
 		m_renderer = Renderer::Create(specs.renderer);
 		m_assetDatabase = AssetDatabase::Create(specs.assets);
 
+		MemoryAllocator::GetInstance().SetCapacity(512 * 1024, 512 * 1024);
+
+		struct kappa 
+		{
+			int a, b, c, d, e;
+		};
+
+		auto alloc1 = MemoryAllocator::Global<kappa>();
+		auto alloc2 = MemoryAllocator::Global<kappa>();
+		
 		m_running = true;
 	}
 
@@ -97,6 +108,8 @@ namespace Simply2D
 				while (m_mainThreadQueue.pop_front(job))
 					job();
 			}
+
+			MemoryAllocator::GetInstance().ResetFrameData();
 		}
 
 		TTF_Quit();
