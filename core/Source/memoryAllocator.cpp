@@ -2,16 +2,21 @@
 
 #include <Source/memoryAllocator.h>
 
-MemoryAllocator MemoryAllocator::s_instance;
+Allocator Allocator::s_instance;
 
-void MemoryAllocator::SetCapacity(size_t globalCapacity, size_t frameCapacity)
+void Allocator::SetRegionsCapacity(size_t globalCapacity, size_t frameCapacity)
 {
-	if (m_frameAllocator.has_value() || m_globalAllocator.has_value())
+	if (m_frameAllocator || m_globalAllocator)
 		return;
 
-	m_globalAllocator.emplace(Allocator(globalCapacity));
+	m_globalAllocator.emplace(OffsetAllocator::Allocator(globalCapacity));
 	m_globalData = operator new(globalCapacity);
 
-	m_frameAllocator.emplace(Allocator(frameCapacity));
+	m_frameAllocator.emplace(OffsetAllocator::Allocator(frameCapacity));
 	m_frameData = operator new(frameCapacity);
+}
+
+void Allocator::ResetFrameRegion()
+{
+	GetInstance().GetFrameAllocator().reset();
 }

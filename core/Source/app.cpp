@@ -41,16 +41,26 @@ namespace Simply2D
 		m_renderer = Renderer::Create(specs.renderer);
 		m_assetDatabase = AssetDatabase::Create(specs.assets);
 
-		MemoryAllocator::GetInstance().SetCapacity(512 * 1024, 512 * 1024);
+		Allocator::GetInstance().SetRegionsCapacity(512 * 1024, 512 * 1024);
 
-		struct kappa 
+		class kappa
 		{
-			int a, b, c, d, e;
+		public:
+			kappa(int a = 13, int b = 14, int c = 23, int d = 89)
+				: a(a), b(b), c(c), d(d)
+			{
+			}
+
+			int a = 0, b = 0, c = 0, d = 0, e = 9, f = 0, g = 3;
 		};
 
-		auto alloc1 = MemoryAllocator::Global<kappa>();
-		auto alloc2 = MemoryAllocator::Global<kappa>();
+		Global<kappa> alloc1 = Allocator::Global<kappa>(1, 1);
+		Global<kappa> alloc2 = Allocator::Global<kappa>(11,11,11,11);
+
+		Allocator::Remove(alloc1);
 		
+		alloc1->g = 0;
+
 		m_running = true;
 	}
 
@@ -108,8 +118,8 @@ namespace Simply2D
 				while (m_mainThreadQueue.pop_front(job))
 					job();
 			}
-
-			MemoryAllocator::GetInstance().ResetFrameData();
+			
+			Allocator::ResetFrameRegion();
 		}
 
 		TTF_Quit();

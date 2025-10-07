@@ -4,58 +4,77 @@
 
 #include <Source/offsetAllocator.h>
 
-using namespace OffsetAllocator;
-
 template<typename Ttype>
-struct MemoryAllocation
+struct Global
 {
-	Allocation allocation;
-	Ttype* ptr{};
+	OffsetAllocator::Allocation alloc;
+	Ttype* ptr;
+
+	// Overload the -> operator
+	Ttype* operator->() { return ptr; }
 };
 
-class MemoryAllocator
+template<typename Ttype>
+struct Frame
+{
+	Ttype* ptr;
+
+	// Overload the -> operator
+	Ttype* operator->() { return ptr; }
+};
+
+class Allocator
 {
 public:
-	MemoryAllocator() = default;
-	MemoryAllocator(const MemoryAllocator& other) = delete;
-	MemoryAllocator(MemoryAllocator&& other) = delete;
+	Allocator() = default;
+	Allocator(const Allocator& other) = delete;
+	Allocator(Allocator&& other) = delete;
 
-	void SetCapacity(size_t globalCapacity, size_t frameCapacity);
-
-	auto GetGlobalAllocator() -> Allocator& { return m_globalAllocator.value(); }
-	auto GetFrameAllocator() -> Allocator& { return m_frameAllocator.value(); }
+	auto GetGlobalAllocator() -> OffsetAllocator::Allocator& { return m_globalAllocator.value(); }
+	auto GetFrameAllocator() -> OffsetAllocator::Allocator& { return m_frameAllocator.value(); }
 
 	auto GetGlobalData() -> void* { return m_globalData; }
 	auto GetFrameData() -> void* { return m_frameData; }
 
-	void ResetFrameData() { m_frameAllocator.reset(); }
+	static auto GetInstance() -> Allocator& { return s_instance; }
+	static auto GetInstanceConst() -> const Allocator& { return s_instance; }
 
-	static auto GetInstance() -> MemoryAllocator& { return s_instance; }
-	static auto GetInstanceConst() -> const MemoryAllocator& { return s_instance; }
-	
+	void SetRegionsCapacity(size_t globalCapacity, size_t frameCapacity);
+	static void ResetFrameRegion();
+
 	template<typename Ttype>
-	static MemoryAllocation<Ttype> Global()
+	static void Remove(Global<Ttype>& ptr)
 	{
-		Allocation alloc = GetInstance().GetGlobalAllocator().allocate(sizeof(Ttype));
-		Ttype* ptr = (Ttype*)((char*)GetInstance().GetGlobalData() + alloc.offset);
-		return {alloc, ptr};
+		if (ptr.ptr)
+			ptr.ptr->~Ttype();
+
+		GetInstance().GetGlobalAllocator().free(ptr.alloc);
+		ptr.ptr = nullptr;
 	}
 
-	template<typename Ttype>
-	static MemoryAllocation<Ttype> Frame()
+	template<typename Ttype, typename... Args>
+	static Global<Ttype> Global(Args&&... args)
 	{
-		Allocation alloc = GetInstance().GetFrameAllocator().allocate(sizeof(Ttype));
+		OffsetAllocator::Allocation alloc = GetInstance().GetGlobalAllocator().allocate(sizeof(Ttype));
+		Ttype* ptr = (Ttype*)((char*)GetInstance().GetGlobalData() + alloc.offset);
+		return { alloc, new (ptr) Ttype(std::forward<Args>(args)...) };
+	}
+
+	template<typename Ttype, typename... Args>
+	static Frame<Ttype> Frame(Args&&... args)
+	{
+		OffsetAllocator::Allocation alloc = GetInstance().GetFrameAllocator().allocate(sizeof(Ttype));
 		Ttype* ptr = (Ttype*)((char*)GetInstance().GetFrameData() + alloc.offset);
-		return {alloc, ptr};
+		return { new (ptr) Ttype(std::forward<Args>(args)...) };
 	}
 
 private:
 	void* m_globalData{};
-	std::optional<Allocator> m_globalAllocator;
+	std::optional<OffsetAllocator::Allocator> m_globalAllocator;
 
 	void* m_frameData{};
-	std::optional<Allocator> m_frameAllocator;
+	std::optional<OffsetAllocator::Allocator> m_frameAllocator;
 
 private:
-	static MemoryAllocator s_instance;
+	static Allocator s_instance;
 };
