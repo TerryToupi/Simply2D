@@ -10,7 +10,7 @@
 #include <tileSet.h>
 #include <tileLayers.h>
 #include <animator.h>
-#include <sprites.h>
+#include <memoryAllocator.h>
 #include <scene.h>
 #include <app.h>
 

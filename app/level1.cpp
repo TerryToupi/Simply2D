@@ -4,8 +4,6 @@
 Level1::Level1(std::string level, Simply2D::SceneManager* manager)
 	:	Scene(level, manager)
 {
-	Simply2D::Sprite* s1 = createSprite("antonis");
-
 	m_animator.Start(&m_anim1, 0.0f, 0);
  }
 
@@ -24,30 +22,57 @@ void Level1::update(float ts)
 	{
 		m_counter1 = 0.0f;
 	}
-
-	Simply2D::Sprite* antonis = getSprite("antonis");
 }
 
 void Level1::render()
 {
-	for (const auto& layer : m_layers)
+	auto calls = Allocator::FrameAlloc<std::array<Simply2D::DrawCall, 4>>();
+
+	for (unsigned i = 0; i < m_layers.size(); ++i)
 	{
 		int twidth = 0, theight = 0;
-		Simply2D::gfx().textureSize(layer->texture(), twidth, theight);
+		Simply2D::gfx().textureSize(m_layers[i]->texture(), twidth, theight);
 
 		int swidth = 0, sheight = 0;
 		Simply2D::gfx().textureSize(SURFACE, swidth, sheight);
 
-		Simply2D::gfx().draw(
-			{
-				.target = SURFACE,
-				.loadOp = Simply2D::LoadOp::LOAD,
-				.storeOp = Simply2D::StoreOp::STORE,
-				.clearColor = {0, 0, 0, 255}
-			}, 
-			{
-				{ layer->texture(), Simply2D::Blend::BLEND, 255, {0, 0, twidth, theight}, {0, 0, swidth, sheight} } 
-			});
+		(*calls.ptr)[i] = {
+			.texture = m_layers[i]->texture(),
+			.blend = Simply2D::Blend::BLEND,
+			.alpha = 255,
+			.src = { 0, 0, twidth, theight },
+			.dist = { 0, 0, swidth, sheight }
+		};
 	}
+
+	Simply2D::gfx().draw(
+		{
+			.target = SURFACE,
+			.loadOp = Simply2D::LoadOp::LOAD,
+			.storeOp = Simply2D::StoreOp::STORE,
+			.clearColor = {0, 0, 0, 255}
+		},
+		Span(calls->data(), m_layers.size())
+	);
+
+	//for (const auto& layer : m_layers)
+	//{
+	//	int twidth = 0, theight = 0;
+	//	Simply2D::gfx().textureSize(layer->texture(), twidth, theight);
+
+	//	int swidth = 0, sheight = 0;
+	//	Simply2D::gfx().textureSize(SURFACE, swidth, sheight);
+
+	//	Simply2D::gfx().draw(
+	//		{
+	//			.target = SURFACE,
+	//			.loadOp = Simply2D::LoadOp::LOAD,
+	//			.storeOp = Simply2D::StoreOp::STORE,
+	//			.clearColor = {0, 0, 0, 255}
+	//		},
+	//		{
+	//			{ layer->texture(), Simply2D::Blend::BLEND, 255, {0, 0, twidth, theight}, {0, 0, swidth, sheight} }
+	//		});
+	//}
 }
 

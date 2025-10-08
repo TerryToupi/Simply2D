@@ -1,6 +1,6 @@
 #include <pch.h>
 
-#include <Source/memoryAllocator.h>
+#include <memoryAllocator.h>
 
 Allocator Allocator::s_instance;
 
@@ -12,7 +12,7 @@ void Allocator::SetRegionsCapacity(size_t globalCapacity, size_t frameCapacity)
 	m_globalAllocator.emplace(OffsetAllocator::Allocator(globalCapacity));
 	m_globalData = operator new(globalCapacity);
 
-	m_frameAllocator.emplace(OffsetAllocator::Allocator(frameCapacity));
+	m_frameAllocator.emplace(BumpAllocator(frameCapacity));
 	m_frameData = operator new(frameCapacity);
 }
 

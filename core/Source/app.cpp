@@ -1,13 +1,13 @@
 #include <pch.h>
 
 #include <app.h>
+#include <memoryAllocator.h>
 
 #include <Source/renderingBackend.h>
 #include <Source/assetDataBase.h>
 #include <Source/mtJobSystem.h>
 #include <Source/gameTime.h>
 #include <Source/animatorManager.h>
-#include <Source/memoryAllocator.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_Mixer/SDL_mixer.h>
@@ -42,24 +42,6 @@ namespace Simply2D
 		m_assetDatabase = AssetDatabase::Create(specs.assets);
 
 		Allocator::GetInstance().SetRegionsCapacity(512 * 1024, 512 * 1024);
-
-		class kappa
-		{
-		public:
-			kappa(int a = 13, int b = 14, int c = 23, int d = 89)
-				: a(a), b(b), c(c), d(d)
-			{
-			}
-
-			int a = 0, b = 0, c = 0, d = 0, e = 9, f = 0, g = 3;
-		};
-
-		Global<kappa> alloc1 = Allocator::Global<kappa>(1, 1);
-		Global<kappa> alloc2 = Allocator::Global<kappa>(11,11,11,11);
-
-		Allocator::Remove(alloc1);
-		
-		alloc1->g = 0;
 
 		m_running = true;
 	}

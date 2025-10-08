@@ -2,7 +2,6 @@
 
 #include <app.h>
 #include <scene.h>
-#include <sprites.h>
 
 #include <Source/assetDataBase.h>
 
@@ -65,17 +64,6 @@ namespace Simply2D
 				}
 			}
 		}
-	}
-
-	Sprite* Scene::createSprite(std::string name)
-	{
-		m_sprites[name] = new Sprite();
-		return m_sprites[name];
-	}
-
-	Sprite* Scene::getSprite(std::string name)
-	{
-		return m_sprites[name];
 	}
  
 	void SceneManager::event()

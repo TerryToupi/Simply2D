@@ -4,11 +4,8 @@
 #include <tileSet.h>
 #include <tileLayers.h>
 
-#include <unordered_map>
-
 namespace Simply2D
 {
-	class Sprite;
 	class Scene;
 
 	class SceneManager
@@ -59,19 +56,13 @@ namespace Simply2D
 			}
 		}
 
-	public:
-		// API functions
-		Sprite* createSprite(std::string name);
-		Sprite* getSprite(std::string name);
-
 	protected:
-		SceneManager*							m_manager;
 		std::shared_ptr<TileSet>				m_tileset;
 		std::vector<std::shared_ptr<TileLayer>> m_layers;
-		
-		std::unordered_map<std::string, Sprite*> m_sprites;
 
-		friend class Sprite;
+	private:
+		SceneManager* m_manager;
+
 		friend class SceneManager;
 	};
 }
