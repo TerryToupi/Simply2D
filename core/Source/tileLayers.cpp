@@ -5,7 +5,7 @@
 
 namespace Simply2D
 {
-	TileLayer::TileLayer(const TileLayerSpecifications& specs, std::shared_ptr<TileSet> tileSet)
+	TileLayer::TileLayer(const TileLayerSpecifications& specs, TileSet* tileSet)
 		:	m_specs(specs), m_tileSet(tileSet)
 	{
 		m_texture = Application::GetInstance().GetRenderer()->createTexture({

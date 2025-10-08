@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include <assets.h>
 #include <tileSet.h>
 #include <tileLayers.h>
@@ -57,8 +59,9 @@ namespace Simply2D
 		}
 
 	protected:
-		std::shared_ptr<TileSet>				m_tileset;
-		std::vector<std::shared_ptr<TileLayer>> m_layers;
+		std::optional<TileSet>					m_tileset;
+		std::array<std::optional<TileLayer>, 6> m_layers;
+		unsigned								m_layersCount = 0;
 
 	private:
 		SceneManager* m_manager;

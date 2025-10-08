@@ -26,9 +26,12 @@ void Level1::update(float ts)
 
 void Level1::render()
 {
-	auto calls = Allocator::FrameAlloc<std::array<Simply2D::DrawCall, 4>>();
+	auto dummy = Allocator::FrameAlloc<int>();
+	auto calls = Allocator::FrameAlloc<Simply2D::DrawCall>(m_layersCount);
 
-	for (unsigned i = 0; i < m_layers.size(); ++i)
+	(*dummy.ptr) = 12;
+
+	for (unsigned i = 0; i < m_layersCount; ++i)
 	{
 		int twidth = 0, theight = 0;
 		Simply2D::gfx().textureSize(m_layers[i]->texture(), twidth, theight);
@@ -36,7 +39,7 @@ void Level1::render()
 		int swidth = 0, sheight = 0;
 		Simply2D::gfx().textureSize(SURFACE, swidth, sheight);
 
-		(*calls.ptr)[i] = {
+		calls[i] = {
 			.texture = m_layers[i]->texture(),
 			.blend = Simply2D::Blend::BLEND,
 			.alpha = 255,
@@ -52,7 +55,7 @@ void Level1::render()
 			.storeOp = Simply2D::StoreOp::STORE,
 			.clearColor = {0, 0, 0, 255}
 		},
-		Span(calls->data(), m_layers.size())
+		Span(calls.ptr, calls.count)
 	);
 
 	//for (const auto& layer : m_layers)

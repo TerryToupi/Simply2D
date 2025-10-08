@@ -10,18 +10,36 @@ struct Global
 {
 	OffsetAllocator::Allocation alloc;
 	Ttype*						ptr;
+	int							count;
 
-	// Overload the -> operator
 	Ttype* operator->() { return ptr; }
+	Ttype& operator[](std::size_t index) { return ptr[index]; }
+	const Ttype& operator[](std::size_t index) const { return ptr[index]; }
+
+	// Range support
+	Ttype* begin() { return ptr; }
+	Ttype* end() { return ptr + count; }
+
+	const Ttype* begin() const { return ptr; }
+	const Ttype* end()   const { return ptr + count; }
 };
 
 template<typename Ttype>
 struct Frame
 {
-	Ttype* ptr;
+	Ttype*		ptr;
+	int			count;
 
-	// Overload the -> operator
 	Ttype* operator->() { return ptr; }
+	Ttype& operator[](std::size_t index) { return ptr[index]; }
+	const Ttype& operator[](std::size_t index) const { return ptr[index]; }
+
+	// Range support
+	Ttype* begin() { return ptr; }
+	Ttype* end() { return ptr + count; }
+
+	const Ttype* begin() const { return ptr; }
+	const Ttype* end()   const { return ptr + count; }
 };
 
 class Allocator
@@ -67,19 +85,29 @@ public:
 	}
 
 	template<typename Ttype, typename... Args>
-	static Global<Ttype> GlobalAlloc(Args&&... args)
+	static Global<Ttype> GlobalAlloc(int capacity = 1, Args&&... args)
 	{
-		OffsetAllocator::Allocation alloc = GetInstance().GetGlobalAllocator().allocate(sizeof(Ttype));
+		OffsetAllocator::Allocation alloc = GetInstance().GetGlobalAllocator().allocate(sizeof(Ttype) * capacity);
 		Ttype* ptr = (Ttype*)((char*)GetInstance().GetGlobalData() + alloc.offset);
-		return { alloc, new (ptr) Ttype(std::forward<Args>(args)...) };
+		
+		auto* copied(ptr);
+		for (int i = 0; i < capacity; ++i)
+			new (copied + i) Ttype(std::forward<Args>(args)...);
+
+		return { alloc, ptr, capacity };
 	}
 
 	template<typename Ttype, typename... Args>
-	static Frame<Ttype> FrameAlloc(Args&&... args)
+	static Frame<Ttype> FrameAlloc(int capacity = 1, Args&&... args)
 	{
-		size_t alloc = GetInstance().GetFrameAllocator().allocate(sizeof(Ttype));
+		size_t alloc = GetInstance().GetFrameAllocator().allocate(sizeof(Ttype) * capacity, alignof(Ttype));
 		Ttype* ptr = (Ttype*)((char*)GetInstance().GetFrameData() + alloc);
-		return { new (ptr) Ttype(std::forward<Args>(args)...) };
+	
+		auto* copied(ptr);
+		for (int i = 0; i < capacity; ++i)
+			new (copied + i) Ttype(std::forward<Args>(args)...);
+
+		return { ptr, capacity };
 	}
 
 private:

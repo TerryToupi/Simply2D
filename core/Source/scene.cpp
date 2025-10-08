@@ -35,16 +35,14 @@ namespace Simply2D
 			
 			// if it's not load it ... well load it
 			assets->load(AssetType::IMAGE, imagePath);
-
-			m_tileset = std::make_shared<TileSet>(tileWidth, tileHeight, assets->get(imagePath));
+			m_tileset.emplace(tileWidth, tileHeight, assets->get(imagePath));
 		}
 
 		// reserviing the size of the layer vector
-		uint16_t reserveSize = (*config)["layers"].size();
-		m_layers.reserve(reserveSize);
+		m_layersCount = (*config)["layers"].size();
 	
 		// Generating the Layers
-		for (unsigned i = 0; i < reserveSize; ++i)
+		for (unsigned i = 0; i < m_layersCount; ++i)
 		{
 			TileLayerSpecifications specs
 			{
@@ -52,7 +50,7 @@ namespace Simply2D
 				.width = (uint16_t)(*config)["layers"][i]["width"],
 				.height = (uint16_t)(*config)["layers"][i]["height"]
 			};
-			m_layers.push_back(std::make_shared<TileLayer>(specs, m_tileset));
+			m_layers[i].emplace(specs, &m_tileset.value());
 
 			for (unsigned h = 0; h < (*config)["layers"][i]["height"]; ++h)
 			{

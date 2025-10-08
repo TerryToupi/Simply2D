@@ -19,7 +19,7 @@ namespace Simply2D
 	{
 	public:
 		TileLayer() = default;
-		TileLayer(const TileLayerSpecifications& specs, std::shared_ptr<TileSet> tilset);
+		TileLayer(const TileLayerSpecifications& specs, TileSet* tilset);
 		~TileLayer();
 
 		void putTile(const int id = 0, const int x = 0, const int y = 0);
@@ -27,7 +27,7 @@ namespace Simply2D
 
 	private:
 		TileLayerSpecifications m_specs;
-		std::shared_ptr<TileSet> m_tileSet;
+		TileSet* m_tileSet;
 		Handle<Texture> m_texture;
 	};
 }
