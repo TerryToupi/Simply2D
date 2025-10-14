@@ -1,7 +1,7 @@
 #include <level1.h>
 #include <level2.h>
 
-Level1::Level1(std::string level, Simply2D::SceneManager* manager)
+Level1::Level1(Simply2D::Asset level, Simply2D::SceneManager* manager)
 	:	Scene(level, manager)
 {
 	m_animator.Start(&m_anim1, 0.0f, 0);
@@ -57,25 +57,9 @@ void Level1::render()
 		},
 		Span(calls.ptr, calls.count)
 	);
+}
 
-	//for (const auto& layer : m_layers)
-	//{
-	//	int twidth = 0, theight = 0;
-	//	Simply2D::gfx().textureSize(layer->texture(), twidth, theight);
-
-	//	int swidth = 0, sheight = 0;
-	//	Simply2D::gfx().textureSize(SURFACE, swidth, sheight);
-
-	//	Simply2D::gfx().draw(
-	//		{
-	//			.target = SURFACE,
-	//			.loadOp = Simply2D::LoadOp::LOAD,
-	//			.storeOp = Simply2D::StoreOp::STORE,
-	//			.clearColor = {0, 0, 0, 255}
-	//		},
-	//		{
-	//			{ layer->texture(), Simply2D::Blend::BLEND, 255, {0, 0, twidth, theight}, {0, 0, swidth, sheight} }
-	//		});
-	//}
+void Level1::end(float ts)
+{
 }
 

@@ -41,7 +41,7 @@ namespace Simply2D
 		case Simply2D::AssetType::FONT:
 			handle = laodFont(fullPath).pack();
 			break;
-		case Simply2D::AssetType::SCENE:
+		case Simply2D::AssetType::SERIALIZABLE:
 			handle = loadSerializable(fullPath).pack();
 		default:
 			break;

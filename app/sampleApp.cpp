@@ -4,8 +4,10 @@
 
 SampleApp::SampleApp()
 {
-	m_sceneManager.push<Level1>("scenes/level1/Level1.json");
-	m_sceneManager.push<Level2>("scenes/level1/Level1.json");
+	Simply2D::assetDatabase().load(Simply2D::AssetType::SERIALIZABLE, m_scenes[0]);
+
+	m_sceneManager.push<Level2>(Simply2D::assetDatabase().get(m_scenes[0]));
+	m_sceneManager.push<Level1>(Simply2D::assetDatabase().get(m_scenes[0]));
 }
 
 SampleApp::~SampleApp()

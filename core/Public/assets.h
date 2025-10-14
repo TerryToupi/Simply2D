@@ -18,7 +18,7 @@ namespace Simply2D
         IMAGE,
         AUDIO,
         FONT,
-        SCENE
+        SERIALIZABLE 
     };
     
     struct Asset

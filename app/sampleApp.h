@@ -16,5 +16,9 @@ public:
 	void render() override;
 
 private:
+	std::array<std::string, 1> m_scenes = {
+		"scenes/level1/Level1.json",
+	};
+
 	Simply2D::SceneManager m_sceneManager;
 };

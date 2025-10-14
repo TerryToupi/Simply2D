@@ -1,7 +1,7 @@
 #include <Level2.h>
 #include <Level1.h>
 
-Level2::Level2(std::string level, Simply2D::SceneManager* manager)
+Level2::Level2(Simply2D::Asset level, Simply2D::SceneManager* manager)
 	:	Scene(level, manager)
 {
 }

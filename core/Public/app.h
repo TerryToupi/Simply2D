@@ -8,6 +8,7 @@
 #include <renderer.h>
 #include <scene.h>
 #include <mtRingBuffer.h>
+#include <memoryAllocator.h>
 
 namespace Simply2D
 {
@@ -16,6 +17,7 @@ namespace Simply2D
 		std::string name = "Simply2D";
 		std::string version = "1.0";
 		std::string identifier = "com.terrytoupi.simply2D-empty";
+		AllocatorSpecifications memory;
 		RendererSpecifications renderer;
 		AssetDatabaseSpecifications assets;
 	};

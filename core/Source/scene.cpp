@@ -10,16 +10,12 @@ using json = nlohmann::json;
 
 namespace Simply2D
 {
-	Scene::Scene(std::string level, SceneManager* manager)
+	Scene::Scene(Asset level, SceneManager* manager)
 		:	m_manager(manager)
 	{
 		AssetDatabaseImpl* assets = (AssetDatabaseImpl*)(Application::GetInstance().GetAssetDatabase().get());
 
-		// assuring that the scene is loaded
-		assets->load(AssetType::SCENE, level);
-
-		json* config = assets->getSerializable(Handle<Serializable>(assets->get(level).handle));
-		
+		json* config = assets->getSerializable(Handle<Serializable>(level.handle));
 		// Generating the tileset
 		{
 			uint16_t tileWidth = (uint16_t)(*config)["tilesets"][0]["tilewidth"];
@@ -64,6 +60,11 @@ namespace Simply2D
 		}
 	}
  
+	void SceneManager::begin(float ts)
+	{
+		m_scenes.at(m_activeIndex)->begin(ts);
+	}
+
 	void SceneManager::event()
 	{
 		m_scenes.at(m_activeIndex)->event();
@@ -77,5 +78,10 @@ namespace Simply2D
 	void SceneManager::render()
 	{
 		m_scenes.at(m_activeIndex)->render();
+	}
+
+	void SceneManager::end(float ts)
+	{
+		m_scenes.at(m_activeIndex)->end(ts);
 	}
 }

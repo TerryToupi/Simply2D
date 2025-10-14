@@ -41,7 +41,7 @@ namespace Simply2D
 		m_renderer = Renderer::Create(specs.renderer);
 		m_assetDatabase = AssetDatabase::Create(specs.assets);
 
-		Allocator::GetInstance().SetRegionsCapacity(512 * 1024, 512 * 1024);
+		Allocator::GetInstance().SetRegionsCapacity(specs.memory);
 
 		m_running = true;
 	}
@@ -74,7 +74,13 @@ namespace Simply2D
 						stop();
 				}
 			}
-			
+
+			// on begin frame
+			{
+				for (const auto& layer : m_layers)
+					layer->begin(timeStep);
+			}
+
 			// updating layers
 			{
 				// updating the Animations
@@ -93,6 +99,14 @@ namespace Simply2D
 			}
 			renderer->endFrame();
 
+			// on enf frame
+			{
+				for (const auto& layer : m_layers)
+					layer->end(timeStep);
+
+				Allocator::ResetFrameRegion();
+			}
+
 			// execute main thread jobs after scripting is done
 			// processing for this frame
 			{
@@ -100,8 +114,6 @@ namespace Simply2D
 				while (m_mainThreadQueue.pop_front(job))
 					job();
 			}
-			
-			Allocator::ResetFrameRegion();
 		}
 
 		TTF_Quit();

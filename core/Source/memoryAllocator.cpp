@@ -4,16 +4,19 @@
 
 Allocator Allocator::s_instance;
 
-void Allocator::SetRegionsCapacity(size_t globalCapacity, size_t frameCapacity)
+void Allocator::SetRegionsCapacity(const AllocatorSpecifications& specs)
 {
 	if (m_frameAllocator || m_globalAllocator)
 		return;
 
-	m_globalAllocator.emplace((OffsetAllocator::uint32)globalCapacity, 128 * 1024);
-	m_globalData = operator new(globalCapacity);
+	m_globalAllocator.emplace(specs.globalCapacity);
+	m_globalData = operator new(specs.globalCapacity);
 
-	m_frameAllocator.emplace(frameCapacity);
-	m_frameData = operator new(frameCapacity);
+	m_sceneAllocator.emplace((OffsetAllocator::uint32)specs.sceneCapacity, 128 * 1024);
+	m_sceneData = operator new(specs.sceneCapacity);
+
+	m_frameAllocator.emplace(specs.frameCapacity);
+	m_frameData = operator new(specs.frameCapacity);
 }
 
 void Allocator::ResetFrameRegion()

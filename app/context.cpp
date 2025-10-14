@@ -9,6 +9,9 @@ int main()
     specs.renderer.vSync = false;
     specs.renderer.borderless = false;
     specs.assets.assetsPath = ASSETS_PATH;
+    specs.memory.frameCapacity = 1 * 1024 * 1024;
+    specs.memory.globalCapacity = 1 * 1024 * 1024;
+    specs.memory.sceneCapacity = 2 * 1024 * 1024;
     specs.name = "GIORGOS";
     specs.version = "1.0";
     specs.identifier = "com.terrytoupi.simply2D.giorgos";

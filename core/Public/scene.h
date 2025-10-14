@@ -15,13 +15,15 @@ namespace Simply2D
 	public:
 		SceneManager() = default;
 		~SceneManager() = default;
-
+		
+		void begin(float ts);
 		void event();
 		void update(float ts);
 		void render();
+		void end(float ts);
 		
 		template<std::derived_from<Scene> TScene>
-		void push(std::string level)
+		void push(Asset level)
 		{
 			m_scenes.push_back(std::make_shared<TScene>(level, this));
 		} 
@@ -36,13 +38,15 @@ namespace Simply2D
 	class Scene
 	{
 	public:
-		Scene(std::string level, SceneManager* manager);
+		Scene(Asset level, SceneManager* manager);
 		virtual ~Scene() = default;
 
 		// Scripting functions
+		virtual void begin(float ts)	{}
 		virtual void event()			{}
 		virtual void update(float ts)	{} 
 		virtual void render()			{}
+		virtual void end(float ts)		{}
 
 		template<typename TScene>
 		requires(std::is_base_of_v<Scene, TScene>)
