@@ -6,8 +6,9 @@
 #include <bumpAllocator.h>
 
 template<typename Ttype>
-struct Global
+class Global
 {
+public:
 	OffsetAllocator::Allocation alloc;
 	Ttype*						ptr;
 	int							count;
@@ -25,8 +26,9 @@ struct Global
 };
 
 template<typename Ttype>
-struct Frame
+class Frame
 {
+public:
 	Ttype*		ptr;
 	int			count;
 
@@ -119,4 +121,40 @@ private:
 
 private:
 	static Allocator s_instance;
+};
+
+
+class LatelyDestroyable;
+
+class DestructionManager final
+{
+public:
+    void Register(LatelyDestroyable* d);
+    void Commit(void);
+    static auto Get(void) -> DestructionManager& { return s_singleton; }
+
+private:
+    std::list<LatelyDestroyable*> m_dead;
+    
+private:
+    static DestructionManager s_singleton;
+};
+
+class LatelyDestroyable
+{
+public:
+    LatelyDestroyable(void) = default;
+    bool IsAlive(void) const { return alive; }
+    void Destroy(void);
+
+private:
+    virtual ~LatelyDestroyable() { }
+    void Delete(void);
+    
+private:
+    bool m_alive = true;
+    bool m_dying = false;
+    
+private:
+    friend class DestructionManager;
 };
