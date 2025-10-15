@@ -6,6 +6,7 @@
 #include <handle.h>
 #include <span.h>
 #include <resources.h>
+#include <mathUtils.h>
 
 namespace Simply2D
 {
@@ -32,8 +33,8 @@ namespace Simply2D
 		Handle<Texture> texture;
 		Blend blend = Blend::BLEND;
 		uint8_t alpha = 255;
-		int src[4] = { 0, 0, 0, 0 };
-		int dist[4] = { 0, 0, 0, 0 };
+		Rect src = { 0, 0, 0, 0 };
+		Rect dist = { 0, 0, 0, 0 };
 	};
 	
 	enum class LoadOp : unsigned int
