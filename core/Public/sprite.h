@@ -41,8 +41,6 @@ namespace Simply2D
 
 	private:
 		std::string m_name;
-		//byte m_frameNo = 0;
-		//Rect m_frameBox{ 0, 0, 0, 0 }; // inside the film 
 		bool m_emptyFrameBox = true;
 		int m_width = 0, m_height = 0;
 		int m_x = 0, m_y = 0;
