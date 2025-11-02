@@ -9,8 +9,6 @@
 #include <Source/renderingBackend.h>
 #include <Source/assetDataBase.h>
 
-#include <Source/mtJobSystem.h>
-
 namespace Simply2D
 { 
 	AssetDatabaseImpl::AssetDatabaseImpl(const AssetDatabaseSpecifications& specs)

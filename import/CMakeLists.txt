@@ -46,12 +46,19 @@ CPMAddPackage(
     GIT_TAG develop 
 )
 
+CPMAddPackage(
+    NAME TinyThreadPool
+    GIT_REPOSITORY https://github.com/TerryToupi/TinyThreadPool.git
+    GIT_TAG main 
+)
+
 # Libraries needed only by the engine
 add_library(CoreImport INTERFACE)
 add_library(Core::Import ALIAS CoreImport) 
 
 target_link_libraries(CoreImport
     INTERFACE
+        TinyThreadPool::Library
         SDL3::SDL3
         SDL3_mixer::SDL3_mixer
         SDL3_image::SDL3_image
@@ -84,3 +91,4 @@ organize_target(SDL3_test "Import")
 organize_target(tiff "Import")
 organize_target(xmp_shared "Import")
 organize_target(nlohmann_json "Import")
+organize_target(TinyThreadPool::Library "Import")
