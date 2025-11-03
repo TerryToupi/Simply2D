@@ -17,7 +17,12 @@ namespace Simply2D
 
 	Rect Sprite::GetBox()
 	{
-		return {m_x, m_y, m_width, m_height};
+		return { m_x, m_y, m_width, m_height };
+	}
+
+	void Sprite::SetMover(const Mover& move)
+	{
+		m_mover = move;
 	}
 
 	Sprite& Sprite::Move(int dx, int dy)
@@ -67,9 +72,9 @@ namespace Simply2D
 	{
 	}
 
-	bool Sprite::CollisionCheck(const Sprite s)
+	void Sprite::SetCollisionCallback(const CollisionCallback& callback)
 	{
-		return false;
+		m_collisionCallback = callback;
 	}
 
 	GravityHandler& Sprite::GetGravityHandler(void)

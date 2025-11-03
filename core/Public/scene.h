@@ -1,10 +1,12 @@
 #pragma once
 
 #include <optional>
+#include <deque>
 
 #include <assets.h>
 #include <tileSet.h>
 #include <tileLayers.h>
+#include <sprite.h>
 
 namespace Simply2D
 {
@@ -48,6 +50,9 @@ namespace Simply2D
 		virtual void render()			{}
 		virtual void end(float ts)		{}
 
+		// registering
+		virtual void registerSprite(Sprite* sprite);
+
 		template<typename TScene>
 		requires(std::is_base_of_v<Scene, TScene>)
 		void transition()
@@ -68,7 +73,11 @@ namespace Simply2D
 		unsigned								m_layersCount = 0;
 
 	private:
-		SceneManager* m_manager;
+		std::deque<Sprite*>& GetSpriteRegister() { return m_spriteRegister; }
+
+	private:
+		SceneManager*		m_manager;
+		std::deque<Sprite*>	m_spriteRegister;
 
 		friend class SceneManager;
 	};

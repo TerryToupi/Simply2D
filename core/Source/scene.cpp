@@ -1,7 +1,10 @@
 #include <pch.h>
 
+#include <variant>
+
 #include <app.h>
 #include <scene.h>
+#include <TinyThreadPool.h>
 
 #include <Source/assetDataBase.h>
 
@@ -59,6 +62,11 @@ namespace Simply2D
 			}
 		}
 	}
+
+	void Scene::registerSprite(Sprite* sprite)
+	{
+		m_spriteRegister.push_back(sprite);
+	}
  
 	void SceneManager::begin(float ts)
 	{
@@ -71,7 +79,34 @@ namespace Simply2D
 	}
 
 	void SceneManager::update(float ts)
-	{
+	{ 
+		const auto& spriteRegister = m_scenes.at(m_activeIndex)->GetSpriteRegister();
+		if (!spriteRegister.empty())
+		{
+			for (unsigned i = 0; i < spriteRegister.size(); ++i)
+			{
+				for (unsigned j = i + 1; j < spriteRegister.size(); ++j)
+				{
+					if (!spriteRegister[i]->GetBoundingArea().has_value() ||
+						!spriteRegister[j]->GetBoundingArea().has_value())
+						continue;
+
+					TinyThreadPool::Execute([&i, &j, &spriteRegister]() 
+					{
+						if (auto* b1 = std::get_if<BoundingBox>(&spriteRegister[i]->GetBoundingArea().value()))
+						{
+							if (auto* b2 = std::get_if<BoundingBox>(&spriteRegister[j]->GetBoundingArea().value()))
+							{
+								b1->Intersects(*b2);
+							}
+						}
+					});
+				}
+			}
+
+			TinyThreadPool::Wait();
+		}
+
 		m_scenes.at(m_activeIndex)->update(ts);
 	}
 
