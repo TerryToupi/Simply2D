@@ -85,23 +85,34 @@ namespace Simply2D
 		{
 			for (unsigned i = 0; i < spriteRegister.size(); ++i)
 			{
-				for (unsigned j = i + 1; j < spriteRegister.size(); ++j)
-				{
-					if (!spriteRegister[i]->GetBoundingArea().has_value() ||
-						!spriteRegister[j]->GetBoundingArea().has_value())
-						continue;
+				if (!spriteRegister[i]->GetBoundingArea().has_value())
+					continue;
 
-					TinyThreadPool::Execute([&i, &j, &spriteRegister]() 
+				TinyThreadPool::Execute([&i, &spriteRegister]() {
+					for (unsigned j = i + 1; i < spriteRegister.size(); ++j)
 					{
+						if (!spriteRegister[i]->GetBoundingArea().has_value() ||
+							!spriteRegister[j]->GetBoundingArea().has_value())
+							continue;
+
 						if (auto* b1 = std::get_if<BoundingBox>(&spriteRegister[i]->GetBoundingArea().value()))
 						{
 							if (auto* b2 = std::get_if<BoundingBox>(&spriteRegister[j]->GetBoundingArea().value()))
 							{
-								b1->Intersects(*b2);
+								if (b1->Intersects(*b2))
+								{
+									auto b1CallBack = spriteRegister[i]->GetCollisionCallback();
+									if (b1CallBack)
+										b1CallBack(spriteRegister[j]);
+									
+									auto b2CallBack = spriteRegister[j]->GetCollisionCallback();
+									if (b2CallBack)
+										b2CallBack(spriteRegister[i]);
+								}
 							}
 						}
-					});
-				}
+					}
+				});
 			}
 
 			TinyThreadPool::Wait();
