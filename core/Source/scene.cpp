@@ -91,8 +91,7 @@ namespace Simply2D
 				TinyThreadPool::Execute([&i, &spriteRegister]() {
 					for (unsigned j = i + 1; i < spriteRegister.size(); ++j)
 					{
-						if (!spriteRegister[i]->GetBoundingArea().has_value() ||
-							!spriteRegister[j]->GetBoundingArea().has_value())
+						if (!spriteRegister[j]->GetBoundingArea().has_value())
 							continue;
 
 						if (auto* b1 = std::get_if<BoundingBox>(&spriteRegister[i]->GetBoundingArea().value()))
