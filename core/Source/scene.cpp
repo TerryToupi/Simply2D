@@ -4,7 +4,6 @@
 
 #include <app.h>
 #include <scene.h>
-#include <TinyThreadPool.h>
 
 #include <Source/assetDataBase.h>
 
@@ -80,42 +79,42 @@ namespace Simply2D
 
 	void SceneManager::update(float ts)
 	{ 
-		const auto& spriteRegister = m_scenes.at(m_activeIndex)->GetSpriteRegister();
-		if (!spriteRegister.empty())
-		{
-			for (unsigned i = 0; i < spriteRegister.size(); ++i)
-			{
-				if (!spriteRegister[i]->GetBoundingArea().has_value())
-					continue;
+		//const auto& spriteRegister = m_scenes.at(m_activeIndex)->GetSpriteRegister();
+		//if (!spriteRegister.empty())
+		//{
+		//	for (unsigned i = 0; i < spriteRegister.size(); ++i)
+		//	{
+		//		if (!spriteRegister[i]->GetBoundingArea().has_value())
+		//			continue;
 
-				TinyThreadPool::Execute([&i, &spriteRegister]() {
-					for (unsigned j = i + 1; i < spriteRegister.size(); ++j)
-					{
-						if (!spriteRegister[j]->GetBoundingArea().has_value())
-							continue;
+		//		TinyThreadPool::Execute([&i, &spriteRegister]() {
+		//			for (unsigned j = i + 1; i < spriteRegister.size(); ++j)
+		//			{
+		//				if (!spriteRegister[j]->GetBoundingArea().has_value())
+		//					continue;
 
-						if (auto* b1 = std::get_if<BoundingBox>(&spriteRegister[i]->GetBoundingArea().value()))
-						{
-							if (auto* b2 = std::get_if<BoundingBox>(&spriteRegister[j]->GetBoundingArea().value()))
-							{
-								if (b1->Intersects(*b2))
-								{
-									auto b1CallBack = spriteRegister[i]->GetCollisionCallback();
-									if (b1CallBack)
-										b1CallBack(spriteRegister[j]);
-									
-									auto b2CallBack = spriteRegister[j]->GetCollisionCallback();
-									if (b2CallBack)
-										b2CallBack(spriteRegister[i]);
-								}
-							}
-						}
-					}
-				});
-			}
+		//				if (auto* b1 = std::get_if<BoundingBox>(&spriteRegister[i]->GetBoundingArea().value()))
+		//				{
+		//					if (auto* b2 = std::get_if<BoundingBox>(&spriteRegister[j]->GetBoundingArea().value()))
+		//					{
+		//						if (b1->Intersects(*b2))
+		//						{
+		//							auto b1CallBack = spriteRegister[i]->GetCollisionCallback();
+		//							if (b1CallBack)
+		//								b1CallBack(spriteRegister[j]);
+		//							
+		//							auto b2CallBack = spriteRegister[j]->GetCollisionCallback();
+		//							if (b2CallBack)
+		//								b2CallBack(spriteRegister[i]);
+		//						}
+		//					}
+		//				}
+		//			}
+		//		});
+		//	}
 
-			TinyThreadPool::Wait();
-		}
+		//	TinyThreadPool::Wait();
+		//}
 
 		m_scenes.at(m_activeIndex)->update(ts);
 	}

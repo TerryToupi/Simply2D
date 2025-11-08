@@ -8,7 +8,7 @@ set(CORE_FOLDER_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 file(GLOB_RECURSE CORE_FILES CONFIGURE_DEPENDS "${CORE_FOLDER_PATH}/**.h" "${CORE_FOLDER_PATH}/**.cpp")
 
 add_library(${PROJECT_NAME} STATIC)
-add_library(Core::Source ALIAS ${PROJECT_NAME})
+add_library(Simply2D::Core ALIAS ${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME}
     PRIVATE
@@ -35,11 +35,21 @@ target_compile_features(${PROJECT_NAME}
 
 source_group(
     TREE ${CORE_FOLDER_PATH}
-    PREFIX "core"
+    PREFIX "Core"
     FILES ${CORE_FILES}
 )
 
+find_package(SDL3 REQUIRED CONFIG)
+find_package(SDL3_image REQUIRED CONFIG)
+find_package(SDL3_mixer REQUIRED CONFIG)
+find_package(SDL3_ttf REQUIRED CONFIG)
+find_package(nlohmann_json REQUIRED CONFIG)
+
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE
-        Core::Import
+    PUBLIC 
+        SDL3::SDL3
+        SDL3_mixer::SDL3_mixer
+        SDL3_image::SDL3_image
+        SDL3_ttf::SDL3_ttf
+        nlohmann_json
 )

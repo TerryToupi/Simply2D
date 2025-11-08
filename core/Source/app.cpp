@@ -8,7 +8,6 @@
 #include <Source/gameTime.h>
 #include <Source/animatorManager.h>
 
-#include <TinyThreadPool.h>
 #include <SDL3/SDL.h>
 #include <SDL3_Mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -36,7 +35,6 @@ namespace Simply2D
 		if (!TTF_Init())
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
 
-		TinyThreadPool::Initialize();
 		m_renderer = Renderer::Create(specs.renderer);
 		m_assetDatabase = AssetDatabase::Create(specs.assets);
 
@@ -118,8 +116,6 @@ namespace Simply2D
 		TTF_Quit();
 		MIX_Quit();
 		SDL_Quit();
-
-		TinyThreadPool::Shutdown();
 	}
 
 	void Application::stop()

@@ -1,94 +1,66 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.20)
+project(Import)
 
-project(ImportLibraries)
+include(ExternalProject)
 
-CPMAddPackage(
-    NAME SDL 
-    GIT_REPOSITORY https://github.com/libsdl-org/SDL.git 
-    GIT_TAG main 
+# Installation directory - this is where everything goes
+set(INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}")
+
+# SDL3
+ExternalProject_Add(
+    SDL3
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+    GIT_TAG main
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
+        -DCMAKE_BUILD_TYPE=Release
 )
 
-CPMAddPackage(
-    NAME SDL_mixer
+# SDL3 mixer
+ExternalProject_Add(
+    SDL3_mixer
     GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
     GIT_TAG main
-    OPTIONS 
-        "SDLMIXER_VENDORED ON"
-        "SDLMIXER_MIDI_NATIVE OFF"
-        "SDLMIXER_GME OFF"
-        "SDLMIXER_WAVPACK OFF"
-        "SDLMIXER_MOD OFF"
-        "SDLMIXER_OPUS OFF"
-        "SDLMIXER_MP3_MPG123 OFF"
-        "SDLMIXER_VORBIS_VORBISFILE OFF"
-        "SDLMIXER_FLAC_LIBFLAC OFF"
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
+        -DCMAKE_BUILD_TYPE=Release
+        -DSDLMIXER_VORBIS_VORBISFILE=OFF
+        -DSDLMIXER_GME=OFF
+        -DSDLMIXER_OPUS=OFF
 )
 
-CPMAddPackage(
-    NAME SDL_image
+# SDL3 image 
+ExternalProject_Add(
+    SDL3_image
     GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
     GIT_TAG main
-    OPTIONS
-        "SDLIMAGE_VENDORED ON"
-        "SDLIMAGE_AVIF OFF"
-        "SDLIMAGE_WEBP OFF"
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
+        -DCMAKE_BUILD_TYPE=Release
+        -DBUILD_SHARED_LIBS=OFF
+        -DSDLIMAGE_AVIF=OFF
+        -DSDLIMAGE_WEBP=OFF
 )
 
-CPMAddPackage(
-    NAME SDL_ttf 
+#SDL3 ttf
+ExternalProject_Add(
+    SDL3_ttf 
     GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
     GIT_TAG main
-) 
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
+        -DCMAKE_BUILD_TYPE=Release
+        -DBUILD_SHARED_LIBS=OFF
+)
 
-CPMAddPackage(
-    NAME nlohmann_json
+# nlohmann_json
+ExternalProject_Add(
+    nlohmann_json 
     GIT_REPOSITORY https://github.com/nlohmann/json.git
     GIT_TAG develop 
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
+        -DCMAKE_BUILD_TYPE=Release
+        -DBUILD_SHARED_LIBS=OFF
+        -DJSON_BuildTests=OFF
 )
-
-CPMAddPackage(
-    NAME TinyThreadPool
-    GIT_REPOSITORY https://github.com/TerryToupi/TinyThreadPool.git
-    GIT_TAG main 
-)
-
-# Libraries needed only by the engine
-add_library(CoreImport INTERFACE)
-add_library(Core::Import ALIAS CoreImport) 
-
-target_link_libraries(CoreImport
-    INTERFACE
-        TinyThreadPool::Library
-        SDL3::SDL3
-        SDL3_mixer::SDL3_mixer
-        SDL3_image::SDL3_image
-        SDL3_ttf::SDL3_ttf
-        nlohmann_json
-)
-
-# Libraries needed by the engine and the application
-add_library(GlobalImport INTERFACE)
-add_library(Global::Import ALIAS GlobalImport) 
-
-target_link_libraries(GlobalImport
-    INTERFACE
-        nlohmann_json
-)
-
-# Organizing all of the imported targets
-# to appear under the "import" filter view
-# in any IDE making the code cleaner
-organize_target(SDL3::SDL3 "Import")
-organize_target(SDL3_mixer::SDL3_mixer "Import")
-organize_target(SDL3_image::SDL3_image "Import")
-organize_target(SDL3_ttf::SDL3_ttf "Import")
-organize_target(freetype "Import")
-organize_target(harfbuzz "Import")
-organize_target(plutosvg "Import")
-organize_target(plutovg "Import")
-organize_target(SDL_uclibc "Import")
-organize_target(SDL3_test "Import")
-organize_target(tiff "Import")
-organize_target(xmp_shared "Import")
-organize_target(nlohmann_json "Import")
-organize_target(TinyThreadPool::Library "Import")

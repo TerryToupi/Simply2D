@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.30)
-
 project(Simply2D_app)
 
 # set the path for conviniance
@@ -32,8 +31,20 @@ source_group(
     FILES ${APP_FILES}
 )
 
+find_package(SDL3 REQUIRED CONFIG)
+find_package(SDL3_image REQUIRED CONFIG)
+find_package(SDL3_mixer REQUIRED CONFIG)
+find_package(SDL3_ttf REQUIRED CONFIG)
+find_package(nlohmann_json REQUIRED CONFIG)
+
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE
-        Core::Source
-        Global::Import
+    PUBLIC 
+        SDL3::SDL3
+        SDL3_mixer::SDL3_mixer
+        SDL3_image::SDL3_image
+        SDL3_ttf::SDL3_ttf
+        nlohmann_json
+        Simply2D::Core
 )
+
+copy_dlls_from_linked_targets(${PROJECT_NAME})

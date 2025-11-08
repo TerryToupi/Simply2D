@@ -88,12 +88,17 @@ node_modules/
 Pods/
 
 # ---- Import Lybraries ----
-import/sdl
-import/sdl_image
-import/sdl_mixer
-import/sdl_ttf
-import/nlohmann_json
-import/tinythreadpool
+Import/bin
+Import/build
+Import/cmake
+Import/include
+Import/lib
+Import/licenses
+Import/share
+Import/*.natvis
 
 # ---- CMAKE generation folder ----
-out/
+vs2026
+vs2022
+ninja
+xcode
