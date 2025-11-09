@@ -37,7 +37,6 @@ ExternalProject_Add(
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
         -DCMAKE_BUILD_TYPE=Release
-        -DBUILD_SHARED_LIBS=OFF
         -DSDLIMAGE_AVIF=OFF
         -DSDLIMAGE_WEBP=OFF
 )
@@ -50,7 +49,6 @@ ExternalProject_Add(
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
         -DCMAKE_BUILD_TYPE=Release
-        -DBUILD_SHARED_LIBS=OFF
 )
 
 # nlohmann_json
@@ -61,6 +59,5 @@ ExternalProject_Add(
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
         -DCMAKE_BUILD_TYPE=Release
-        -DBUILD_SHARED_LIBS=OFF
         -DJSON_BuildTests=OFF
 )
