@@ -17,7 +17,7 @@ namespace Simply2D
 				if (!sprites[i]->GetBoundingArea().has_value())
 					continue;
 
-				ThreadPool::Execute([&i, &sprites]() {
+				ThreadPool::Execute([i, &sprites]() {
 					for (unsigned j = i + 1; i < sprites.size(); ++j)
 					{
 						if (!sprites[j]->GetBoundingArea().has_value())
