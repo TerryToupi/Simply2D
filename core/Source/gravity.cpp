@@ -1,6 +1,6 @@
 #include <pch.h>
 
-#include <Gravity.h>
+#include <gravity.h>
 
 namespace Simply2D 
 {

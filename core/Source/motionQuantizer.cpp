@@ -1,6 +1,6 @@
 #include <pch.h>
 
-#include <MotionQuantizer.h>
+#include <motionQuantizer.h>
 
 namespace Simply2D
 {

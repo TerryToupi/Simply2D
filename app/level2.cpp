@@ -1,5 +1,5 @@
-#include <Level2.h>
-#include <Level1.h>
+#include <level2.h>
+#include <level1.h>
 
 Level2::Level2(Simply2D::Asset level, Simply2D::SceneManager* manager)
 	:	Scene(level, manager)
