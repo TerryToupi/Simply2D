@@ -5,7 +5,13 @@ project(Simply2D_core)
 # set the path for conviniance
 set(CORE_FOLDER_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 # grab all the files recursivly. No need to add them one by one
-file(GLOB_RECURSE CORE_FILES CONFIGURE_DEPENDS "${CORE_FOLDER_PATH}/**.h" "${CORE_FOLDER_PATH}/**.cpp")
+file(
+    GLOB_RECURSE 
+        CORE_FILES 
+    CONFIGURE_DEPENDS 
+            "${CORE_FOLDER_PATH}/**.h" 
+            "${CORE_FOLDER_PATH}/**.cpp"
+)
 
 add_library(${PROJECT_NAME} STATIC)
 add_library(Simply2D::Core ALIAS ${PROJECT_NAME})
@@ -44,9 +50,15 @@ find_package(SDL3_image REQUIRED CONFIG)
 find_package(SDL3_mixer REQUIRED CONFIG)
 find_package(SDL3_ttf REQUIRED CONFIG)
 find_package(nlohmann_json REQUIRED CONFIG)
+find_package(EABase REQUIRED CONFIG)
+find_package(EASTL REQUIRED CONFIG)
+find_package(rpmalloc REQUIRED CONFIG)
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC 
+        EABase::EABase
+        EASTL::EASTL
+        rpmalloc::rpmalloc
         SDL3::SDL3
         SDL3_mixer::SDL3_mixer
         SDL3_image::SDL3_image
