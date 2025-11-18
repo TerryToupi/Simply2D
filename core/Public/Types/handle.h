@@ -1,42 +1,33 @@
-#ifndef __HANDLE_HPP__
-#define __HANDLE_HPP__
-
+#pragma once
 #include <cstdint>
 
 template<typename T>
-class Handle
+class THandle
 {
 public:
-	Handle() : m_Index(0), m_Generation(0) {}
-	Handle(uint32_t packed) : m_Index(static_cast<uint16_t>(packed >> 16)), m_Generation(static_cast<uint16_t>(packed & 0xFFFF)) {}
+	THandle() : m_index(0), m_generation(0) {}
+	THandle(uint32_t packed) : m_index(static_cast<uint16_t>(packed >> 16)), m_generation(static_cast<uint16_t>(packed & 0xFFFF)) {}
 
-	bool IsValid() const { return m_Generation != 0; }
+	bool IsValid() const { return m_generation != 0; }
 
-	bool operator==(const Handle<T>& other) const { return other.m_Index == m_Index && other.m_Generation == m_Generation; }
-	bool operator!=(const Handle<T>& other) const { return other.m_Index != m_Index || other.m_Generation != m_Generation; }
+	bool operator==(const THandle<T>& other) const { return other.m_index == m_index && other.m_generation == m_generation; }
+	bool operator!=(const THandle<T>& other) const { return other.m_index != m_index || other.m_generation != m_generation; }
 
-	static Handle sentinal() { return Handle(0, 0xffff); }
+	static THandle Sentinal() { return THandle(0, 0xffff); }
 
-	uint32_t hashKey() const { return (((uint32_t)m_Index) << 16) + (uint32_t)m_Generation; }
-	uint16_t index()  const { return m_Index; }
-	uint16_t generation() const { return m_Generation; }
+	uint32_t Hash() const { return (((uint32_t)m_index) << 16) + (uint32_t)m_generation; }
+	uint16_t Index()  const { return m_index; }
+	uint16_t Generation() const { return m_generation; }
 
-	uint32_t pack() const { return (static_cast<uint32_t>(m_Index) << 16) | m_Generation; }
-	//Handle<T> unpack(uint32_t packedValue)
-	//{
-	//	m_Index = static_cast<uint16_t>(packedValue >> 16);
-	//	m_Generation = static_cast<uint16_t>(packedValue & 0xFFFF);
-	//	return *this;
-	//}
+	uint32_t Pack() const { return (static_cast<uint32_t>(m_index) << 16) | m_generation; }
 
 private:
-	Handle(uint32_t index, uint32_t generation) : m_Index(index), m_Generation(generation) {}
+	THandle(uint32_t index, uint32_t generation) : m_index(index), m_generation(generation) {}
 
 private:
-	uint16_t m_Index;      /**< Resource index */
-	uint16_t m_Generation; /**< Generation for validity tracking */
+	uint16_t m_index; 
+	uint16_t m_generation;
 
-	template<typename U, typename V> friend class Pool;
+	template<typename U, typename V, uint16_t MinimumPoolSize>
+	friend class TPool;
 };
-
-#endif // !__HANDLE_HPP__

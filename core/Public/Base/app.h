@@ -44,6 +44,7 @@ namespace Simply2D
 		void create(const ApplicationSpecifications& specs = ApplicationSpecifications());
 		void run();
 		void stop();
+		void destroy();
 
 		template<typename TLayer>
 		requires(std::is_base_of_v<Layer, TLayer>)

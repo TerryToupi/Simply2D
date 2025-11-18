@@ -42,15 +42,9 @@ find_package(SDL3_image REQUIRED CONFIG)
 find_package(SDL3_mixer REQUIRED CONFIG)
 find_package(SDL3_ttf REQUIRED CONFIG)
 find_package(nlohmann_json REQUIRED CONFIG)
-find_package(EABase REQUIRED CONFIG)
-find_package(EASTL REQUIRED CONFIG)
-find_package(rpmalloc REQUIRED CONFIG)
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC 
-        EABase::EABase
-        EASTL::EASTL
-        rpmalloc::rpmalloc
         SDL3::SDL3
         SDL3_mixer::SDL3_mixer
         SDL3_image::SDL3_image

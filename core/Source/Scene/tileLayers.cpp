@@ -29,7 +29,7 @@ namespace Simply2D
 			Tile tile = m_tileSet->getTile(id - 1);
 			uint16_t tileWidth = m_tileSet->getTileWidth();
 			uint16_t tileHeight = m_tileSet->getTileHeight();
-			Handle<Texture> tileset = m_tileSet->texture();
+			THandle<Texture> tileset = m_tileSet->texture();
 
 			Application::GetInstance().GetRenderer()->draw({
 				.target = m_texture, 
@@ -48,7 +48,7 @@ namespace Simply2D
 		}
 	}
 
-	Handle<Texture> TileLayer::texture()
+	THandle<Texture> TileLayer::texture()
 	{
 		return m_texture;
 	}

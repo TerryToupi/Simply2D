@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Types/handle.h"
+#include "Types/Handle.h"
 
 #define UINT_BIT_SHIFT(x) (1u << x)
 
@@ -28,7 +28,7 @@ namespace Simply2D
 		int height = 0;
 	};
 
-	#define SURFACE Handle<Simply2D::Texture>(UINT_MAX)
+	#define SURFACE THandle<Simply2D::Texture>(UINT_MAX)
 
 	// ------------ TEXTURE ---------------------------
 	class Texture;

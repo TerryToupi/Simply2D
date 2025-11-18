@@ -31,16 +31,16 @@ namespace Simply2D
 		switch (type)
 		{
 		case Simply2D::AssetType::IMAGE:
-			handle = loadImage(fullPath).pack();
+			handle = loadImage(fullPath).Pack();
 			break;
 		case Simply2D::AssetType::AUDIO:
-			handle = loadAudio(fullPath).pack();
+			handle = loadAudio(fullPath).Pack();
 			break;
 		case Simply2D::AssetType::FONT:
-			handle = laodFont(fullPath).pack();
+			handle = laodFont(fullPath).Pack();
 			break;
 		case Simply2D::AssetType::SERIALIZABLE:
-			handle = loadSerializable(fullPath).pack();
+			handle = loadSerializable(fullPath).Pack();
 		default:
 			break;
 		}
@@ -63,13 +63,13 @@ namespace Simply2D
 		switch (asset.type)
 		{
 		case Simply2D::AssetType::IMAGE:
-			unloadImage(Handle<Image>(asset.handle));
+			unloadImage(THandle<Image>(asset.handle));
 			break;
 		case Simply2D::AssetType::AUDIO:
-			unloadAudio(Handle<Audio>(asset.handle));
+			unloadAudio(THandle<Audio>(asset.handle));
 			break;
 		case Simply2D::AssetType::FONT:
-			unloadFont(Handle<Font>(asset.handle));
+			unloadFont(THandle<Font>(asset.handle));
 			break;
 		default:
 			break;
@@ -77,106 +77,106 @@ namespace Simply2D
 		m_loadedAssets.erase(path);
 	}
 
-	SDL_Surface* AssetDatabaseImpl::getImage(Handle<Image> image)
+	SDL_Surface* AssetDatabaseImpl::getImage(THandle<Image> image)
 	{
-		return *m_images.get(image);
+		return *m_images.Get(image);
 	}
 
-	MIX_Audio* AssetDatabaseImpl::getAudio(Handle<Audio> audio)
+	MIX_Audio* AssetDatabaseImpl::getAudio(THandle<Audio> audio)
 	{
-		return *m_audio.get(audio);
+		return *m_audio.Get(audio);
 	}
 
-	TTF_Font* AssetDatabaseImpl::getFont(Handle<Font> font)
+	TTF_Font* AssetDatabaseImpl::getFont(THandle<Font> font)
 	{
-		return *m_font.get(font);
+		return *m_font.Get(font);
 	}
 
-	json* AssetDatabaseImpl::getSerializable(Handle<Serializable> text)
+	json* AssetDatabaseImpl::getSerializable(THandle<Serializable> text)
 	{
-		return m_serializables.get(text);
+		return m_serializables.Get(text);
 	}
 
-	Handle<Image> AssetDatabaseImpl::loadImage(std::string path)
+	THandle<Image> AssetDatabaseImpl::loadImage(std::string path)
 	{
 		SDL_Surface* surface = IMG_Load(path.c_str());
 		if (!surface)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "FAILED: %s ", SDL_GetError());
-			return Handle<Image>();
+			return THandle<Image>();
 		}
 		
-		return m_images.insert(surface);
+		return m_images.Insert(std::move(surface));
 	}
 
-	Handle<Audio> AssetDatabaseImpl::loadAudio(std::string path)
+	THandle<Audio> AssetDatabaseImpl::loadAudio(std::string path)
 	{
 		MIX_Audio* audio = MIX_LoadAudio(nullptr, path.c_str(), true);
 		if (!audio)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "FAILED: %s ", SDL_GetError());
-			return Handle<Audio>();
+			return THandle<Audio>();
 		}
 
-		return m_audio.insert(audio);
+		return m_audio.Insert(std::move(audio));
 	}
 
-	Handle<Font> AssetDatabaseImpl::laodFont(std::string path)
+	THandle<Font> AssetDatabaseImpl::laodFont(std::string path)
 	{
 		TTF_Font* font = TTF_OpenFont(path.c_str(), 16);
 		if (!font)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "FAILED: %s ", SDL_GetError());
-			return Handle<Font>();
+			return THandle<Font>();
 		} 
 
-		return m_font.insert(font);
+		return m_font.Insert(std::move(font));
 	}
 
-	Handle<Serializable> AssetDatabaseImpl::loadSerializable(std::string path)
+	THandle<Serializable> AssetDatabaseImpl::loadSerializable(std::string path)
 	{
 		std::ifstream file(path);
-		return m_serializables.insert(json::parse(file));
+		return m_serializables.Insert(json::parse(file));
 	}
 
-	void AssetDatabaseImpl::unloadImage(Handle<Image> image)
+	void AssetDatabaseImpl::unloadImage(THandle<Image> image)
 	{
 		SDL_Surface* surface = getImage(image);
 		if (!surface)
 			return;
 	
 		SDL_DestroySurface(surface);
-		m_images.remove(image);
+		m_images.Remove(image);
 	}
 
-	void AssetDatabaseImpl::unloadAudio(Handle<Audio> audio)
+	void AssetDatabaseImpl::unloadAudio(THandle<Audio> audio)
 	{
 		MIX_Audio* a = getAudio(audio);
 		if (!a)
 			return;
 
 		MIX_DestroyAudio(a);
-		m_audio.remove(audio);
+		m_audio.Remove(audio);
 	}
 
-	void AssetDatabaseImpl::unloadFont(Handle<Font> font)
+	void AssetDatabaseImpl::unloadFont(THandle<Font> font)
 	{
 		TTF_Font* f = getFont(font);
 		if (!f)
 			return;
 
 		TTF_CloseFont(f);
-		m_font.remove(font);
+		m_font.Remove(font);
 	}
 
-	void AssetDatabaseImpl::unloadSerializable(Handle<Serializable> text)
+	void AssetDatabaseImpl::unloadSerializable(THandle<Serializable> text)
 	{ 
 		json* j = getSerializable(text); 
 		if (!j)
 			return;
 
 		j->clear();
-		m_serializables.remove(text);
+		m_serializables.Remove(text);
 	}
 
 	std::shared_ptr<AssetDatabase> AssetDatabase::Create(const AssetDatabaseSpecifications& specs)

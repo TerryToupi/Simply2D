@@ -24,7 +24,7 @@ namespace Simply2D
         TileSet(uint16_t tileWidth, uint16_t tileHeight, Asset setImage);
         ~TileSet();
 
-        Handle<Texture> texture();
+        THandle<Texture> texture();
 
         Tile getTile(uint16_t index);
         Tile getTile(uint16_t x, uint16_t y);
@@ -36,7 +36,7 @@ namespace Simply2D
         uint16_t getTileSetHeight();
 
     private:
-        Handle<Texture> m_tileSetTexture;
+        THandle<Texture> m_tileSetTexture;
 
         uint16_t m_tileWidth = 0;
         uint16_t m_tileHeight = 0;

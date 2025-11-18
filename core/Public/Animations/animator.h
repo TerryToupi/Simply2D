@@ -12,7 +12,7 @@ namespace Simply2D
 		using FrameRects = std::array<std::array<int, 4>, 30>;
 
 		// animation atlas
-		Handle<Texture> texture;
+		THandle<Texture> texture;
 		FrameRects frames;
 		uint16_t totalFrames = 0;
 

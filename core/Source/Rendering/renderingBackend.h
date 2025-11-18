@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "Types/pool.h"
+#include "Types/Pool.h"
 #include "Rendering/renderer.h"
 
 #include <SDL3/SDL.h>
@@ -18,13 +18,13 @@ namespace Simply2D
 
 		virtual void draw(const RenderDescriptor& desc, Span<DrawCall> calls) override;
 
-		virtual Handle<Texture> createTexture(const TextureDescriptor&& desc) override;
-		virtual Handle<Texture> createTexture(Handle<Image> image) override;
-		virtual void destroyTexture(Handle<Texture> texture) override;
+		virtual THandle<Texture> createTexture(const TextureDescriptor&& desc) override;
+		virtual THandle<Texture> createTexture(THandle<Image> image) override;
+		virtual void destroyTexture(THandle<Texture> texture) override;
 		
-		virtual void textureSize(Handle<Texture> texture, int& width, int& height) override;
+		virtual void textureSize(THandle<Texture> texture, int& width, int& height) override;
 
-		SDL_Texture* getTexture(Handle<Texture> texture);
+		SDL_Texture* getTexture(THandle<Texture> texture);
 		
 	private:
 		void beginFrame();
@@ -34,7 +34,7 @@ namespace Simply2D
 		SDL_Window* m_windowHandle{};
 		SDL_Renderer* m_rendererHandle{};
 
-		Pool<SDL_Texture*, Texture> m_textures{ 16u, "Texture Resources" };
+		TPool<SDL_Texture*, Texture> m_textures;
 
 		friend class Application;
 	};

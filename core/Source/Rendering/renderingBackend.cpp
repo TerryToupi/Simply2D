@@ -126,7 +126,7 @@ namespace Simply2D
 		}
 	}
 
-	Handle<Texture> RendererImpl::createTexture(const TextureDescriptor&& desc)
+	THandle<Texture> RendererImpl::createTexture(const TextureDescriptor&& desc)
 	{
 		SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA8888;
 		SDL_TextureAccess access = SDL_TEXTUREACCESS_STATIC;
@@ -159,13 +159,13 @@ namespace Simply2D
 		if (texture == nullptr)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_RENDER, "FAILED: %s ", SDL_GetError());
-			return Handle<Texture>();
+			return THandle<Texture>();
 		}
 			
-		return m_textures.insert(texture);
+		return m_textures.Insert(std::move(texture));
 	}
 
-	Handle<Texture> RendererImpl::createTexture(Handle<Image> image)
+	THandle<Texture> RendererImpl::createTexture(THandle<Image> image)
 	{
 		AssetDatabaseImpl* assets = static_cast<AssetDatabaseImpl*>(Application::GetInstance().GetAssetDatabase().get());
 
@@ -176,25 +176,25 @@ namespace Simply2D
 		if (!texture)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_RENDER, "FAILED: %s ", SDL_GetError());
-			return Handle<Texture>();
+			return THandle<Texture>();
 		}
 		
-		return m_textures.insert(texture);
+		return m_textures.Insert(std::move(texture));
 	}
 
-	SDL_Texture* RendererImpl::getTexture(Handle<Texture> texture)
+	SDL_Texture* RendererImpl::getTexture(THandle<Texture> texture)
 	{
-		return *m_textures.get(texture);
+		return *m_textures.Get(texture);
 	}
 
-	void RendererImpl::destroyTexture(Handle<Texture> texture)
+	void RendererImpl::destroyTexture(THandle<Texture> texture)
 	{
 		SDL_Texture* tex = getTexture(texture);
 		SDL_DestroyTexture(tex);
-		m_textures.remove(texture);
+		m_textures.Remove(texture);
 	}
 
-	void RendererImpl::textureSize(Handle<Texture> texture, int& width, int& height)
+	void RendererImpl::textureSize(THandle<Texture> texture, int& width, int& height)
 	{
 		if (texture == SURFACE)
 		{

@@ -6,7 +6,7 @@
 #include "Base/resources.h"
 #include "Math/mathUtils.h"
 
-#include "Types/handle.h"
+#include "Types/Handle.h"
 #include "Types/span.h"
 
 namespace Simply2D
@@ -31,7 +31,7 @@ namespace Simply2D
 
 	struct DrawCall
 	{
-		Handle<Texture> texture;
+		THandle<Texture> texture;
 		Blend blend = Blend::BLEND;
 		uint8_t alpha = 255;
 		Rect src = { 0, 0, 0, 0 };
@@ -52,7 +52,7 @@ namespace Simply2D
 
 	struct RenderDescriptor
 	{
-		Handle<Texture> target = SURFACE;
+		THandle<Texture> target = SURFACE;
 		LoadOp loadOp = LoadOp::CLEAR;
 		StoreOp storeOp = StoreOp::STORE;
 		uint8_t clearColor[4] = { 0, 0, 0, 255 };
@@ -67,11 +67,11 @@ namespace Simply2D
 
 		virtual void draw(const RenderDescriptor& desc, Span<DrawCall> calls) = 0;
 
-		virtual Handle<Texture> createTexture(const TextureDescriptor&& desc) = 0;
-		virtual Handle<Texture> createTexture(Handle<Image> image) = 0;
-		virtual void destroyTexture(Handle<Texture> texture) = 0;
+		virtual THandle<Texture> createTexture(const TextureDescriptor&& desc) = 0;
+		virtual THandle<Texture> createTexture(THandle<Image> image) = 0;
+		virtual void destroyTexture(THandle<Texture> texture) = 0;
 
-		virtual void textureSize(Handle<Texture> texture, int& width, int& height) = 0;
+		virtual void textureSize(THandle<Texture> texture, int& width, int& height) = 0;
 
 	protected:
 		RendererSpecifications m_specifications;

@@ -19,5 +19,6 @@ int main()
     Simply2D::app().create(specs);
     Simply2D::app().pushLayer<Menu>();
     Simply2D::app().run();
+    Simply2D::app().destroy();
     return 0;
 }

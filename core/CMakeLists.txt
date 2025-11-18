@@ -12,6 +12,8 @@ file(
             "${CORE_FOLDER_PATH}/**.h" 
             "${CORE_FOLDER_PATH}/**.cpp"
 )
+# Exclude ThridParty folder
+list(FILTER CORE_FILES EXCLUDE REGEX ".*/ThridParty/.*")
 
 add_library(${PROJECT_NAME} STATIC)
 add_library(Simply2D::Core ALIAS ${PROJECT_NAME})
@@ -50,18 +52,23 @@ find_package(SDL3_image REQUIRED CONFIG)
 find_package(SDL3_mixer REQUIRED CONFIG)
 find_package(SDL3_ttf REQUIRED CONFIG)
 find_package(nlohmann_json REQUIRED CONFIG)
-find_package(EABase REQUIRED CONFIG)
-find_package(EASTL REQUIRED CONFIG)
-find_package(rpmalloc REQUIRED CONFIG)
+
+add_subdirectory(ThridParty/rpmalloc)
+set_property(TARGET rpmalloc PROPERTY FOLDER "ThirdParty")
+
+add_subdirectory(ThridParty/EASTL)
+set_property(TARGET EASTL PROPERTY FOLDER "ThirdParty")
+set_property(TARGET EABase PROPERTY FOLDER "ThirdParty")
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC 
-        EABase::EABase
-        EASTL::EASTL
-        rpmalloc::rpmalloc
         SDL3::SDL3
         SDL3_mixer::SDL3_mixer
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
         nlohmann_json
+    
+    PUBLIC
+        rpmalloc::rpmalloc
+        EASTL::EASTL
 )

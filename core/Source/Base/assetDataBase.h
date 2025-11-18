@@ -23,27 +23,27 @@ namespace Simply2D
         virtual Asset get(std::string path) override;
         virtual void unload(std::string path) override;
 
-        SDL_Surface* getImage(Handle<Image> image);
-        MIX_Audio*   getAudio(Handle<Audio> audio);
-        TTF_Font*    getFont(Handle<Font> font);
+        SDL_Surface* getImage(THandle<Image> image);
+        MIX_Audio*   getAudio(THandle<Audio> audio);
+        TTF_Font*    getFont(THandle<Font> font);
 
-        json*        getSerializable(Handle<Serializable> text);
+        json*        getSerializable(THandle<Serializable> text);
 
     private: 
-        Handle<Image>        loadImage(std::string path);
-        Handle<Audio>        loadAudio(std::string path);
-        Handle<Font>         laodFont(std::string path);
-        Handle<Serializable> loadSerializable(std::string path);
+        THandle<Image>        loadImage(std::string path);
+        THandle<Audio>        loadAudio(std::string path);
+        THandle<Font>         laodFont(std::string path);
+        THandle<Serializable> loadSerializable(std::string path);
 
-        void unloadImage(Handle<Image> image);
-        void unloadAudio(Handle<Audio> audio);
-        void unloadFont(Handle<Font> font);
-        void unloadSerializable(Handle<Serializable> text);
+        void unloadImage(THandle<Image> image);
+        void unloadAudio(THandle<Audio> audio);
+        void unloadFont(THandle<Font> font);
+        void unloadSerializable(THandle<Serializable> text);
 
-        Pool<SDL_Surface*, Simply2D::Image> m_images        { 16u, "texture pool" };
-        Pool<MIX_Audio*, Simply2D::Audio>   m_audio         { 16u, "audio pool" };
-        Pool<TTF_Font*, Simply2D::Font>     m_font          { 16u, "fonts pool" };
-        Pool<json, Simply2D::Serializable>  m_serializables { 64u, "serializables pool" };
+        TPool<SDL_Surface*, Simply2D::Image> m_images;
+        TPool<MIX_Audio*, Simply2D::Audio>   m_audio;
+        TPool<TTF_Font*, Simply2D::Font>     m_font;
+        TPool<json, Simply2D::Serializable>  m_serializables;
 
         std::unordered_map<std::string, Asset> m_loadedAssets;
     };

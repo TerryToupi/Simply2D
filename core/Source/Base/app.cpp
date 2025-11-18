@@ -1,6 +1,7 @@
 #include <pch.h>
 
 #include "Base/app.h"
+#include "Memory/memory.h"
 #include "Memory/memoryAllocator.h"
 
 #include "Source/Base/assetDataBase.h"
@@ -42,6 +43,7 @@ namespace Simply2D
 		m_assetDatabase = AssetDatabase::Create(specs.assets);
 
 		Allocator::GetInstance().SetRegionsCapacity(specs.memory);
+		MM::Initialize();
 
 		m_running = true;
 	}
@@ -115,16 +117,20 @@ namespace Simply2D
 					job();
 			}
 		}
-
-		TTF_Quit();
-		MIX_Quit();
-		SDL_Quit();
-
-		ThreadPool::Shutdown();
 	}
 
 	void Application::stop()
 	{
 		m_running = false;
+	}
+
+	void Application::destroy()
+	{
+		TTF_Quit();
+		MIX_Quit();
+		SDL_Quit();
+
+		ThreadPool::Shutdown();
+		MM::Shutdown();
 	}
 }

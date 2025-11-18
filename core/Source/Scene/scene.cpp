@@ -18,7 +18,7 @@ namespace Simply2D
 	{
 		AssetDatabaseImpl* assets = (AssetDatabaseImpl*)(Application::GetInstance().GetAssetDatabase().get());
 
-		json* config = assets->getSerializable(Handle<Serializable>(level.handle));
+		json* config = assets->getSerializable(THandle<Serializable>(level.handle));
 		// Generating the tileset
 		{
 			uint16_t tileWidth = (uint16_t)(*config)["tilesets"][0]["tilewidth"];

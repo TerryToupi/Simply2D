@@ -24,11 +24,11 @@ namespace Simply2D
 		~TileLayer();
 
 		void putTile(const int id = 0, const int x = 0, const int y = 0);
-		Handle<Texture> texture();
+		THandle<Texture> texture();
 
 	private:
 		TileLayerSpecifications m_specs;
 		TileSet* m_tileSet;
-		Handle<Texture> m_texture;
+		THandle<Texture> m_texture;
 	};
 }
