@@ -27,10 +27,11 @@ namespace Simply2D
 	class Application
 	{
 	public:
-		void Create(const ApplicationSpecifications& specs = ApplicationSpecifications());
+		static void Create(const ApplicationSpecifications& specs = ApplicationSpecifications());
+		static void Destroy();
+
 		void Run();
 		void Stop();
-		void Destroy();
 
 		static Application* GetInstance()
 		{

@@ -18,7 +18,7 @@ int main()
 		specs.identifier = "com.terrytoupi.simply2D.giorgos";
 
 		// create application
-		Simply2D::app().Create(specs);
+		Simply2D::Application::Create(specs);
 
 		// load assets
 		Simply2D::assetDatabase().load(Simply2D::AssetType::SERIALIZABLE, "scenes/level1/Level1.json");
@@ -31,7 +31,7 @@ int main()
 		Simply2D::app().Run();
 
 		// shutdown systems
-		Simply2D::app().Destroy();
+		Simply2D::Application::Destroy();
 	}
 	MM::Shutdown();
     return 0;

@@ -124,14 +124,14 @@ namespace Simply2D
 	void Application::Destroy()
 	{
 		// shutdown scenes
-		m_scenes.clear();
+		s_pInstance->m_scenes.clear();
 
 		// shutdown Renderer
-		RendererImpl* rimpl = static_cast<RendererImpl*>(m_pRenderer);
+		RendererImpl* rimpl = static_cast<RendererImpl*>(s_pInstance->m_pRenderer);
 		Delete<RendererImpl>(rimpl);
 
 		// shutdown AssetDatabase
-		AssetDatabaseImpl* aimpl = static_cast<AssetDatabaseImpl*>(m_pAssetDatabase);
+		AssetDatabaseImpl* aimpl = static_cast<AssetDatabaseImpl*>(s_pInstance->m_pAssetDatabase);
 		Delete<AssetDatabaseImpl>(aimpl);
 
 		// shutdown SDL
