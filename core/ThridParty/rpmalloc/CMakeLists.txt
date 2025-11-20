@@ -17,7 +17,6 @@ option(RPMALLOC_INSTALL "Enable install targets" OFF)
 # ----------------------------------------
 set(RPMALLOC_SOURCES
     rpmalloc/rpmalloc.c
-    rpmalloc/malloc.c
 )
 
 set(RPMALLOC_PUBLIC_HEADERS
