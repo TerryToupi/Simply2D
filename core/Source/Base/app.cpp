@@ -9,6 +9,7 @@
 #include "Source/Base/threadPool.h"
 #include "Source/Rendering/renderingBackend.h"
 #include "Source/Animation/animatorManager.h"
+#include "Source/Systems/colisionChecker.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3_Mixer/SDL_mixer.h>
@@ -16,13 +17,16 @@
 
 namespace Simply2D
 {
-	void Application::create(const ApplicationSpecifications& specs)
+	void Application::Create(const ApplicationSpecifications& specs)
 	{
-		m_specifications = specs;
+		assert(s_pInstance == nullptr);
+		s_pInstance = New<Application>();
 
-		if (!SDL_SetAppMetadata(m_specifications.name.c_str(),
-			m_specifications.version.c_str(),
-			m_specifications.identifier.c_str()))
+		s_pInstance->m_specifications = specs;
+
+		if (!SDL_SetAppMetadata(s_pInstance->m_specifications.name.c_str(),
+			s_pInstance->m_specifications.version.c_str(),
+			s_pInstance->m_specifications.identifier.c_str()))
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
 
 		if (!SDL_Init(SDL_INIT_VIDEO |
@@ -38,34 +42,34 @@ namespace Simply2D
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
 
 		ThreadPool::Initialize();
-
-		m_renderer = Renderer::Create(specs.renderer);
-		m_assetDatabase = AssetDatabase::Create(specs.assets);
-
+		s_pInstance->m_pRenderer = Renderer::Create(specs.renderer);
+		s_pInstance->m_pAssetDatabase = AssetDatabase::Create(specs.assets);
 		Allocator::GetInstance().SetRegionsCapacity(specs.memory);
-		MM::Initialize();
 
-		m_running = true;
+		s_pInstance->m_running = true;
 	}
 
-	void Application::run()
+	void Application::Run()
 	{
 		double oldTime = 0;
 		double currTime = 0;
 		float timeStep = 0;
-
-		RendererImpl* renderer = static_cast<RendererImpl*>(m_renderer.get());
+		uint32_t frameActiveScene = 0;
 
 		// setup timer
 		currTime = Clock::getTime();
 		timeStep = std::min(0.1f, std::max(0.0001f, (float)(currTime - oldTime)));
 		oldTime = currTime;
 
+		RendererImpl* renderer = static_cast<RendererImpl*>(m_pRenderer);
 		while (m_running)
 		{
 			currTime = Clock::getTime();
 			timeStep = std::min(0.1f, std::max(0.0001f, (float)(currTime - oldTime)));
 			oldTime = currTime;
+
+			// cache the currently active scene
+			frameActiveScene = m_activeScene;
 
 			// polling events
 			{
@@ -73,64 +77,73 @@ namespace Simply2D
 				while (SDL_PollEvent(&event))
 				{
 					if (event.type == SDL_EVENT_QUIT)
-						stop();
+						Stop();
 				}
 			}
 
 			// on begin frame
 			{
-				for (const auto& layer : m_layers)
-					layer->begin(timeStep);
+				// begin for the active scene
+				m_scenes.at(frameActiveScene)->begin(timeStep);
 			}
 
 			// updating layers
 			{
 				// updating the Animations
 				AnimatorManager::GetInstance().Progress(currTime);
-				
-				// update the scripting
-				for (const auto& layer : m_layers)
-					layer->update(timeStep);
+
+				// check for colisions
+				ColisionChecker::check(m_scenes.at(frameActiveScene)->GetSpriteRegister());
+
+				// update the scene
+				m_scenes.at(frameActiveScene)->update(timeStep);
 			}
 
 			// rendering
 			renderer->beginFrame();
 			{
-				for (const auto& layer : m_layers)
-					layer->render();
+				// rendering the scenes first
+				m_scenes.at(frameActiveScene)->render();
 			}
 			renderer->endFrame();
 
 			// on enf frame
 			{
-				for (const auto& layer : m_layers)
-					layer->end(timeStep);
+				m_scenes.at(frameActiveScene)->end(timeStep);
 
 				Allocator::ResetFrameRegion();
-			}
-
-			// execute main thread jobs after scripting is done
-			// processing for this frame
-			{
-				std::function<void()> job;
-				while (m_mainThreadQueue.pop_front(job))
-					job();
 			}
 		}
 	}
 
-	void Application::stop()
+	void Application::Stop()
 	{
 		m_running = false;
 	}
 
-	void Application::destroy()
+	void Application::Destroy()
 	{
+		// shutdown scenes
+		m_scenes.clear();
+
+		// shutdown Renderer
+		RendererImpl* rimpl = static_cast<RendererImpl*>(m_pRenderer);
+		Delete<RendererImpl>(rimpl);
+
+		// shutdown AssetDatabase
+		AssetDatabaseImpl* aimpl = static_cast<AssetDatabaseImpl*>(m_pAssetDatabase);
+		Delete<AssetDatabaseImpl>(aimpl);
+
+		// shutdown SDL
 		TTF_Quit();
 		MIX_Quit();
 		SDL_Quit();
 
+		// shutdown Threads
 		ThreadPool::Shutdown();
-		MM::Shutdown();
+
+		// Delete the application
+		Delete<Application>(s_pInstance);
+		s_pInstance = nullptr;
 	}
 }

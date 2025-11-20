@@ -9,10 +9,10 @@ namespace Simply2D
 	TileSet::TileSet(uint16_t tileWidth, uint16_t tileHeight, Asset setImage)
 		:	m_tileWidth(tileWidth), m_tileHeight(tileHeight)
 	{
-		m_tileSetTexture = Application::GetInstance().GetRenderer()->createTexture(THandle<Image>(setImage.handle));
+		m_tileSetTexture = Application::GetInstance()->GetRenderer()->createTexture(THandle<Image>(setImage.handle));
 
 		int width = 0, height = 0;
-		Application::GetInstance().GetRenderer()->textureSize(m_tileSetTexture, width, height);
+		Application::GetInstance()->GetRenderer()->textureSize(m_tileSetTexture, width, height);
 
 		m_tileSetWidth = width / m_tileWidth;
 		m_tileSetHeight = height / m_tileHeight;
@@ -32,7 +32,7 @@ namespace Simply2D
 
 	TileSet::~TileSet()
 	{
-		Application::GetInstance().GetRenderer()->destroyTexture(m_tileSetTexture);
+		Application::GetInstance()->GetRenderer()->destroyTexture(m_tileSetTexture);
 		m_tiles.clear();
 	}
 

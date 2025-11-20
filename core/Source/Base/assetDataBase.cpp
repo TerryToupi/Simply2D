@@ -9,6 +9,8 @@
 #include "Source/Rendering/renderingBackend.h"
 #include "Source/Base/assetDataBase.h"
 
+#include "Memory/memory.h"
+
 namespace Simply2D
 { 
 	AssetDatabaseImpl::AssetDatabaseImpl(const AssetDatabaseSpecifications& specs)
@@ -136,7 +138,8 @@ namespace Simply2D
 	THandle<Serializable> AssetDatabaseImpl::loadSerializable(std::string path)
 	{
 		std::ifstream file(path);
-		return m_serializables.Insert(json::parse(file));
+		json j = json::parse(file);
+		return m_serializables.Insert(std::move(j));
 	}
 
 	void AssetDatabaseImpl::unloadImage(THandle<Image> image)
@@ -179,8 +182,8 @@ namespace Simply2D
 		m_serializables.Remove(text);
 	}
 
-	std::shared_ptr<AssetDatabase> AssetDatabase::Create(const AssetDatabaseSpecifications& specs)
+	AssetDatabase* AssetDatabase::Create(const AssetDatabaseSpecifications& specs)
 	{
-		return std::make_shared<AssetDatabaseImpl>(specs);
+		return static_cast<AssetDatabase*>(New<AssetDatabaseImpl>(specs));
 	}
 }

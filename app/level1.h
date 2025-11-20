@@ -5,7 +5,7 @@
 class Level1 final : public Simply2D::Scene
 {
 public:
-	Level1(Simply2D::Asset level, Simply2D::SceneManager* manager);
+	Level1(Simply2D::Asset level);
 	~Level1();
 
 	virtual void event()		   override;

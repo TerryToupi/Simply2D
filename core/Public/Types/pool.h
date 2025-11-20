@@ -41,7 +41,7 @@ public:
 
     U* Get(const THandle<V>& handle)
     {
-        if (!handle.IsValid() || handle.m_index >= m_size) return nullptr;
+        if (handle.m_index >= m_size) return nullptr;
         if (handle.m_generation != m_data[handle.m_index].generation) return nullptr;
 
         return &m_data[handle.m_index].data;
@@ -49,7 +49,7 @@ public:
 
     void Remove(const THandle<V>& handle)
     {
-        if (!handle.IsValid() || handle.m_index >= m_size) return;
+        if (handle.m_index >= m_size) return;
         if (m_data[handle.m_index].generation != handle.m_generation) return;
 
         ++m_data[handle.m_index].generation;

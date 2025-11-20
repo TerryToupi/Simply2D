@@ -3,15 +3,16 @@
 #include "Base/app.h"
 #include "Base/assets.h"
 
-
 #include "Source/Rendering/renderingBackend.h"
 #include "Source/Base/assetDataBase.h"
 
+#include "Memory/memory.h"
+
 namespace Simply2D
 {
-	std::shared_ptr<Renderer> Renderer::Create(const RendererSpecifications& specs)
+	Renderer* Renderer::Create(const RendererSpecifications& specs)
 	{
-		return std::make_shared<RendererImpl>(specs);
+		return static_cast<Renderer*>(New<RendererImpl>(specs));
 	}
 
 	RendererImpl::RendererImpl(const RendererSpecifications& specs)
@@ -167,7 +168,7 @@ namespace Simply2D
 
 	THandle<Texture> RendererImpl::createTexture(THandle<Image> image)
 	{
-		AssetDatabaseImpl* assets = static_cast<AssetDatabaseImpl*>(Application::GetInstance().GetAssetDatabase().get());
+		AssetDatabaseImpl* assets = static_cast<AssetDatabaseImpl*>(Application::GetInstance()->GetAssetDatabase());
 
 		SDL_Surface* surface = assets->getImage(image);
 		assert(surface);

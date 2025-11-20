@@ -77,7 +77,7 @@ namespace Simply2D
 		RendererSpecifications m_specifications;
 
 	private:
-		static std::shared_ptr<Renderer> Create(const RendererSpecifications& specs);
+		static Renderer* Create(const RendererSpecifications& specs);
 		
 		friend class Application;
 	};

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <optional>
-#include <deque>
 
 #include "Base/assets.h"
 
@@ -9,39 +8,15 @@
 #include "tileLayers.h"
 #include "sprite.h"
 
+#include "Types/Arrays.h"
+#include "Types/Deque.h"
+
 namespace Simply2D
 {
-	class Scene;
-
-	class SceneManager
-	{
-	public:
-		SceneManager() = default;
-		~SceneManager() = default;
-		
-		void begin(float ts);
-		void event();
-		void update(float ts);
-		void render();
-		void end(float ts);
-		
-		template<std::derived_from<Scene> TScene>
-		void push(Asset level)
-		{
-			m_scenes.push_back(std::make_shared<TScene>(level, this));
-		} 
-
-	private:
-		uint8_t m_activeIndex = 0;
-		std::vector<std::shared_ptr<Scene>> m_scenes;
-
-		friend class Scene;
-	};
-
 	class Scene
 	{
 	public:
-		Scene(Asset level, SceneManager* manager);
+		Scene(Asset level);
 		virtual ~Scene() = default;
 
 		// Scripting functions
@@ -54,32 +29,17 @@ namespace Simply2D
 		// registering
 		virtual void registerSprite(Sprite* sprite);
 
-		template<typename TScene>
-		requires(std::is_base_of_v<Scene, TScene>)
-		void transition()
-		{
-			for (unsigned i = 0; i < m_manager->m_scenes.size(); ++i)
-			{
-				if (auto casted = dynamic_cast<TScene*>(m_manager->m_scenes.at(i).get()))
-				{
-					m_manager->m_activeIndex = i;
-					return;
-				}
-			}
-		}
-
 	protected:
-		std::optional<TileSet>					m_tileset;
-		std::array<std::optional<TileLayer>, 6> m_layers;
-		unsigned								m_layersCount = 0;
+		std::optional<TileSet>				m_tileset;
+		TArray<std::optional<TileLayer>, 6> m_layers;
+		unsigned							m_layersCount = 0;
 
 	private:
-		std::deque<Sprite*>& GetSpriteRegister() { return m_spriteRegister; }
+		TDeque<Sprite*>& GetSpriteRegister() { return m_spriteRegister; }
 
 	private:
-		SceneManager*		m_manager;
-		std::deque<Sprite*>	m_spriteRegister;
+		TDeque<Sprite*>	m_spriteRegister;
 
-		friend class SceneManager;
+		friend class Application;
 	};
 }

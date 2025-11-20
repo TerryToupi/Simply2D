@@ -13,10 +13,9 @@ using json = nlohmann::json;
 
 namespace Simply2D
 {
-	Scene::Scene(Asset level, SceneManager* manager)
-		:	m_manager(manager)
+	Scene::Scene(Asset level) 
 	{
-		AssetDatabaseImpl* assets = (AssetDatabaseImpl*)(Application::GetInstance().GetAssetDatabase().get());
+		AssetDatabaseImpl* assets = (AssetDatabaseImpl*)(Application::GetInstance()->GetAssetDatabase());
 
 		json* config = assets->getSerializable(THandle<Serializable>(level.handle));
 		// Generating the tileset
@@ -66,34 +65,5 @@ namespace Simply2D
 	void Scene::registerSprite(Sprite* sprite)
 	{
 		m_spriteRegister.push_back(sprite);
-	}
- 
-	void SceneManager::begin(float ts)
-	{
-		m_scenes.at(m_activeIndex)->begin(ts);
-	}
-
-	void SceneManager::event()
-	{
-		m_scenes.at(m_activeIndex)->event();
-	}
-
-	void SceneManager::update(float ts)
-	{ 
-		// colision checking on the registered sprites
-		ColisionChecker::check(m_scenes.at(m_activeIndex)->GetSpriteRegister());
-
-		// persistence update on the script
-		m_scenes.at(m_activeIndex)->update(ts);
-	}
-
-	void SceneManager::render()
-	{
-		m_scenes.at(m_activeIndex)->render();
-	}
-
-	void SceneManager::end(float ts)
-	{
-		m_scenes.at(m_activeIndex)->end(ts);
 	}
 }

@@ -8,8 +8,6 @@ public:
 	THandle() : m_index(0), m_generation(0) {}
 	THandle(uint32_t packed) : m_index(static_cast<uint16_t>(packed >> 16)), m_generation(static_cast<uint16_t>(packed & 0xFFFF)) {}
 
-	bool IsValid() const { return m_generation != 0; }
-
 	bool operator==(const THandle<T>& other) const { return other.m_index == m_index && other.m_generation == m_generation; }
 	bool operator!=(const THandle<T>& other) const { return other.m_index != m_index || other.m_generation != m_generation; }
 

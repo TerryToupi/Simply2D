@@ -2,15 +2,15 @@
 
 #include <string>
 #include <vector>
-#include <functional>
 
-#include "layer.h"
 #include "assets.h"
 
 #include "Rendering/renderer.h"
 #include "Scene/scene.h"
-#include "Types/mtRingBuffer.h"
 #include "Memory/memoryAllocator.h"
+
+#include "Memory/memory.h"
+#include "Types/Arrays.h"
 
 namespace Simply2D
 {
@@ -27,33 +27,45 @@ namespace Simply2D
 	class Application
 	{
 	public:
-		static Application& GetInstance()
+		void Create(const ApplicationSpecifications& specs = ApplicationSpecifications());
+		void Run();
+		void Stop();
+		void Destroy();
+
+		static Application* GetInstance()
 		{
-			static Application instance;
-			return instance;
-		}
-		std::shared_ptr<Renderer> GetRenderer()
-		{
-			return m_renderer;
-		}
-		std::shared_ptr<AssetDatabase> GetAssetDatabase()
-		{
-			return m_assetDatabase;
+			return s_pInstance;
 		}
 
-		void create(const ApplicationSpecifications& specs = ApplicationSpecifications());
-		void run();
-		void stop();
-		void destroy();
-
-		template<typename TLayer>
-		requires(std::is_base_of_v<Layer, TLayer>)
-		void pushLayer()
+		Renderer* GetRenderer()
 		{
-			m_layers.push_back(std::make_shared<TLayer>());
+			return m_pRenderer;
+		}
+		AssetDatabase* GetAssetDatabase()
+		{
+			return m_pAssetDatabase;
 		}
 
-	private:
+		template<std::derived_from<Scene> TScene>
+		void pushScene(Asset asset)
+		{
+			m_scenes.push_back(std::make_shared<TScene>(asset));
+		}
+
+		template<typename TScene>
+		requires(std::is_base_of_v<Scene, TScene>)
+		void activateScene()
+		{
+			for (unsigned i = 0; i < m_scenes.size(); ++i)
+			{
+				if (typeid(m_scenes[i]) == typeid(TScene))
+				{
+					m_activeScene = i;
+					return;
+				}
+			}
+		}
+
 		Application() = default;
 		~Application() = default;
 		Application(const Application& app) = delete;
@@ -62,14 +74,13 @@ namespace Simply2D
 	private:
 		bool m_running = false;
 
-		ApplicationSpecifications m_specifications;
-		std::shared_ptr<Renderer> m_renderer;
-		std::shared_ptr<AssetDatabase> m_assetDatabase;
+		ApplicationSpecifications	m_specifications;
+		Renderer*					m_pRenderer;
+		AssetDatabase*				m_pAssetDatabase;
 
-		std::vector<std::shared_ptr<Layer>> m_layers;
+		TVector<std::shared_ptr<Scene>> m_scenes;
+		uint32_t						m_activeScene = 0;
 
-		MTRingQueue<std::function<void()>, 256> m_mainThreadQueue;
-	
-		friend class Layer;
+		static inline Application* s_pInstance = nullptr;
 	};
 }

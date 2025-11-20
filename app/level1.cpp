@@ -1,8 +1,8 @@
 #include <level1.h>
-#include <level2.h>
+#include <iostream>
 
-Level1::Level1(Simply2D::Asset level, Simply2D::SceneManager* manager)
-	:	Scene(level, manager)
+Level1::Level1(Simply2D::Asset level)
+	:	Scene(level)
 {
 	m_animator.Start(&m_anim1, 0.0f, 0);
  }
@@ -17,11 +17,6 @@ void Level1::event()
 
 void Level1::update(float ts)
 {
-	m_counter1 += ts;
-	if (m_counter1 >= m_timer1)
-	{
-		m_counter1 = 0.0f;
-	}
 }
 
 void Level1::render()

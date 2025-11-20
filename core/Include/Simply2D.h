@@ -2,7 +2,6 @@
 
 #include "Base/app.h"
 #include "Base/assets.h"
-#include "Base/layer.h"
 #include "Base/resources.h"
 
 #include "Rendering/renderer.h"
@@ -32,16 +31,16 @@ namespace Simply2D
 {
 	static inline Simply2D::Application& app()
 	{
-		return Simply2D::Application::GetInstance();
+		return *Simply2D::Application::GetInstance();
 	}
 
 	static inline Simply2D::Renderer& gfx()
 	{
-		return *Simply2D::Application::GetInstance().GetRenderer();
+		return *Simply2D::Application::GetInstance()->GetRenderer();
 	}
 
 	static inline Simply2D::AssetDatabase& assetDatabase()
 	{
-		return *Simply2D::Application::GetInstance().GetAssetDatabase();
+		return *Simply2D::Application::GetInstance()->GetAssetDatabase();
 	}
 }

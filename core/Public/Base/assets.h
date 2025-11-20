@@ -42,7 +42,7 @@ namespace Simply2D
         AssetDatabaseSpecifications m_specifications;
 
     private:
-		static std::shared_ptr<AssetDatabase> Create(const AssetDatabaseSpecifications& specs);
+		static AssetDatabase* Create(const AssetDatabaseSpecifications& specs);
 
         friend class Application;
     };
