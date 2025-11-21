@@ -56,6 +56,12 @@ namespace Simply2D
 		float timeStep = 0;
 		uint32_t frameActiveScene = 0;
 
+#if not defined(NDEBUG)
+		float statsTimer = 5.0f;
+		float statsCounter = 0.0f;
+#endif // !NDEBUG
+
+
 		// setup timer
 		currTime = Clock::getTime();
 		timeStep = std::min(0.1f, std::max(0.0001f, (float)(currTime - oldTime)));
@@ -113,6 +119,16 @@ namespace Simply2D
 
 				Allocator::ResetFrameRegion();
 			}
+
+#if not defined(NDEBUG)
+			if (statsCounter >= statsTimer)
+			{
+				statsCounter = 0.0f;
+				MM::CLIReportStatistics();
+			}
+			else
+				statsCounter += timeStep;
+#endif // !NDEBUG
 		}
 	}
 

@@ -14,8 +14,6 @@ namespace MM
     void InitializeThreadHeap();
     void ShutdownThreadHeap();
 
-    //-------------------------------------------------------------------------
-
     inline void MemsetZero(void* ptr, size_t size)
     {
         memset(ptr, 0, size);
@@ -26,8 +24,6 @@ namespace MM
     {
         memset(ptr, 0, sizeof(T));
     }
-
-    //-------------------------------------------------------------------------
 
     inline bool IsAligned(void const* p, size_t n)
     {
@@ -50,10 +46,9 @@ namespace MM
         return CalculatePaddingForAlignment(reinterpret_cast<uintptr_t>(address), requiredAlignment);
     }
 
-    //-------------------------------------------------------------------------
-
     size_t GetTotalRequestedMemory();
     size_t GetTotalAllocatedMemory();
+    void   CLIReportStatistics();
 }
 
 //-------------------------------------------------------------------------
@@ -63,8 +58,6 @@ namespace MM
 [[nodiscard]] void* Alloc(size_t size, size_t alignment = DEFAULT_ALIGNMENT);
 [[nodiscard]] void* Realloc(void* pMemory, size_t newSize, size_t originalAlignment = DEFAULT_ALIGNMENT);
 void Free(void*& pMemory);
-
-//-------------------------------------------------------------------------
 
 template<typename T, typename... ConstructorParams>
 [[nodiscard]] inline T* New(ConstructorParams&&... params)
