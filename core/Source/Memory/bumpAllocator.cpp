@@ -1,5 +1,3 @@
-#include <pch.h>
-
 #include "Memory/bumpAllocator.h"
 
 BumpAllocator::BumpAllocator(size_t capacity)

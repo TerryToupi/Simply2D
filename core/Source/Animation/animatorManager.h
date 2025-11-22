@@ -20,13 +20,13 @@ namespace Simply2D
 		void Progress(double currTime);
 		void TimeShift(double dt);
 
-		static auto GetInstance(void) -> AnimatorManager& { return s_Instance; }
-		static auto GetInstanceConst(void) -> const AnimatorManager& { return s_Instance; }
+		static AnimatorManager& GetInstance(void)
+		{
+			static AnimatorManager instacne;
+			return instacne;
+		}
 
 	private:
 		std::set<Animator*>	m_running, m_suspended;
-
-	private:
-		static AnimatorManager s_Instance;
 	};
 }

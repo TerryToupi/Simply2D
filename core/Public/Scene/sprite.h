@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <variant>
+#include <string>
 
 #include "Math/mathUtils.h"
 

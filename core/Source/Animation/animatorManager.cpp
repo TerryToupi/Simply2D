@@ -1,11 +1,7 @@
-#include <pch.h>
-
 #include "Source/Animation/animatorManager.h"
 
 namespace Simply2D
 {
-	AnimatorManager AnimatorManager::s_Instance;
-
 	void AnimatorManager::Reginster(Animator* a)
 	{
 		m_suspended.insert(a);

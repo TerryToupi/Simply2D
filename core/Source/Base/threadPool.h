@@ -1,51 +1,67 @@
 #pragma once
 
-#include <future>
-#include <memory>
+#include <deque>
+#include <mutex>
 #include <functional>
-#include <type_traits>
+#include <atomic>
+#include <condition_variable>
+#include <vector>
+#include <thread>
 
-namespace Simply2D 
+namespace Simply2D
 {
-	namespace ThreadPool
-	{
-		using Job = std::function<void()>;
+    using Job = std::function<void()>;
 
-		// Initialization of the threadPool
-		void Initialize();
+    class ThreadPool
+    {
+    public:
+        // ---- Static Public API ----
+        static void Initialize();
+        static void Shutdown();
+        static void Execute(const Job& job);
+        static void Wait();
+        static bool Busy();
 
-		// Shutdown of the threadPool
-		void Shutdown();
-		
-		// Execute job without a promise
-		void Execute(const Job& job);
+    private:
+        // ---- Singleton Access ----
+        static ThreadPool& Instance();
 
-		// is the queue busy
-		bool Busy();
+        ThreadPool() = default;
+        ThreadPool(const ThreadPool&) = delete;
+        ThreadPool& operator=(const ThreadPool&) = delete;
 
-		// Wait if the queue is busy to finish execution
-		void Wait();
+        // ---- Internal Implementations ----
+        void InitializeImpl();
+        void ShutdownImpl();
+        void ExecuteImpl(const Job& job);
+        void WaitImpl();
+        bool BusyImpl();
 
-		// executing a task async and getting a result
-		template<class F, class... Args>
-		auto Async(F&& f, Args&&... args)
-			-> std::future<typename std::invoke_result_t<F, Args...>>
-		{
-			using return_type = std::invoke_result_t<F, Args...>;
+        void WorkerLoop();
 
-			auto job = std::make_shared<std::packaged_task<return_type()>>(
-				[f = std::forward<F>(f), ...args = std::forward<Args>(args)]() mutable
-				{
-					return std::invoke(f, args...);
-				}
-			);
+        struct JobQueue
+        {
+            bool push_back(const Job& item);
+            bool pop_front(Job& out);
+            void clear();
+            bool empty();
 
-			std::future<return_type> res = job->get_future();
-			Execute([job]()
-				{
-					(*job)();
-				});
-			return res;
-		}
-	}
+            std::deque<Job> m_queue;
+            std::mutex      m_lock;
+        };
+
+        // ---- Internal State ----
+        std::atomic<bool> m_alive{ false };
+        uint32_t          m_numThreads = 0;
+        std::vector<std::thread> m_threads;
+
+        JobQueue          m_jobQueue;
+
+        std::atomic<uint64_t> m_currentLabel{ 0 };
+        std::atomic<uint64_t> m_finishLabel{ 0 };
+
+        std::condition_variable m_wakeCondition;
+        std::mutex              m_wakeMutex;
+    };
 }
+

@@ -2,6 +2,7 @@
 
 #include <set>
 #include <functional>
+#include <array>
 
 #include "Base/resources.h"
 

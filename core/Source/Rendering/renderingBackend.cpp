@@ -1,5 +1,3 @@
-#include <pch.h>
-
 #include "Base/app.h"
 #include "Base/assets.h"
 

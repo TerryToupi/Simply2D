@@ -1,5 +1,3 @@
-#include <pch.h>
-
 #include "Base/app.h"
 #include "Memory/memory.h"
 #include "Memory/memoryAllocator.h"
@@ -58,7 +56,7 @@ namespace Simply2D
 
 #if not defined(NDEBUG)
 		float statsTimer = 5.0f;
-		float statsCounter = 0.0f;
+		float statsCounter = 5.0f;
 #endif // !NDEBUG
 
 

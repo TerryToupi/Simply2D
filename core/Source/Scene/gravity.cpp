@@ -1,5 +1,3 @@
-#include <pch.h>
-
 #include "Scene/gravity.h"
 
 namespace Simply2D 

@@ -1,9 +1,9 @@
 ﻿#include "Memory/memory.h"
 
-#include "rpmalloc.h"
-
 #include <cstdio>
 #include <utility>
+
+#include "rpmalloc.h"
 
 namespace MM
 {
@@ -16,9 +16,11 @@ namespace MM
 
         // Init config
         memset(&g_rpmallocConfig, 0, sizeof(rpmalloc_config_t));
-        g_rpmallocConfig.page_size = 64 * 1024;
-        g_rpmallocConfig.span_size = 128 * 1024;
-        g_rpmallocConfig.span_map_count = 32;
+        //g_rpmallocConfig.page_size = 64 * 1024;
+        //g_rpmallocConfig.span_size = 128 * 1024;
+        //g_rpmallocConfig.span_map_count = 32;
+        g_rpmallocConfig.enable_huge_pages = 1;
+        g_rpmallocConfig.span_map_count = 256;
         rpmalloc_initialize_config(&g_rpmallocConfig);
 
         g_isMemorySystemInitialized = true;
@@ -95,3 +97,6 @@ void Free(void*& pMemory)
 	rpfree((uint8_t*)pMemory);
 	pMemory = nullptr;
 }
+
+// override the new / delete opperator
+#include "rpnew.h"

@@ -1,7 +1,4 @@
-#include <pch.h> 
-
 #include "Base/app.h"
-
 #include "Scene/tileLayers.h"
 
 namespace Simply2D

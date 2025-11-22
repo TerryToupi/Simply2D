@@ -49,10 +49,6 @@ list(FILTER CORE_FILES EXCLUDE REGEX ".*/ThirdParty/.*")
 # --------------------------------------------------
 # EABase (headers only)
 # --------------------------------------------------
-file(GLOB_RECURSE EABASE_HEADERS CONFIGURE_DEPENDS
-    "${EABASE_ROOT}/include/Common/*.h"
-)
-
 set(EABASE_INCLUDE_DIR "${EABASE_ROOT}/include/Common")
 
 # --------------------------------------------------
@@ -71,25 +67,19 @@ set(EASTL_INCLUDE_DIR "${EASTL_ROOT}/include")
 # rpmalloc (C sources + include)
 # Mirrors their official CMake layout: rpmalloc/rpmalloc.c
 # --------------------------------------------------
-file(GLOB RPMALLOC_HEADERS CONFIGURE_DEPENDS
-    "${RPMALLOC_ROOT}/rpmalloc/*.h"
-)
 file(GLOB RPMALLOC_SOURCES CONFIGURE_DEPENDS
     "${RPMALLOC_ROOT}/rpmalloc/*.c"
 )
-
-set(RPMALLOC_INCLUDE_DIR "${RPMALLOC_ROOT}/rpmalloc")
+set(RPMALLOC_INCLUDE_DIR "${RPMALLOC_ROOT}/rpmalloc/rpmalloc")
 
 # --------------------------------------------------
 # Single static library with EVERYTHING
 # --------------------------------------------------
 add_library(${PROJECT_NAME} STATIC
     ${CORE_FILES}
-    ${EABASE_HEADERS}
     ${EASTL_SOURCES}
-    ${EASTL_HEADERS} 
+    ${EASTL_HEADERS}       # for IDE browsing
     ${RPMALLOC_SOURCES}
-    ${RPMALLOC_HEADERS}
 )
 
 add_library(Simply2D::Core ALIAS ${PROJECT_NAME})
@@ -97,7 +87,7 @@ add_library(Simply2D::Core ALIAS ${PROJECT_NAME})
 target_compile_features(${PROJECT_NAME}
     PUBLIC
         cxx_std_20
-        c_std_11 
+        c_std_11           # rpmalloc wants C11
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -115,6 +105,14 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # --------------------------------------------------
+# Precompiled header (ideally includes rpnew.h)
+# --------------------------------------------------
+target_precompile_headers(${PROJECT_NAME}
+    PRIVATE
+        ${CORE_FOLDER}/pch.h
+)
+
+# --------------------------------------------------
 # Core / EASTL / EABase defines
 # (mirroring EASTL + EABase CMake)
 # --------------------------------------------------
@@ -124,7 +122,7 @@ target_compile_definitions(${PROJECT_NAME}
         _CRT_SECURE_NO_WARNINGS
         _SCL_SECURE_NO_WARNINGS
         EASTL_OPENSOURCE=1
-        EASTL_USER_DEFINED_NEW=1
+        EASTL_USER_DEFINED_NEW=1   # since you override global new/delete
 )
 
 if(EASTL_STD_ITERATOR_CATEGORY_ENABLED)
@@ -192,11 +190,4 @@ target_link_libraries(${PROJECT_NAME}
 # --------------------------------------------------
 # Group core files for IDE
 # --------------------------------------------------
-source_group(TREE ${CORE_FOLDER} PREFIX "Core" FILES 
-    ${CORE_FILES}
-    ${EABASE_HEADERS}
-    ${EASTL_SOURCES}
-    ${EASTL_HEADERS} 
-    ${RPMALLOC_SOURCES}
-    ${RPMALLOC_HEADERS}
-)
+source_group(TREE ${CORE_FOLDER} PREFIX "Core" FILES ${CORE_FILES})

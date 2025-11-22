@@ -1,144 +1,125 @@
-#include <pch.h>
-
-#include "Source/Base/threadPool.h"
-
-#include <deque>
-#include <atomic>
-#include <thread>
-#include <algorithm> 
-#include <condition_variable>
+#include "ThreadPool.h"
+#include <algorithm>
 
 namespace Simply2D
 {
-	namespace ThreadPool
-	{
-		class JobQueue
-		{
-		public:
-			inline bool push_back(const Job& item)
-			{
-				std::scoped_lock locker(m_lock);
-				m_queue.push_back(item);
-				return true;
-			}
+    ThreadPool& ThreadPool::Instance()
+    {
+        static ThreadPool instance;
+        return instance;
+    }
 
-			inline bool pop_front(Job& item)
-			{
-				std::scoped_lock locker(m_lock);
-				if (m_queue.empty())
-					return false;
+    void ThreadPool::Initialize() { Instance().InitializeImpl(); }
+    void ThreadPool::Shutdown() { Instance().ShutdownImpl(); }
+    void ThreadPool::Execute(const Job& job) { Instance().ExecuteImpl(job); }
+    void ThreadPool::Wait() { Instance().WaitImpl(); }
+    bool ThreadPool::Busy() { return Instance().BusyImpl(); }
 
-				item = std::move(m_queue.front());
-				m_queue.pop_front();
-				return true;
-			}
+    bool ThreadPool::JobQueue::push_back(const Job& item)
+    {
+        std::scoped_lock lock(m_lock);
+        m_queue.push_back(item);
+        return true;
+    }
 
-			inline bool clear()
-			{
-				std::scoped_lock locker(m_lock);
-				m_queue.clear();
-				return true;
-			}
+    bool ThreadPool::JobQueue::pop_front(Job& out)
+    {
+        std::scoped_lock lock(m_lock);
+        if (m_queue.empty())
+            return false;
 
-			inline bool empty()
-			{
-				std::scoped_lock locker(m_lock);
-				return m_queue.empty();
-			}
+        out = std::move(m_queue.front());
+        m_queue.pop_front();
+        return true;
+    }
 
-		private:
-			std::deque<Job> m_queue;
-			std::mutex		m_lock;
-		};
+    void ThreadPool::JobQueue::clear()
+    {
+        std::scoped_lock lock(m_lock);
+        m_queue.clear();
+    }
 
+    bool ThreadPool::JobQueue::empty()
+    {
+        std::scoped_lock lock(m_lock);
+        return m_queue.empty();
+    }
 
+    void ThreadPool::WorkerLoop()
+    {
+        Job job;
 
-		// Thread pool state
-		std::atomic<bool>		 p_alive;
-		std::vector<std::thread> p_threads;
-		uint32_t				 p_num_threads = 0;
-		std::atomic<uint64_t>	 p_current_label;
-		std::atomic<uint64_t>	 p_finish_label;
-		JobQueue				 p_job_pool;
-		std::condition_variable	 p_wake_condition;
-		std::mutex				 p_wake_mutex;
+        while (true)
+        {
+            if (m_jobQueue.pop_front(job))
+            {
+                job();
+                m_finishLabel.fetch_add(1);
+                continue;
+            }
 
+            std::unique_lock<std::mutex> lock(m_wakeMutex);
+            m_wakeCondition.wait(lock, [this]() {
+                return !m_alive.load() || !m_jobQueue.empty();
+                });
 
+            if (!m_alive.load() && m_jobQueue.empty())
+                break;
+        }
+    }
 
-		void Initialize()
-		{
-			p_finish_label.store(0);
-			p_current_label.store(0);
+    void ThreadPool::InitializeImpl()
+    {
+        ShutdownImpl();
 
-			p_num_threads = std::thread::hardware_concurrency();
-			p_num_threads = std::max(1u, p_num_threads);
+        m_finishLabel.store(0);
+        m_currentLabel.store(0);
 
-			p_threads.reserve(p_num_threads);
+        m_numThreads = std::thread::hardware_concurrency();
+        m_numThreads = std::max(1u, m_numThreads);
 
-			p_alive.store(true);
-			for (uint32_t thread_id = 0; thread_id < p_num_threads; ++thread_id)
-			{
-				p_threads.emplace_back([=]() {
-					Job job;
-					while (true)
-					{
-						if (p_job_pool.pop_front(job))
-						{
-							job();
-							p_finish_label.fetch_add(1);
-							continue;
-						}
+        m_threads.reserve(m_numThreads);
+        m_alive.store(true);
 
-						std::unique_lock<std::mutex> lock(p_wake_mutex);
-						p_wake_condition.wait(lock, []() {
-							return !p_alive.load() || !p_job_pool.empty();
-							});
+        for (uint32_t i = 0; i < m_numThreads; ++i)
+            m_threads.emplace_back([this] { WorkerLoop(); });
+    }
 
-						if (!p_alive.load() && p_job_pool.empty())
-							break;
-					}
-					});
-			}
-		}
+    void ThreadPool::ShutdownImpl()
+    {
+        if (!m_alive.load())
+            return;
 
-		void Shutdown()
-		{
-			p_alive.store(false);
-			p_wake_condition.notify_all();
+        m_alive.store(false);
+        m_wakeCondition.notify_all();
 
-			for (auto& thread : p_threads)
-			{
-				if (thread.joinable())
-					thread.join();
-			}
+        for (auto& t : m_threads)
+            if (t.joinable())
+                t.join();
 
-			p_threads.clear();
-			p_job_pool.clear();
-			p_num_threads = 0;
-			p_current_label.store(0);
-			p_finish_label.store(0);
-		}
+        m_threads.clear();
+        m_jobQueue.clear();
 
-		inline void poll()
-		{
-			std::this_thread::yield();
-		}
+        m_currentLabel.store(0);
+        m_finishLabel.store(0);
+        m_numThreads = 0;
+    }
 
-		void Execute(const Job& job)
-		{
-			p_current_label.fetch_add(1);
-			p_job_pool.push_back(job);
-			p_wake_condition.notify_one();
-		}
+    void ThreadPool::ExecuteImpl(const Job& job)
+    {
+        m_currentLabel.fetch_add(1);
+        m_jobQueue.push_back(job);
+        m_wakeCondition.notify_one();
+    }
 
-		bool Busy()
-		{
-			return p_finish_label.load() < p_current_label.load();
-		}
+    bool ThreadPool::BusyImpl()
+    {
+        return m_finishLabel.load() < m_currentLabel.load();
+    }
 
-		void Wait()
-		{
-			while (Busy()) { poll(); }
-		}
-	}
+    void ThreadPool::WaitImpl()
+    {
+        while (BusyImpl())
+            std::this_thread::yield();
+    }
 }

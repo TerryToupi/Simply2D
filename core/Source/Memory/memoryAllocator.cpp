@@ -1,5 +1,3 @@
-#include <pch.h>
-
 #include "Memory/memoryAllocator.h"
 
 Allocator Allocator::s_instance;

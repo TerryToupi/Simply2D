@@ -1,5 +1,3 @@
-#include <pch.h>
-
 #include "Scene/boundingArea.h"
 
 namespace Simply2D

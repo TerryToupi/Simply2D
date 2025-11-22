@@ -1,5 +1,3 @@
-#include <pch.h>
-
 #include "Source/Systems/colisionChecker.h"
 #include "Source/Base/threadPool.h"
 

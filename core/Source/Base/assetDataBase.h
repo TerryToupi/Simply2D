@@ -3,12 +3,12 @@
 #include "Base/assets.h"
 #include "Types/Pool.h"
 
-#include <nlohmann/json.hpp>
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
+#include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
 namespace Simply2D

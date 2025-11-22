@@ -1,5 +1,3 @@
-#include <pch.h>
-
 #include "Animations/animator.h"
 #include "Source/Animation/animatorManager.h"
 
