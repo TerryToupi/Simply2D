@@ -10,7 +10,7 @@ namespace Simply2D
 {
 	Renderer* Renderer::Create(const RendererSpecifications& specs)
 	{
-		return static_cast<Renderer*>(New<RendererImpl>(specs));
+		return static_cast<Renderer*>(MM::New<RendererImpl>(specs));
 	}
 
 	RendererImpl::RendererImpl(const RendererSpecifications& specs)

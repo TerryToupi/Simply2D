@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Memory/allocator.h"
+#include "Memory/memory.h"
 #include "EASTL/hash_map.h"
 
 template<typename K, typename V> 

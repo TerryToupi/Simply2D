@@ -39,9 +39,9 @@ include(CommonCppFlags)
 # Core source files (exclude ThirdParty)
 # --------------------------------------------------
 file(GLOB_RECURSE CORE_FILES CONFIGURE_DEPENDS
-    "${CORE_FOLDER}/**.h"
-    "${CORE_FOLDER}/**.hpp"
-    "${CORE_FOLDER}/**.cpp"
+    "${CORE_FOLDER}/*.h"
+    "${CORE_FOLDER}/*.hpp"
+    "${CORE_FOLDER}/*.cpp"
 )
 
 list(FILTER CORE_FILES EXCLUDE REGEX ".*/ThirdParty/.*")
@@ -83,13 +83,14 @@ set(RPMALLOC_INCLUDE_DIR "${RPMALLOC_ROOT}/rpmalloc")
 # --------------------------------------------------
 # Single static library with EVERYTHING
 # --------------------------------------------------
-add_library(${PROJECT_NAME} STATIC
-    ${CORE_FILES}
-    ${EABASE_HEADERS}
-    ${EASTL_SOURCES}
-    ${EASTL_HEADERS} 
-    ${RPMALLOC_SOURCES}
-    ${RPMALLOC_HEADERS}
+add_library(${PROJECT_NAME} 
+    STATIC
+        ${CORE_FILES}
+        ${EABASE_HEADERS}
+        ${EASTL_SOURCES}
+        ${EASTL_HEADERS} 
+        ${RPMALLOC_SOURCES}
+        ${RPMALLOC_HEADERS}
 )
 
 add_library(Simply2D::Core ALIAS ${PROJECT_NAME})
@@ -114,17 +115,25 @@ target_include_directories(${PROJECT_NAME}
         "${CORE_FOLDER}"
 )
 
+# ------------------------------------------------------------------------------------------
+# Compiler flags
+# ------------------------------------------------------------------------------------------
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/EASTL/scripts/CMake")
+include(CommonCppFlags)
+
 # --------------------------------------------------
 # Core / EASTL / EABase defines
 # (mirroring EASTL + EABase CMake)
 # --------------------------------------------------
 target_compile_definitions(${PROJECT_NAME}
     PUBLIC
-        _CHAR16T
-        _CRT_SECURE_NO_WARNINGS
-        _SCL_SECURE_NO_WARNINGS
-        EASTL_OPENSOURCE=1
-        EASTL_USER_DEFINED_NEW=1
+        -D_CHAR16T
+        -D_CRT_SECURE_NO_WARNINGS
+        -D_SCL_SECURE_NO_WARNINGS
+        -DEASTL_OPENSOURCE=1
+        -DRPMALLOC_CONFIGURABLE=1
+        -DEASTL_USER_DEFINED_ALLOCATOR=1
+        -DEASTL_EXCEPTIONS_ENABLED=0
 )
 
 if(EASTL_STD_ITERATOR_CATEGORY_ENABLED)
@@ -141,9 +150,6 @@ if(EASTL_DISABLE_APRIL_2025_DEPRECATIONS)
     target_compile_definitions(${PROJECT_NAME} PUBLIC EA_DEPRECATIONS_FOR_2025_APRIL=EA_DISABLED)
 endif()
 
-# --------------------------------------------------
-# rpmalloc-style settings (from their CMake)
-# --------------------------------------------------
 if(RPMALLOC_ENABLE_STATISTICS)
     target_compile_definitions(${PROJECT_NAME} PUBLIC ENABLE_STATISTICS=1)
 else()
@@ -153,8 +159,6 @@ endif()
 if(RPMALLOC_ENABLE_ASSERTS)
     target_compile_definitions(${PROJECT_NAME} PUBLIC ENABLE_ASSERTS=1)
 endif()
-
-target_compile_definitions(${PROJECT_NAME} PUBLIC RPMALLOC_CONFIGURABLE=1)
 
 if(MSVC)
     # same as rpmalloc CMake: disable half-baked C11 atomics

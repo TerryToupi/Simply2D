@@ -182,6 +182,6 @@ namespace Simply2D
 
 	AssetDatabase* AssetDatabase::Create(const AssetDatabaseSpecifications& specs)
 	{
-		return static_cast<AssetDatabase*>(New<AssetDatabaseImpl>(specs));
+		return static_cast<AssetDatabase*>(MM::New<AssetDatabaseImpl>(specs));
 	}
 }

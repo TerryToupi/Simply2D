@@ -26,7 +26,6 @@
 #include "Types/handle.h"
 #include "Types/pool.h"
 #include "Types/span.h"
-#include "Types/mtRingBuffer.h"
 
 namespace Simply2D
 {

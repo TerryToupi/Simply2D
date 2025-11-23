@@ -1,24 +1,64 @@
 #include "Memory/allocator.h"
 #include "Memory/memory.h"
+#include "EASTL/internal/config.h"
+#include "EASTL/allocator.h"
 
-namespace MM
+namespace eastl
 {
-	void* RPMallocAllocator::allocate(size_t n, int flags)
-	{
-		(void)flags; 
-		return Alloc(n);
-	}
+    allocator g_defaultAllocator;
 
-	void* RPMallocAllocator::allocate(size_t n, size_t alignment, size_t offset, int flags)
-	{
-		(void)offset; 
-		(void)flags;
-		return Alloc(n, alignment);
-	}
+    //-------------------------------------------------------------------------
 
-	void RPMallocAllocator::deallocate(void* p, size_t n)
-	{
-		(void)n; 
-		Free(p);
-	}
+    allocator* GetDefaultAllocator()
+    {
+        return &g_defaultAllocator;
+    }
+
+    allocator* SetDefaultAllocator(allocator* pAllocator)
+    {
+        return &g_defaultAllocator;
+    }
+
+    //-------------------------------------------------------------------------
+
+    allocator::allocator(const char* EASTL_NAME(pName))
+    {
+    }
+
+    allocator::allocator(const allocator& EASTL_NAME(alloc))
+    {
+    }
+
+    allocator::allocator(const allocator& EASTL_NAME(alloc), const char* EASTL_NAME(pName))
+    {
+    }
+
+    allocator& allocator::operator=(const allocator& EASTL_NAME(alloc))
+    {
+        return *this;
+    }
+
+    const char* allocator::get_name() const
+    {
+        return EASTL_ALLOCATOR_DEFAULT_NAME;
+    }
+
+    void allocator::set_name(const char* EASTL_NAME(pName))
+    {
+    }
+
+    void* allocator::allocate(size_t n, int flags)
+    {
+        return MM::Alloc(n, EASTL_ALLOCATOR_MIN_ALIGNMENT);
+    }
+
+    void* allocator::allocate(size_t n, size_t alignment, size_t offset, int flags)
+    {
+        return MM::Alloc(n, alignment);
+    }
+
+    void allocator::deallocate(void* p, size_t)
+    {
+        MM::Free(p);
+    }
 }

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Memory/allocator.h"
+#include "Memory/memory.h"
 #include "EASTL/deque.h"
 
 template<typename T>
-using TDeque = eastl::deque<T, MM::RPMallocAllocator>;
+using TDeque = eastl::deque<T>;

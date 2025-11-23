@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "rpmalloc.h"
+#include "rpnew.h"
 
 namespace MM
 {
@@ -63,40 +64,37 @@ namespace MM
         printf("<============================== [MEMORY REPORT] ==============================>\n");
         rpmalloc_dump_statistics(stdout);
     }
+
+    void* Alloc(size_t size, size_t alignment)
+    {
+        assert(MM::g_isMemorySystemInitialized);
+
+        if (size == 0) return nullptr;
+
+        void* pMemory = nullptr;
+
+        pMemory = rpaligned_alloc(alignment, size);
+        assert(MM::IsAligned(pMemory, alignment));
+        return pMemory;
+    }
+
+    void* Realloc(void* pMemory, size_t newSize, size_t originalAlignment)
+    {
+        assert(MM::g_isMemorySystemInitialized);
+
+        void* pReallocatedMemory = nullptr;
+
+        pReallocatedMemory = rprealloc(pMemory, newSize);
+
+        assert(pReallocatedMemory != nullptr);
+        return pReallocatedMemory;
+    }
+
+    void Free(void*& pMemory)
+    {
+        assert(MM::g_isMemorySystemInitialized);
+
+        rpfree((uint8_t*)pMemory);
+        pMemory = nullptr;
+    }
 }
-
-void* Alloc(size_t size, size_t alignment)
-{
-    assert(MM::g_isMemorySystemInitialized);
-
-	if (size == 0) return nullptr;
-
-	void* pMemory = nullptr;
-
-	pMemory = rpaligned_alloc(alignment, size);
-    assert(MM::IsAligned(pMemory, alignment));
-	return pMemory;
-}
-
-void* Realloc(void* pMemory, size_t newSize, size_t originalAlignment)
-{
-    assert(MM::g_isMemorySystemInitialized);
-
-	void* pReallocatedMemory = nullptr;
-
-	pReallocatedMemory = rprealloc(pMemory, newSize);
-
-    assert(pReallocatedMemory != nullptr);
-	return pReallocatedMemory;
-}
-
-void Free(void*& pMemory)
-{
-    assert(MM::g_isMemorySystemInitialized);
-
-	rpfree((uint8_t*)pMemory);
-	pMemory = nullptr;
-}
-
-// override the new / delete opperator
-#include "rpnew.h"

@@ -18,7 +18,7 @@ namespace Simply2D
 	void Application::Create(const ApplicationSpecifications& specs)
 	{
 		assert(s_pInstance == nullptr);
-		s_pInstance = New<Application>();
+		s_pInstance = MM::New<Application>();
 
 		s_pInstance->m_specifications = specs;
 
@@ -142,11 +142,11 @@ namespace Simply2D
 
 		// shutdown Renderer
 		RendererImpl* rimpl = static_cast<RendererImpl*>(s_pInstance->m_pRenderer);
-		Delete<RendererImpl>(rimpl);
+		MM::Delete<RendererImpl>(rimpl);
 
 		// shutdown AssetDatabase
 		AssetDatabaseImpl* aimpl = static_cast<AssetDatabaseImpl*>(s_pInstance->m_pAssetDatabase);
-		Delete<AssetDatabaseImpl>(aimpl);
+		MM::Delete<AssetDatabaseImpl>(aimpl);
 
 		// shutdown SDL
 		TTF_Quit();
@@ -157,7 +157,7 @@ namespace Simply2D
 		ThreadPool::Shutdown();
 
 		// Delete the application
-		Delete<Application>(s_pInstance);
+		MM::Delete<Application>(s_pInstance);
 		s_pInstance = nullptr;
 	}
 }

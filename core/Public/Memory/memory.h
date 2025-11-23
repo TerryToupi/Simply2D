@@ -49,31 +49,26 @@ namespace MM
     size_t GetTotalRequestedMemory();
     size_t GetTotalAllocatedMemory();
     void   CLIReportStatistics();
-}
 
-//-------------------------------------------------------------------------
-// Global Memory Management Functions
-//-------------------------------------------------------------------------
+	[[nodiscard]] void* Alloc(size_t size, size_t alignment = DEFAULT_ALIGNMENT);
+	[[nodiscard]] void* Realloc(void* pMemory, size_t newSize, size_t originalAlignment = DEFAULT_ALIGNMENT);
+	void Free(void*& pMemory);
 
-[[nodiscard]] void* Alloc(size_t size, size_t alignment = DEFAULT_ALIGNMENT);
-[[nodiscard]] void* Realloc(void* pMemory, size_t newSize, size_t originalAlignment = DEFAULT_ALIGNMENT);
-void Free(void*& pMemory);
-
-template<typename T, typename... ConstructorParams>
-[[nodiscard]] inline T* New(ConstructorParams&&... params)
-{
-	void* pMemory = Alloc(sizeof(T), alignof(T));
-    assert(pMemory != nullptr);
-	return new(pMemory) T(std::forward<ConstructorParams>(params)...);
-}
-
-template<typename T>
-inline void Delete(T*& pType)
-{
-	if (pType != nullptr)
+	template<typename T, typename... ConstructorParams>
+	[[nodiscard]] inline T* New(ConstructorParams&&... params)
 	{
-		pType->~T();
-		Free((void*&)pType);
+		void* pMemory = Alloc(sizeof(T), alignof(T));
+		assert(pMemory != nullptr);
+		return new(pMemory) T(std::forward<ConstructorParams>(params)...);
+	}
+
+	template<typename T>
+	inline void Delete(T*& pType)
+	{
+		if (pType != nullptr)
+		{
+			pType->~T();
+			Free((void*&)pType);
+		}
 	}
 }
-

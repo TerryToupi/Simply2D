@@ -9,8 +9,8 @@
 #include "Scene/scene.h"
 #include "Memory/memoryAllocator.h"
 
-#include "Memory/memory.h"
 #include "Types/Arrays.h"
+#include "Types/SmartPointers.h"
 
 namespace Simply2D
 {
@@ -50,7 +50,7 @@ namespace Simply2D
 		template<std::derived_from<Scene> TScene>
 		void pushScene(Asset asset)
 		{
-			m_scenes.push_back(std::make_shared<TScene>(asset));
+			m_scenes.push_back(MakeRef<TScene>(asset));
 		}
 
 		template<typename TScene>
@@ -79,8 +79,8 @@ namespace Simply2D
 		Renderer*					m_pRenderer;
 		AssetDatabase*				m_pAssetDatabase;
 
-		TVector<std::shared_ptr<Scene>> m_scenes;
-		uint32_t						m_activeScene = 0;
+		TVector<Ref<Scene>>			m_scenes;
+		uint32_t					m_activeScene = 0;
 
 		static inline Application* s_pInstance = nullptr;
 	};
