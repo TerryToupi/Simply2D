@@ -4,7 +4,7 @@
 #include "EASTL/hash_map.h"
 
 template<typename K, typename V> 
-using THashMap = eastl::hash_map<K, V, eastl::hash<K>, eastl::equal_to<K>, MM::RPMallocAllocator>;
+using THashMap = eastl::hash_map<K, V, std::hash<K>>;
 
 template<typename K, typename V> 
 using TPair = eastl::pair<K, V>;

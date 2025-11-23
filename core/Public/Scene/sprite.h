@@ -2,9 +2,10 @@
 
 #include <optional>
 #include <variant>
-#include <string>
 
 #include "Math/mathUtils.h"
+#include "Types/String.h"
+#include "Types/Function.h"
 
 #include "boundingArea.h"
 #include "motionQuantizer.h"
@@ -15,13 +16,13 @@ namespace Simply2D
 	class Sprite 
 	{
 	public:
-		using Mover				= std::function<void(Rect& r, int* dx, int* dy)>;
+		using Mover				= TFunction<void(Rect& r, int* dx, int* dy)>;
 		using BoundingVariant	= std::variant<BoundingBox>;
 		using OptionalBounding	= std::optional<BoundingVariant>;
-		using CollisionCallback = std::function<void(Sprite*)>;
+		using CollisionCallback = TFunction<void(Sprite*)>;
 
 	public:
-		Sprite(const std::string& _name, int _x, int _y);
+		Sprite(const TString& _name, int _x, int _y);
 		virtual ~Sprite() = default;
 
 		void	 SetBox(int _width, int _height);
@@ -46,7 +47,7 @@ namespace Simply2D
 
 	private:
 		// for deriving
-		std::string	m_name;
+		TString m_name;
 
 		// colisions
 		OptionalBounding  m_boundingArea;

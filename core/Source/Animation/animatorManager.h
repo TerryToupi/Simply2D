@@ -1,8 +1,7 @@
 #pragma once
 
-#include <set>
-
 #include "Animations/animator.h"
+#include "Types/Set.h"
 
 namespace Simply2D
 {
@@ -27,6 +26,6 @@ namespace Simply2D
 		}
 
 	private:
-		std::set<Animator*>	m_running, m_suspended;
+		TSet<Animator*>	m_running, m_suspended;
 	};
 }

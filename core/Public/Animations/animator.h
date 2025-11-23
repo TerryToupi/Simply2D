@@ -2,15 +2,16 @@
 
 #include <set>
 #include <functional>
-#include <array>
 
 #include "Base/resources.h"
+#include "Types/Arrays.h"
+#include "Types/Function.h"
 
 namespace Simply2D
 {
 	struct Animation 
 	{
-		using FrameRects = std::array<std::array<int, 4>, 30>;
+		using FrameRects = TArray<TArray<int, 4>, 30>;
 
 		// animation atlas
 		THandle<Texture> texture;
@@ -38,9 +39,9 @@ namespace Simply2D
 	class Animator
 	{
 	public:
-		using OnFinish = std::function<void(Animator*)>;
-		using OnStart = std::function<void(Animator*)>;
-		using OnAction = std::function<void(Animator*, const Animation&)>;
+		using OnFinish = TFunction<void(Animator*)>;
+		using OnStart = TFunction<void(Animator*)>;
+		using OnAction = TFunction<void(Animator*, const Animation&)>;
 
 	public:
 		Animator();

@@ -1,11 +1,9 @@
 #pragma once
 
-#include <string>
-#include <memory>
-
 #include "Base/resources.h"
 #include "Math/mathUtils.h"
 
+#include "Types/String.h"
 #include "Types/Handle.h"
 #include "Types/span.h"
 
@@ -13,7 +11,7 @@ namespace Simply2D
 {
 	struct RendererSpecifications
 	{
-		std::string name = "Simply2D";
+		TString name = "Simply2D";
 		int width = 640;
 		int height = 480;
 		bool borderless = false;

@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include "assets.h"
 
 #include "Rendering/renderer.h"
@@ -11,14 +8,15 @@
 
 #include "Types/Arrays.h"
 #include "Types/SmartPointers.h"
+#include "Types/String.h"
 
 namespace Simply2D
 {
 	struct ApplicationSpecifications
 	{
-		std::string name = "Simply2D";
-		std::string version = "1.0";
-		std::string identifier = "com.terrytoupi.simply2D-empty";
+		TString name = "Simply2D";
+		TString version = "1.0";
+		TString identifier = "com.terrytoupi.simply2D-empty";
 		AllocatorSpecifications memory;
 		RendererSpecifications renderer;
 		AssetDatabaseSpecifications assets;

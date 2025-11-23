@@ -2,9 +2,9 @@
 
 #include <cstdint>
 #include <cmath>
-#include <vector>
 
 #include "Base/assets.h"
+#include "Types/Arrays.h"
 
 namespace Simply2D
 {
@@ -17,7 +17,7 @@ namespace Simply2D
     class TileSet
     {
     public:
-        using TileStorage = std::vector<Tile>;
+        using TileStorage = TVector<Tile>;
 
     public:
         TileSet() = default;

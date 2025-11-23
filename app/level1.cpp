@@ -1,5 +1,4 @@
 #include <level1.h>
-#include <iostream>
 
 Level1::Level1(Simply2D::Asset level)
 	:	Scene(level)

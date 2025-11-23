@@ -2,7 +2,7 @@
 
 namespace Simply2D
 {
-	Sprite::Sprite(const std::string& _name, int _x, int _y)
+	Sprite::Sprite(const TString& _name, int _x, int _y)
 		:	m_name(_name), m_x(_x), m_y(_y)
 	{
 	}

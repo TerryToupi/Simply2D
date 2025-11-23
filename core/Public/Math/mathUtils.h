@@ -1,6 +1,6 @@
 #pragma once
 
-#include <array>
+#include "Types/Arrays.h"
 
 namespace Simply2D
 {
@@ -10,5 +10,5 @@ namespace Simply2D
 		return x > 0 ? 1 : x < 0 ? -1 : 0;
 	}
 
-	using Rect = std::array<int, 4>;
+	using Rect = TArray<int, 4>;
 }

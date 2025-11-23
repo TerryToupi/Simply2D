@@ -2,6 +2,11 @@
 
 #include "Base/assets.h"
 #include "Types/Pool.h"
+#include "Types/HashMap.h"
+#include "Types/String.h"
+
+// for now
+#include <string>
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -45,6 +50,6 @@ namespace Simply2D
         TPool<TTF_Font*, Simply2D::Font>     m_font;
         TPool<json, Simply2D::Serializable>  m_serializables;
 
-        std::unordered_map<std::string, Asset> m_loadedAssets;
+        THashMap<std::string, Asset> m_loadedAssets;
     };
 }
