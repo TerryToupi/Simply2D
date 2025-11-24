@@ -4,7 +4,6 @@
 
 #include "Rendering/renderer.h"
 #include "Scene/scene.h"
-#include "Memory/memoryAllocator.h"
 
 #include "Types/Arrays.h"
 #include "Types/SmartPointers.h"
@@ -17,7 +16,6 @@ namespace Simply2D
 		TString name = "Simply2D";
 		TString version = "1.0";
 		TString identifier = "com.terrytoupi.simply2D-empty";
-		AllocatorSpecifications memory;
 		RendererSpecifications renderer;
 		AssetDatabaseSpecifications assets;
 	};

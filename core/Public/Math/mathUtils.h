@@ -11,4 +11,5 @@ namespace Simply2D
 	}
 
 	using Rect = TArray<int, 4>;
+	using Triagle = TArray<int, 3>;
 }

@@ -1,6 +1,5 @@
 #include "Base/app.h"
 #include "Memory/memory.h"
-#include "Memory/memoryAllocator.h"
 
 #include "Source/Base/assetDataBase.h"
 #include "Source/Base/gameTime.h"
@@ -42,7 +41,6 @@ namespace Simply2D
 		ThreadPool::Initialize();
 		s_pInstance->m_pRenderer = Renderer::Create(specs.renderer);
 		s_pInstance->m_pAssetDatabase = AssetDatabase::Create(specs.assets);
-		Allocator::GetInstance().SetRegionsCapacity(specs.memory);
 
 		s_pInstance->m_running = true;
 	}
@@ -111,11 +109,9 @@ namespace Simply2D
 			}
 			renderer->endFrame();
 
-			// on enf frame
+			// on end frame
 			{
 				m_scenes.at(frameActiveScene)->end(timeStep);
-
-				Allocator::ResetFrameRegion();
 			}
 
 #if not defined(NDEBUG)

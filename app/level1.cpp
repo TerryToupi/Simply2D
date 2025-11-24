@@ -20,10 +20,7 @@ void Level1::update(float ts)
 
 void Level1::render()
 {
-	auto dummy = Allocator::FrameAlloc<int>();
-	auto calls = Allocator::FrameAlloc<Simply2D::DrawCall>(m_layersCount);
-
-	(*dummy.ptr) = 12;
+	TArray<Simply2D::DrawCall, 6> calls;
 
 	for (unsigned i = 0; i < m_layersCount; ++i)
 	{
@@ -49,7 +46,7 @@ void Level1::render()
 			.storeOp = Simply2D::StoreOp::STORE,
 			.clearColor = {0, 0, 0, 255}
 		},
-		Span(calls.ptr, calls.count)
+		Span(calls.data(), calls.size())
 	);
 }
 
