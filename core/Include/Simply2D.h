@@ -27,6 +27,9 @@
 #include "Types/Span.h"
 #include "Types/String.h"
 #include "Types/Json.h"
+#include "Events/event.h"
+#include "Events/inputEvents.h"
+#include "Events/windowEvent.h"
 
 namespace Simply2D
 {

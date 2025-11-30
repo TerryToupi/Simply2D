@@ -1,5 +1,6 @@
 #include <level1.h>
 #include <SampleSprite.h>
+#include <iostream>
 
 Level1::Level1(Simply2D::Asset level)
 	:	Scene(level)
@@ -11,8 +12,11 @@ Level1::~Level1()
 {
 }
 
-void Level1::event()
+void Level1::event(Simply2D::Event& e)
 {
+	Simply2D::EventDispatcher dispatch(e);
+	dispatch.Dispatch<Simply2D::MouseButtonPressedEvent>([this](Simply2D::MouseButtonPressedEvent& e) { std::cout << e.ToString().c_str() << std::endl;  return true; });
+	dispatch.Dispatch<Simply2D::KeyPressedEvent>([this](Simply2D::KeyPressedEvent& e) { std::cout << e.ToString().c_str() << std::endl;  return true; });
 }
 
 void Level1::update(float ts)

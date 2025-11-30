@@ -9,6 +9,10 @@
 #include "Types/Arrays.h"
 #include "Types/SmartPointers.h"
 
+#include "Events/event.h"
+#include "Events/inputEvents.h"
+#include "Events/windowEvent.h"
+
 #include <cstring>
 
 namespace Simply2D
@@ -20,11 +24,11 @@ namespace Simply2D
 		virtual ~Scene() = default;
 
 		// Scripting functions
-		virtual void begin(float ts)	{}
-		virtual void event()			{}
-		virtual void update(float ts)	{} 
-		virtual void render()			{}
-		virtual void end(float ts)		{}
+		virtual void begin(float ts)			{}
+		virtual void event(Simply2D::Event& e)	{}
+		virtual void update(float ts)			{} 
+		virtual void render()					{}
+		virtual void end(float ts)				{}
 
 		// sprites
 		template<std::derived_from<Sprite> TSprite, typename... Args>

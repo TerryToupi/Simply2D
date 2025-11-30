@@ -7,6 +7,10 @@
 #include "Source/Animation/animatorManager.h"
 #include "Source/Systems/colisionChecker.h"
 
+#include "Events/event.h"
+#include "Events/inputEvents.h"
+#include "Events/windowEvent.h"
+
 #include <SDL3/SDL.h>
 #include <SDL3_Mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -76,7 +80,21 @@ namespace Simply2D
 				while (SDL_PollEvent(&event))
 				{
 					if (event.type == SDL_EVENT_QUIT)
+					{
+						WindowClosedEvent e{};
+						m_scenes.at(frameActiveScene)->event(e);
 						Stop();
+					}
+					if (event.type == SDL_EVENT_KEY_DOWN)
+					{
+						KeyPressedEvent e{ (int)event.key.key, false};
+						m_scenes.at(frameActiveScene)->event(e);
+					}
+					if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+					{
+						MouseButtonPressedEvent e{ (int)event.button.button };
+						m_scenes.at(frameActiveScene)->event(e);
+					}
 				}
 			}
 
