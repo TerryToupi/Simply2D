@@ -75,7 +75,7 @@ file(GLOB RPMALLOC_HEADERS CONFIGURE_DEPENDS
     "${RPMALLOC_ROOT}/rpmalloc/*.h"
 )
 file(GLOB RPMALLOC_SOURCES CONFIGURE_DEPENDS
-    "${RPMALLOC_ROOT}/rpmalloc/*.c"
+    "${RPMALLOC_ROOT}/rpmalloc/rpmalloc.c"
 )
 
 set(RPMALLOC_INCLUDE_DIR "${RPMALLOC_ROOT}/rpmalloc")

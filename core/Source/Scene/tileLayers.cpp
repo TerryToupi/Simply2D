@@ -3,10 +3,10 @@
 
 namespace Simply2D
 {
-	TileLayer::TileLayer(const TileLayerSpecifications& specs, TileSet* tileSet)
+	TileLayer::TileLayer(const TileLayerSpecifications& specs, Ref<TileSet> tileSet)
 		:	m_specs(specs), m_tileSet(tileSet)
 	{
-		m_texture = Application::GetInstance()->GetRenderer()->createTexture({
+		m_texture = Application::GetRenderer()->createTexture({
 			.format = TextureFormat::RGBA8_UNORM,
 			.access = TextureAccess::READ_WRITE,
 			.width = m_specs.width * tileSet->getTileWidth(),
@@ -16,7 +16,7 @@ namespace Simply2D
 
 	TileLayer::~TileLayer()
 	{
-		Application::GetInstance()->GetRenderer()->destroyTexture(m_texture);
+		Application::GetRenderer()->destroyTexture(m_texture);
 	}
 
 	void TileLayer::putTile(const int id, const int x, const int y)
@@ -28,7 +28,7 @@ namespace Simply2D
 			uint16_t tileHeight = m_tileSet->getTileHeight();
 			THandle<Texture> tileset = m_tileSet->texture();
 
-			Application::GetInstance()->GetRenderer()->draw({
+			Application::GetRenderer()->draw({
 				.target = m_texture, 
 				.loadOp = LoadOp::LOAD, 
 				.storeOp = StoreOp::STORE

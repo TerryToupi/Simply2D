@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Animations/animator.h"
+#include "Memory/memory.h"
 #include "Types/Set.h"
 
 namespace Simply2D
@@ -19,13 +20,29 @@ namespace Simply2D
 		void Progress(double currTime);
 		void TimeShift(double dt);
 
-		static AnimatorManager& GetInstance(void)
+		static AnimatorManager* GetInstance(void)
 		{
-			static AnimatorManager instacne;
-			return instacne;
+			return s_pInstance;
+		}
+
+	private:
+		static void Create()
+		{
+			assert(s_pInstance == nullptr);
+			s_pInstance = MM::New<AnimatorManager>();
+		}
+
+		static void Destroy()
+		{
+			assert(s_pInstance != nullptr);
+			MM::Delete<AnimatorManager>(s_pInstance);
 		}
 
 	private:
 		TSet<Animator*>	m_running, m_suspended;
+
+		static inline AnimatorManager* s_pInstance = nullptr;
+
+		friend class Application;
 	};
 }

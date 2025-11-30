@@ -29,19 +29,9 @@ namespace Simply2D
 		void Run();
 		void Stop();
 
-		static Application* GetInstance()
-		{
-			return s_pInstance;
-		}
-
-		Renderer* GetRenderer()
-		{
-			return m_pRenderer;
-		}
-		AssetDatabase* GetAssetDatabase()
-		{
-			return m_pAssetDatabase;
-		}
+		static inline Application* GetInstance() { return s_pInstance; }
+		static inline Renderer* GetRenderer() { return s_pRenderer; }
+		static inline AssetDatabase* GetAssetDatabase() { return s_pAssetDatabase; }
 
 		template<std::derived_from<Scene> TScene>
 		void pushScene(Asset asset)
@@ -72,12 +62,12 @@ namespace Simply2D
 		bool m_running = false;
 
 		ApplicationSpecifications	m_specifications;
-		Renderer*					m_pRenderer;
-		AssetDatabase*				m_pAssetDatabase;
 
 		TVector<Ref<Scene>>			m_scenes;
 		uint32_t					m_activeScene = 0;
 
-		static inline Application* s_pInstance = nullptr;
+		static inline Application*		s_pInstance		 = nullptr;
+		static inline Renderer*			s_pRenderer		 = nullptr;
+		static inline AssetDatabase*    s_pAssetDatabase = nullptr;
 	};
 }

@@ -3,7 +3,6 @@
 
 #include "Source/Base/assetDataBase.h"
 #include "Source/Base/gameTime.h"
-#include "Source/Base/threadPool.h"
 #include "Source/Rendering/renderingBackend.h"
 #include "Source/Animation/animatorManager.h"
 #include "Source/Systems/colisionChecker.h"
@@ -24,24 +23,23 @@ namespace Simply2D
 		if (!SDL_SetAppMetadata(s_pInstance->m_specifications.name.c_str(),
 			s_pInstance->m_specifications.version.c_str(),
 			s_pInstance->m_specifications.identifier.c_str()))
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to initialize %s", SDL_GetError());
 
 		if (!SDL_Init(SDL_INIT_VIDEO |
 			SDL_INIT_EVENTS |
 			SDL_INIT_AUDIO |
 			SDL_INIT_GAMEPAD))
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to initialize %s", SDL_GetError());
 
 		if (!MIX_Init())
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to initialize %s", SDL_GetError());
 
 		if (!TTF_Init())
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to inialize %s", SDL_GetError());
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to initialize %s", SDL_GetError());
 
-		ThreadPool::Initialize();
-		s_pInstance->m_pRenderer = Renderer::Create(specs.renderer);
-		s_pInstance->m_pAssetDatabase = AssetDatabase::Create(specs.assets);
-
+		AnimatorManager::Create(); 
+		s_pInstance->s_pRenderer = Renderer::Create(specs.renderer);
+		s_pInstance->s_pAssetDatabase = AssetDatabase::Create(specs.assets);
 		s_pInstance->m_running = true;
 	}
 
@@ -57,13 +55,12 @@ namespace Simply2D
 		float statsCounter = 5.0f;
 #endif // !NDEBUG
 
-
 		// setup timer
 		currTime = Clock::getTime();
 		timeStep = std::min(0.1f, std::max(0.0001f, (float)(currTime - oldTime)));
 		oldTime = currTime;
 
-		RendererImpl* renderer = static_cast<RendererImpl*>(m_pRenderer);
+		RendererImpl* renderer = static_cast<RendererImpl*>(s_pRenderer);
 		while (m_running)
 		{
 			currTime = Clock::getTime();
@@ -92,10 +89,10 @@ namespace Simply2D
 			// updating layers
 			{
 				// updating the Animations
-				AnimatorManager::GetInstance().Progress(currTime);
+				AnimatorManager::GetInstance()->Progress(currTime);
 
-				// check for colisions
-				ColisionChecker::check(m_scenes.at(frameActiveScene)->GetSpriteRegister());
+				// collision checking
+				ColisionChecker::check(m_scenes.at(frameActiveScene));
 
 				// update the scene
 				m_scenes.at(frameActiveScene)->update(timeStep);
@@ -137,20 +134,20 @@ namespace Simply2D
 		s_pInstance->m_scenes.clear();
 
 		// shutdown Renderer
-		RendererImpl* rimpl = static_cast<RendererImpl*>(s_pInstance->m_pRenderer);
+		RendererImpl* rimpl = static_cast<RendererImpl*>(s_pInstance->s_pRenderer);
 		MM::Delete<RendererImpl>(rimpl);
 
 		// shutdown AssetDatabase
-		AssetDatabaseImpl* aimpl = static_cast<AssetDatabaseImpl*>(s_pInstance->m_pAssetDatabase);
+		AssetDatabaseImpl* aimpl = static_cast<AssetDatabaseImpl*>(s_pInstance->s_pAssetDatabase);
 		MM::Delete<AssetDatabaseImpl>(aimpl);
+
+		// delete animator manager
+		AnimatorManager::Destroy();
 
 		// shutdown SDL
 		TTF_Quit();
 		MIX_Quit();
 		SDL_Quit();
-
-		// shutdown Threads
-		ThreadPool::Shutdown();
 
 		// Delete the application
 		MM::Delete<Application>(s_pInstance);

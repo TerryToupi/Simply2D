@@ -20,7 +20,7 @@ public:
 	uint32_t Pack() const { return (static_cast<uint32_t>(m_index) << 16) | m_generation; }
 
 private:
-	THandle(uint32_t index, uint32_t generation) : m_index(index), m_generation(generation) {}
+	THandle(uint16_t index, uint16_t generation) : m_index(index), m_generation(generation) {}
 
 private:
 	uint16_t m_index; 

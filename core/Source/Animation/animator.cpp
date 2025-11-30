@@ -5,11 +5,11 @@ namespace Simply2D
 {
 	Animator::Animator() 
 	{
-		AnimatorManager::GetInstance().Reginster(this);
+		AnimatorManager::GetInstance()->Reginster(this);
 	}
 	Animator::~Animator()
 	{
-		AnimatorManager::GetInstance().Cancel(this);
+		AnimatorManager::GetInstance()->Cancel(this);
 	}
 	void Animator::Stop(void)
 	{
@@ -58,13 +58,13 @@ namespace Simply2D
 	}
 	void Animator::NotifyStopped(void)
 	{
-		AnimatorManager::GetInstance().MarkAsSuspended(this);
+		AnimatorManager::GetInstance()->MarkAsSuspended(this);
 		if (m_onFinish)
 			(m_onFinish)(this);
 	}
 	void Animator::NotifyStarted(void)
 	{
-		AnimatorManager::GetInstance().MarkAsRunning(this);
+		AnimatorManager::GetInstance()->MarkAsRunning(this);
 		if (m_onStart)
 			(m_onStart)(this);
 	}

@@ -166,7 +166,7 @@ namespace Simply2D
 
 	THandle<Texture> RendererImpl::createTexture(THandle<Image> image)
 	{
-		AssetDatabaseImpl* assets = static_cast<AssetDatabaseImpl*>(Application::GetInstance()->GetAssetDatabase());
+		auto assets = static_cast<AssetDatabaseImpl*>(Application::GetAssetDatabase());
 
 		SDL_Surface* surface = assets->getImage(image);
 		assert(surface);
@@ -183,6 +183,9 @@ namespace Simply2D
 
 	SDL_Texture* RendererImpl::getTexture(THandle<Texture> texture)
 	{
+		if (!m_textures.Get(texture))
+			SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Texture invalid: %s ", SDL_GetError());
+
 		return *m_textures.Get(texture);
 	}
 

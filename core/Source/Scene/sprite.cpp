@@ -2,9 +2,18 @@
 
 namespace Simply2D
 {
-	Sprite::Sprite(const TString& _name, int _x, int _y)
-		:	m_name(_name), m_x(_x), m_y(_y)
+	Sprite::Sprite(const char* _name, int _x, int _y)
+		:	m_id(_name), m_x(_x), m_y(_y)
 	{
+	}
+
+	Sprite::~Sprite()
+	{
+	}
+
+	const char* Sprite::GetID()
+	{
+		return m_id.c_str();
 	}
 
 	void Sprite::SetBox(int _width, int _height)
@@ -54,10 +63,6 @@ namespace Simply2D
 		return 0;
 	}
 
-	void Sprite::SetBoundingArea(const BoundingVariant& area)
-	{
-	}
-
 	void Sprite::SetColiderBox(unsigned _w, unsigned _h)
 	{
 	}
@@ -68,11 +73,6 @@ namespace Simply2D
 
 	void Sprite::SetQuanntizerVertHorz(int v, int h)
 	{
-	}
-
-	void Sprite::SetCollisionCallback(const CollisionCallback& callback)
-	{
-		m_collisionCallback = callback;
 	}
 
 	GravityHandler& Sprite::GetGravityHandler(void)

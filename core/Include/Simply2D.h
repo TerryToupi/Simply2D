@@ -22,9 +22,11 @@
 #include "Types/IDVector.h"
 #include "Types/Pool.h"
 #include "Types/Set.h"
+#include "Types/SparceSet.h"
 #include "Types/SmartPointers.h"
 #include "Types/Span.h"
 #include "Types/String.h"
+#include "Types/Json.h"
 
 namespace Simply2D
 {
@@ -35,11 +37,11 @@ namespace Simply2D
 
 	static inline Simply2D::Renderer& gfx()
 	{
-		return *Simply2D::app().GetRenderer();
+		return *Simply2D::Application::GetRenderer();
 	}
 
-	static inline Simply2D::AssetDatabase& assetDatabase()
+	static inline Simply2D::AssetDatabase& assets()
 	{
-		return *Simply2D::app().GetAssetDatabase();
+		return *Simply2D::Application::GetAssetDatabase();
 	}
 }

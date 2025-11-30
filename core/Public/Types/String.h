@@ -4,7 +4,7 @@
 #include "EASTL/string.h"
 #include "EASTL/fixed_string.h"
 
-using TString = eastl::basic_string<char>;
+using TString = eastl::string;
 
 template<eastl_size_t S>
 using TInlineString = eastl::fixed_string<char, 256, true>;

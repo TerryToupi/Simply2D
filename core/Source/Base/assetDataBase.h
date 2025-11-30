@@ -4,6 +4,7 @@
 #include "Types/Pool.h"
 #include "Types/HashMap.h"
 #include "Types/String.h"
+#include "types/Json.h"
 
 // for now
 #include <string>
@@ -12,9 +13,6 @@
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
-
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
 
 namespace Simply2D
 {

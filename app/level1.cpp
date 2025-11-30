@@ -1,10 +1,11 @@
 #include <level1.h>
+#include <SampleSprite.h>
 
 Level1::Level1(Simply2D::Asset level)
 	:	Scene(level)
 {
-	m_animator.Start(&m_anim1, 0.0f, 0);
- }
+	AddSprite<SampleSprite>("Antonis", 0, 0);
+}
 
 Level1::~Level1()
 {
@@ -16,6 +17,12 @@ void Level1::event()
 
 void Level1::update(float ts)
 {
+	SampleSprite* antonis = GetSprite<SampleSprite>("Antonis");
+
+	for (auto& sprite : GetAll<Simply2D::Sprite>())
+	{
+		sprite->update(ts);
+	}
 }
 
 void Level1::render()
@@ -25,13 +32,13 @@ void Level1::render()
 	for (unsigned i = 0; i < m_layersCount; ++i)
 	{
 		int twidth = 0, theight = 0;
-		Simply2D::gfx().textureSize(m_layers[i]->texture(), twidth, theight);
+		Simply2D::gfx().textureSize(m_layers[i].texture(), twidth, theight);
 
 		int swidth = 0, sheight = 0;
 		Simply2D::gfx().textureSize(SURFACE, swidth, sheight);
 
 		calls[i] = {
-			.texture = m_layers[i]->texture(),
+			.texture = m_layers[i].texture(),
 			.blend = Simply2D::Blend::BLEND,
 			.alpha = 255,
 			.src = { 0, 0, twidth, theight },

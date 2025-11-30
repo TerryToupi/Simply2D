@@ -11,19 +11,31 @@
 #include "motionQuantizer.h"
 #include "gravity.h"
 
+#define SPRITE_TYPE(x) #x
+
 namespace Simply2D
 {
 	class Sprite 
 	{
 	public:
-		using Mover				= TFunction<void(Rect& r, int* dx, int* dy)>;
-		using BoundingVariant	= std::variant<BoundingBox>;
-		using OptionalBounding	= std::optional<BoundingVariant>;
-		using CollisionCallback = TFunction<void(Sprite*)>;
+		using Mover	= TFunction<void(Rect& r, int* dx, int* dy)>;
 
 	public:
-		Sprite(const TString& _name, int _x, int _y);
-		virtual ~Sprite() = default;
+		Sprite(const char* _name, int _x, int _y);
+		virtual ~Sprite() = 0;
+
+	// scripting
+	public:
+		virtual void begin(float ts)  { }
+		virtual void update(float ts) { }
+		virtual void end(float ts)    { }
+
+		virtual BoundingArea* OnGetCollider() { return nullptr; }
+		virtual	void		  OnCollision(Sprite& other) { }
+
+	// setters and getters
+	public:
+		const char* GetID();
 
 		void	 SetBox(int _width, int _height);
 		Rect	 GetBox();
@@ -32,28 +44,18 @@ namespace Simply2D
 		void     SetPos(int _x, int _y);
 		int		 GetPosX() const;
 		int		 GetPosY() const;
-		void	 SetBoundingArea(const BoundingVariant& area);
 		void	 SetColiderBox(unsigned _w, unsigned _h);
-		auto	 GetBoundingArea() -> const OptionalBounding& { return m_boundingArea; }
 		void	 SetMotionQuantizerUse(bool v);
 		void	 SetQuanntizerVertHorz(int v, int h);
-		
-		void	 SetCollisionCallback(const CollisionCallback& callback);
-		auto	 GetCollisionCallback() -> const CollisionCallback& { return m_collisionCallback; }
 
 		GravityHandler& GetGravityHandler(void);
 		Sprite&			SetHasDirectMotion(bool v);
 		bool			GetHasDirectMotion(void) const;
 
 	private:
-		// for deriving
-		TString m_name;
+		TString m_id;
 
-		// colisions
-		OptionalBounding  m_boundingArea;
-		CollisionCallback m_collisionCallback;
-		
-		// persitent data
+		// persistent data
 		bool m_emptyFrameBox = true;
 		int	 m_width = 0, m_height = 0;
 		int	 m_x = 0, m_y = 0;

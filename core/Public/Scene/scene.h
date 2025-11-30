@@ -1,7 +1,5 @@
 #pragma once
 
-#include <optional>
-
 #include "Base/assets.h"
 
 #include "tileSet.h"
@@ -9,8 +7,9 @@
 #include "sprite.h"
 
 #include "Types/Arrays.h"
-#include "Types/Deque.h"
 #include "Types/SmartPointers.h"
+
+#include <cstring>
 
 namespace Simply2D
 {
@@ -27,27 +26,62 @@ namespace Simply2D
 		virtual void render()			{}
 		virtual void end(float ts)		{}
 
-		// registering
-		void registerSprite(Sprite* sprite);
-
+		// sprites
 		template<std::derived_from<Sprite> TSprite, typename... Args>
-		void addSprite(Args&&... args) 
+		TSprite* AddSprite(Args&&... args) 
 		{
-			m_sprites.push_back(MakeRef<TSprite>(std::forward<Args>(args)...));
+			auto ptr = MakeRef<TSprite>(std::forward<Args>(args)...);
+			m_sprites.push_back(ptr);
+			return ptr.get();
+		}
+
+		template<std::derived_from<Sprite> TSprite>
+		TSprite* GetSprite(const char* id)
+		{
+			for (auto& sprite : m_sprites)
+				if (strcmp(id, sprite->GetID()) == 0)
+					return static_cast<TSprite*>(sprite.get());
+
+			return nullptr;
+		}
+
+		template<std::derived_from<Sprite> TSprite>
+		TVector<TSprite*> GetAll()
+		{
+			TVector<TSprite*> result;
+			result.reserve(m_sprites.size());
+
+			if constexpr (std::is_same_v<TSprite, Sprite>)
+			{
+				for (auto& sprite : m_sprites)
+					result.push_back(static_cast<TSprite*>(sprite.get()));
+			}
+			else
+			{
+				for (auto& sprite : m_sprites)
+					if (auto* casted = dynamic_cast<TSprite*>(sprite.get()))
+						result.push_back(casted);
+			}
+
+			return result;
+		}
+
+		void RemoveSprite(const char* id)
+		{
+			for (size_t i = 0; i < m_sprites.size(); ++i)
+			{
+				if (strcmp(id, m_sprites[i]->GetID()) == 0)
+				{
+					m_sprites.erase(m_sprites.begin() + i);
+					return;
+				}
+			}
 		}
 
 	protected:
-		std::optional<TileSet>				m_tileset;
-		TArray<std::optional<TileLayer>, 6> m_layers;
-		unsigned							m_layersCount = 0;
-
-	private:
-		TDeque<Sprite*>& GetSpriteRegister() { return m_spriteRegister; }
-
-	private:
-		TDeque<Sprite*>	m_spriteRegister;
 		TVector<Ref<Sprite>> m_sprites;
-
-		friend class Application;
+		Ref<TileSet>		 m_tileset;
+		TVector<TileLayer>	 m_layers;
+		unsigned			 m_layersCount = 0;
 	};
 }

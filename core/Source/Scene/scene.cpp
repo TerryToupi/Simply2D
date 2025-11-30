@@ -2,18 +2,17 @@
 
 #include "Base/app.h"
 #include "Scene/scene.h"
+#include "Types/Utils.h"
+#include "Types/Json.h"
 
-#include <Source/Base/assetDataBase.h>
-#include <Source/Systems/colisionChecker.h>
-
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
+#include "Source/Base/assetDataBase.h"
+#include "Source/Systems/colisionChecker.h"
 
 namespace Simply2D
 {
 	Scene::Scene(Asset level) 
 	{
-		AssetDatabaseImpl* assets = (AssetDatabaseImpl*)(Application::GetInstance()->GetAssetDatabase());
+		AssetDatabaseImpl* assets = (AssetDatabaseImpl*)(Application::GetAssetDatabase());
 
 		json* config = assets->getSerializable(THandle<Serializable>(level.handle));
 		// Generating the tileset
@@ -31,13 +30,12 @@ namespace Simply2D
 			
 			// if it's not load it ... well load it
 			assets->load(AssetType::IMAGE, imagePath);
-			m_tileset.emplace(tileWidth, tileHeight, assets->get(imagePath));
+			m_tileset = MakeRef<TileSet>(tileWidth, tileHeight, assets->get(imagePath));
 		}
 
 		// reserviing the size of the layer vector
 		m_layersCount = (*config)["layers"].size();
-	
-		// Generating the Layers
+		m_layers.reserve(m_layersCount);
 		for (unsigned i = 0; i < m_layersCount; ++i)
 		{
 			TileLayerSpecifications specs
@@ -46,7 +44,7 @@ namespace Simply2D
 				.width = (uint16_t)(*config)["layers"][i]["width"],
 				.height = (uint16_t)(*config)["layers"][i]["height"]
 			};
-			m_layers[i].emplace(specs, &m_tileset.value());
+			m_layers.emplace_back(specs, m_tileset);
 
 			for (unsigned h = 0; h < (*config)["layers"][i]["height"]; ++h)
 			{
@@ -54,14 +52,9 @@ namespace Simply2D
 				{
 					uint16_t index = h * (uint16_t)(*config)["layers"][i]["width"] + w;
 					uint16_t tileID = (uint16_t)(*config)["layers"][i]["data"][index];
-					m_layers.at(i)->putTile(tileID, w, h);
+					m_layers.at(i).putTile(tileID, w, h);
 				}
 			}
 		}
-	}
-
-	void Scene::registerSprite(Sprite* sprite)
-	{
-		m_spriteRegister.push_back(sprite);
 	}
 }

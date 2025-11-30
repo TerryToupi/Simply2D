@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Scene/sprite.h"
-#include "Types/Deque.h"
+#include "Types/SmartPointers.h"
+#include "Scene/scene.h"
 
 namespace Simply2D
 {
 	namespace ColisionChecker
 	{
-		void check(TDeque<Sprite*>& sprites);
+		void check(Ref<Scene> scene);
 	}
 }

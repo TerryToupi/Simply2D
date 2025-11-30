@@ -41,8 +41,10 @@ public:
 
     U* Get(const THandle<V>& handle)
     {
-        if (handle.m_index >= m_size) return nullptr;
-        if (handle.m_generation != m_data[handle.m_index].generation) return nullptr;
+        if (handle.m_index >= m_size) 
+            return nullptr;
+        if (handle.m_generation != m_data[handle.m_index].generation) 
+            return nullptr;
 
         return &m_data[handle.m_index].data;
     }

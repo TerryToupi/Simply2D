@@ -1,11 +1,10 @@
 #pragma once 
 
-#include <array>
-
 #include "tileSet.h"
 
 #include "Rendering/renderer.h"
 #include "Types/span.h"
+#include "Types/SmartPointers.h"
 
 namespace Simply2D 
 {
@@ -20,7 +19,7 @@ namespace Simply2D
 	{
 	public:
 		TileLayer() = default;
-		TileLayer(const TileLayerSpecifications& specs, TileSet* tilset);
+		TileLayer(const TileLayerSpecifications& specs, Ref<TileSet> tilset);
 		~TileLayer();
 
 		void putTile(const int id = 0, const int x = 0, const int y = 0);
@@ -28,7 +27,7 @@ namespace Simply2D
 
 	private:
 		TileLayerSpecifications m_specs;
-		TileSet* m_tileSet;
+		Ref<TileSet> m_tileSet;
 		THandle<Texture> m_texture;
 	};
 }
