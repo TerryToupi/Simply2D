@@ -17,6 +17,8 @@ void Level1::event(Simply2D::Event& e)
 	Simply2D::EventDispatcher dispatch(e);
 	dispatch.Dispatch<Simply2D::MouseButtonPressedEvent>([this](Simply2D::MouseButtonPressedEvent& e) { std::cout << e.ToString().c_str() << std::endl;  return true; });
 	dispatch.Dispatch<Simply2D::KeyPressedEvent>([this](Simply2D::KeyPressedEvent& e) { std::cout << e.ToString().c_str() << std::endl;  return true; });
+	dispatch.Dispatch<Simply2D::MouseButtonReleasedEvent>([this](Simply2D::MouseButtonReleasedEvent& e) { std::cout << e.ToString().c_str() << std::endl;  return true; });
+	dispatch.Dispatch<Simply2D::KeyReleasedEvent>([this](Simply2D::KeyReleasedEvent& e) { std::cout << e.ToString().c_str() << std::endl;  return true; });
 }
 
 void Level1::update(float ts)
@@ -24,9 +26,7 @@ void Level1::update(float ts)
 	SampleSprite* antonis = GetSprite<SampleSprite>("Antonis");
 
 	for (auto& sprite : GetAll<Simply2D::Sprite>())
-	{
 		sprite->update(ts);
-	}
 }
 
 void Level1::render()

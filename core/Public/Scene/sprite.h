@@ -11,8 +11,6 @@
 #include "motionQuantizer.h"
 #include "gravity.h"
 
-#define SPRITE_TYPE(x) #x
-
 namespace Simply2D
 {
 	class Sprite 

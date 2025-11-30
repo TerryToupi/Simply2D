@@ -2,7 +2,7 @@
 
 #include "Simply2D.h"
 
-class SampleSprite : public Simply2D::Sprite
+class SampleSprite final : public Simply2D::Sprite
 {
 public:
 	SampleSprite(const char* name, int _x, int _y);
