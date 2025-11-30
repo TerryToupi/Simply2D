@@ -90,9 +90,19 @@ namespace Simply2D
 						KeyPressedEvent e{ (int)event.key.key, false};
 						m_scenes.at(frameActiveScene)->event(e);
 					}
+					if (event.type == SDL_EVENT_KEY_UP)
+					{
+						KeyReleasedEvent e{ (int)event.key.key};
+						m_scenes.at(frameActiveScene)->event(e);
+					}
 					if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
 					{
 						MouseButtonPressedEvent e{ (int)event.button.button };
+						m_scenes.at(frameActiveScene)->event(e);
+					}
+					if (event.type == SDL_EVENT_MOUSE_BUTTON_UP)
+					{
+						MouseButtonReleasedEvent e{ (int)event.button.button };
 						m_scenes.at(frameActiveScene)->event(e);
 					}
 				}
