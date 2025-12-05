@@ -6,6 +6,9 @@ Level1::Level1(const std::string& scene)
 	:	Scene(scene)
 {
 	AddSprite<SampleSprite>("Antonis", 0, 0);
+
+	THandle<Simply2D::Image> image = Simply2D::assets().load<Simply2D::Image>("image://a");
+	Simply2D::assets().unload<Simply2D::Image>("image://a");
 }
 
 Level1::~Level1()
