@@ -5,7 +5,7 @@
 class Level1 final : public Simply2D::Scene
 {
 public:
-	Level1(Simply2D::Asset level);
+	Level1(const std::string& scene);
 	~Level1();
 
 	virtual void event(Simply2D::Event& e)	override;

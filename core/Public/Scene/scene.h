@@ -13,14 +13,14 @@
 #include "Events/inputEvents.h"
 #include "Events/windowEvent.h"
 
-#include <cstring>
+#include <string>
 
 namespace Simply2D
 {
 	class Scene
 	{
 	public:
-		Scene(Asset level);
+		Scene(const std::string& vfp);
 		virtual ~Scene() = default;
 
 		// Scripting functions

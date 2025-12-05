@@ -13,20 +13,6 @@ namespace Simply2D
         std::string assetsPath = "./";
     };
 
-    enum class AssetType : uint16_t
-    {
-        IMAGE,
-        AUDIO,
-        FONT,
-        SERIALIZABLE 
-    };
-    
-    struct Asset
-    {
-        AssetType type;
-        uint32_t handle;
-    };
-    
     class AssetDatabase
     {
     public:
@@ -34,9 +20,21 @@ namespace Simply2D
             :   m_specifications(specs) {}
         virtual ~AssetDatabase() = default;
 
-        virtual void load(AssetType type, std::string path) = 0;
-        virtual Asset get(std::string path) = 0;
-        virtual void unload(std::string path) = 0;
+       template<typename T>
+       THandle<T> load(const std::string& vfp);
+
+	   virtual THandle<Image> loadImage(const std::string&) = 0;
+	   virtual THandle<Font>  loadFont(const std::string&) = 0;
+	   virtual THandle<Audio> loadAudio(const std::string&) = 0;
+	   virtual THandle<Json>  loadSerializable(const std::string&) = 0;
+
+	   template<typename T>
+	   void unload(const std::string& vfp);
+
+	   virtual void unloadImage(const std::string&) = 0;
+	   virtual void unloadFont(const std::string&) = 0;
+	   virtual void unloadAudio(const std::string&) = 0;
+	   virtual void unloadSerializable(const std::string&) = 0;
 
     protected:
         AssetDatabaseSpecifications m_specifications;
@@ -46,4 +44,55 @@ namespace Simply2D
 
         friend class Application;
     };
+
+
+	// Loading
+	template<>
+	inline THandle<Image> AssetDatabase::load<Image>(const std::string& vfp) 
+	{
+		return loadImage(vfp);
+	}
+
+	template<>
+	inline THandle<Font> AssetDatabase::load<Font>(const std::string& vfp) 
+	{
+		return loadFont(vfp);
+	}
+
+	template<>
+	inline THandle<Audio> AssetDatabase::load<Audio>(const std::string& vfp) 
+	{
+		return loadAudio(vfp);
+	}
+
+	template<>
+	inline THandle<Json> AssetDatabase::load<Json>(const std::string& vfp) 
+	{
+		return loadSerializable(vfp);
+	}
+
+	// Unloading
+	template<>
+	inline void AssetDatabase::unload<Image>(const std::string& vfp) 
+	{
+		unloadImage(vfp);
+	}
+
+	template<>
+	inline void AssetDatabase::unload<Font>(const std::string& vfp) 
+	{
+		unloadFont(vfp);
+	}
+
+	template<>
+	inline void AssetDatabase::unload<Audio>(const std::string& vfp) 
+	{
+		unloadAudio(vfp);
+	}
+
+	template<>
+	inline void AssetDatabase::unload<Json>(const std::string& vfp) 
+	{
+		unloadSerializable(vfp);
+	}
 }

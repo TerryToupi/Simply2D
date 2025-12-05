@@ -2,8 +2,8 @@
 #include <SampleSprite.h>
 #include <iostream>
 
-Level1::Level1(Simply2D::Asset level)
-	:	Scene(level)
+Level1::Level1(const std::string& scene)
+	:	Scene(scene)
 {
 	AddSprite<SampleSprite>("Antonis", 0, 0);
 }

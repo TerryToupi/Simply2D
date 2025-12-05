@@ -17,11 +17,8 @@ int main()
 		// create application
 		Simply2D::Application::Create(specs);
 
-		// load assets
-		Simply2D::assets().load(Simply2D::AssetType::SERIALIZABLE, "scenes/level1/Level1.json");
-
 		// push scenes and make first scene active
-		Simply2D::app().pushScene<Level1>(Simply2D::assets().get("scenes/level1/Level1.json"));
+		Simply2D::app().pushScene<Level1>("scene://Level1");
 		Simply2D::app().activateScene<Level1>();
 
 		// run the application

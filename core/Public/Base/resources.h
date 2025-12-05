@@ -6,6 +6,27 @@
 
 namespace Simply2D
 {
+	// ------------ TEXTURE ---------------------------
+	class Texture;
+
+	// ------------ IMAGE -----------------------------
+	class Image;
+		
+	// ------------ AUDIO -----------------------------
+	class Audio;
+
+	// ------------ FONT ------------------------------
+	class Font;
+
+	// ----------- SERIALIZABLES ----------------------
+	class Json;
+
+
+	// ---------- Defines -----------------------------
+	#define SURFACE THandle<Simply2D::Texture>(UINT_MAX)
+
+
+	// ---------- Descriptors ------------------------
 	enum class TextureFormat : unsigned int
 	{
 		RGBA32_FLOAT = UINT_BIT_SHIFT(0),  /**< 32-bit float RGBA */
@@ -27,21 +48,4 @@ namespace Simply2D
 		int width = 0;
 		int height = 0;
 	};
-
-	#define SURFACE THandle<Simply2D::Texture>(UINT_MAX)
-
-	// ------------ TEXTURE ---------------------------
-	class Texture;
-
-	// ------------ IMAGE -----------------------------
-	class Image;
-		
-	// ------------ AUDIO -----------------------------
-	class Audio;
-
-	// ------------ FONT ------------------------------
-	class Font;
-
-	// ----------- SERIALIZABLES ----------------------
-	class Serializable;
 }

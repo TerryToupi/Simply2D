@@ -6,31 +6,23 @@
 #include "Types/Json.h"
 
 #include "Source/Base/assetDataBase.h"
-#include "Source/Systems/colisionChecker.h"
 
 namespace Simply2D
 {
-	Scene::Scene(Asset level) 
+	Scene::Scene(const std::string& vfp) 
 	{
-		AssetDatabaseImpl* assets = (AssetDatabaseImpl*)(Application::GetAssetDatabase());
-
-		json* config = assets->getSerializable(THandle<Serializable>(level.handle));
+		auto* assets = static_cast<AssetDatabaseImpl*>(Application::GetAssetDatabase());
+		
+		THandle<Json> levelHandle = assets->load<Json>(vfp);
+		json* config = assets->getSerializable(levelHandle);
 		// Generating the tileset
 		{
-			uint16_t tileWidth = (uint16_t)(*config)["tilesets"][0]["tilewidth"];
-			uint16_t tileHeight = (uint16_t)(*config)["tilesets"][0]["tileheight"];
-	
-			std::string imagePath = "/images";
-			std::string configTilesetPath = (std::string)(*config)["tilesets"][0]["image"];
-			std::size_t pos = configTilesetPath.find("images/");
-			if (pos != std::string::npos) 
-			{
-				imagePath = configTilesetPath.substr(pos);
-			}
-			
-			// if it's not load it ... well load it
-			assets->load(AssetType::IMAGE, imagePath);
-			m_tileset = MakeRef<TileSet>(tileWidth, tileHeight, assets->get(imagePath));
+			auto tileWidth = static_cast<uint16_t>((*config)["tilesets"][0]["tilewidth"]);
+			auto tileHeight = static_cast<uint16_t>((*config)["tilesets"][0]["tileheight"]);
+			auto name = static_cast<std::string>((*config)["tilesets"][0]["name"]);
+
+			THandle<Image> image = assets->load<Image>("image://" + name);
+			m_tileset = MakeRef<TileSet>(tileWidth, tileHeight, image);
 		}
 
 		// reserviing the size of the layer vector

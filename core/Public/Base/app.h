@@ -29,14 +29,14 @@ namespace Simply2D
 		void Run();
 		void Stop();
 
-		static inline Application* GetInstance() { return s_pInstance; }
-		static inline Renderer* GetRenderer() { return s_pRenderer; }
+		static inline Application*	 GetInstance()		{ return s_pInstance; }
+		static inline Renderer*		 GetRenderer()		{ return s_pRenderer; }
 		static inline AssetDatabase* GetAssetDatabase() { return s_pAssetDatabase; }
 
 		template<std::derived_from<Scene> TScene>
-		void pushScene(Asset asset)
+		void pushScene(const std::string& scene)
 		{
-			m_scenes.push_back(MakeRef<TScene>(asset));
+			m_scenes.push_back(MakeRef<TScene>(scene));
 		}
 
 		template<typename TScene>

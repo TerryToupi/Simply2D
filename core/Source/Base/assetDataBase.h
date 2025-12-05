@@ -16,38 +16,48 @@
 
 namespace Simply2D
 {
-    class AssetDatabaseImpl final : public AssetDatabase
+    class ResourcLocator
     {
     public:
-        AssetDatabaseImpl(const AssetDatabaseSpecifications& specs);
-        ~AssetDatabaseImpl();
+        ResourcLocator(std::string& root)
+            :   m_root(root) { }
 
-        virtual void load(AssetType type, std::string path) override;
-        virtual Asset get(std::string path) override;
-        virtual void unload(std::string path) override;
+		void Mount(const std::string& prefix, const std::string& directory);
+		std::string Resolve(const std::string& vfp) const;
 
-        SDL_Surface* getImage(THandle<Image> image);
-        MIX_Audio*   getAudio(THandle<Audio> audio);
-        TTF_Font*    getFont(THandle<Font> font);
+	private:
+		std::string m_root;
+		THashMap<std::string, std::string> m_mounts;
+	};
 
-        json*        getSerializable(THandle<Serializable> text);
+	class AssetDatabaseImpl final : public AssetDatabase
+	{
+	public:
+		AssetDatabaseImpl(const AssetDatabaseSpecifications& specs);
+		~AssetDatabaseImpl();
+
+		virtual THandle<Image> loadImage(const std::string&) override;
+		virtual THandle<Font>  loadFont(const std::string&) override;
+		virtual THandle<Audio> loadAudio(const std::string&) override;
+		virtual THandle<Json>  loadSerializable(const std::string&) override;
+
+		virtual void unloadImage(const std::string&) override;
+		virtual void unloadFont(const std::string&) override;
+		virtual void unloadAudio(const std::string&) override;
+		virtual void unloadSerializable(const std::string&) override;
+
+		SDL_Surface* getImage(THandle<Image> image);
+		MIX_Audio*   getAudio(THandle<Audio> audio);
+		TTF_Font*    getFont(THandle<Font> font);
+		json*        getSerializable(THandle<Json> text);
 
     private: 
-        THandle<Image>        loadImage(std::string path);
-        THandle<Audio>        loadAudio(std::string path);
-        THandle<Font>         laodFont(std::string path);
-        THandle<Serializable> loadSerializable(std::string path);
-
-        void unloadImage(THandle<Image> image);
-        void unloadAudio(THandle<Audio> audio);
-        void unloadFont(THandle<Font> font);
-        void unloadSerializable(THandle<Serializable> text);
-
         TPool<SDL_Surface*, Simply2D::Image> m_images;
         TPool<MIX_Audio*, Simply2D::Audio>   m_audio;
         TPool<TTF_Font*, Simply2D::Font>     m_font;
-        TPool<json, Simply2D::Serializable>  m_serializables;
+        TPool<json, Simply2D::Json>			 m_serializables;
 
-        THashMap<std::string, Asset> m_loadedAssets;
+        ResourcLocator m_locator;
+		THashMap<std::string, uint32_t> m_loaded;
     };
 }

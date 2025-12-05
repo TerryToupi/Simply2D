@@ -21,7 +21,7 @@ namespace Simply2D
 
     public:
         TileSet() = default;
-        TileSet(uint16_t tileWidth, uint16_t tileHeight, Asset setImage);
+        TileSet(uint16_t tileWidth, uint16_t tileHeight, THandle<Image> setImage);
         ~TileSet();
 
         THandle<Texture> texture();

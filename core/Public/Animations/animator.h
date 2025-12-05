@@ -1,8 +1,6 @@
 #pragma once
 
-#include <set>
-#include <functional>
-
+#include "Math/mathUtils.h"
 #include "Base/resources.h"
 #include "Types/Arrays.h"
 #include "Types/Function.h"
@@ -11,7 +9,7 @@ namespace Simply2D
 {
 	struct Animation 
 	{
-		using FrameRects = TArray<TArray<int, 4>, 30>;
+		using FrameRects = TArray<Rect, 30>;
 
 		// animation atlas
 		THandle<Texture> texture;
