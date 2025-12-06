@@ -30,6 +30,9 @@ void Level1::update(float ts)
 
 	for (auto& sprite : GetAll<Simply2D::Sprite>())
 		sprite->update(ts);
+
+	if (Simply2D::app().IsPressed(Simply2D::SCANCODE_0))
+		std::cout << "0 pressed" << std::endl;
 }
 
 void Level1::render()

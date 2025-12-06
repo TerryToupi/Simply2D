@@ -9,6 +9,9 @@
 #include "Types/SmartPointers.h"
 #include "Types/String.h"
 
+#include "Input/KeyboardInput.h"
+#include "Input/MouseInput.h"
+
 namespace Simply2D
 {
 	struct ApplicationSpecifications
@@ -29,8 +32,8 @@ namespace Simply2D
 		void Run();
 		void Stop();
 
-		static inline Application*	 GetInstance()		{ return s_pInstance; }
-		static inline Renderer*		 GetRenderer()		{ return s_pRenderer; }
+		static inline Application* GetInstance() { return s_pInstance; }
+		static inline Renderer* GetRenderer() { return s_pRenderer; }
 		static inline AssetDatabase* GetAssetDatabase() { return s_pAssetDatabase; }
 
 		template<std::derived_from<Scene> TScene>
@@ -53,6 +56,8 @@ namespace Simply2D
 			}
 		}
 
+		static bool IsPressed(Keyboard code);
+
 		Application() = default;
 		~Application() = default;
 		Application(const Application& app) = delete;
@@ -66,8 +71,11 @@ namespace Simply2D
 		TVector<Ref<Scene>>			m_scenes;
 		uint32_t					m_activeScene = 0;
 
-		static inline Application*		s_pInstance		 = nullptr;
-		static inline Renderer*			s_pRenderer		 = nullptr;
-		static inline AssetDatabase*    s_pAssetDatabase = nullptr;
+		static inline Application*		s_pInstance = nullptr;
+		static inline Renderer*			s_pRenderer = nullptr;
+		static inline AssetDatabase*	s_pAssetDatabase = nullptr;
+
+		static inline const bool*	s_pKeyState = nullptr;
+		static inline int			s_Keylength = 0;
 	};
 }

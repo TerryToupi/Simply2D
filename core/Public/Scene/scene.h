@@ -24,6 +24,7 @@ namespace Simply2D
 		virtual ~Scene() = default;
 
 		// Scripting functions
+		virtual void start()					{}
 		virtual void begin(float ts)			{}
 		virtual void event(Simply2D::Event& e)	{}
 		virtual void update(float ts)			{} 
@@ -87,5 +88,8 @@ namespace Simply2D
 		Ref<TileSet>		 m_tileset;
 		TVector<TileLayer>	 m_layers;
 		unsigned			 m_layersCount = 0;
+
+	private:
+		friend class ColisionSystem;
 	};
 }

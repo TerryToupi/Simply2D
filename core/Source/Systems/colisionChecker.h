@@ -3,10 +3,14 @@
 #include "Types/SmartPointers.h"
 #include "Scene/scene.h"
 
+#include "Types/Arrays.h"
+#include "Types/Function.h"
+
 namespace Simply2D
 {
-	namespace ColisionChecker
+	class ColisionSystem final
 	{
-		void check(Ref<Scene> scene);
-	}
+	public:
+		void Check(Ref<Scene>) const;
+	};
 }

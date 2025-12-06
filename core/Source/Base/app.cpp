@@ -64,6 +64,14 @@ namespace Simply2D
 		timeStep = std::min(0.1f, std::max(0.0001f, (float)(currTime - oldTime)));
 		oldTime = currTime;
 
+		// Start
+		{
+			for (const auto& scene : m_scenes)
+			{
+				scene->start();
+			}
+		}
+
 		RendererImpl* renderer = static_cast<RendererImpl*>(s_pRenderer);
 		while (m_running)
 		{
@@ -73,6 +81,11 @@ namespace Simply2D
 
 			// cache the currently active scene
 			frameActiveScene = m_activeScene;
+
+			// Init keyboard scan codes;
+			{
+				s_pKeyState = SDL_GetKeyboardState(&s_Keylength);
+			}
 
 			// polling events
 			{
@@ -120,7 +133,7 @@ namespace Simply2D
 				AnimatorManager::GetInstance()->Progress(currTime);
 
 				// collision checking
-				ColisionChecker::check(m_scenes.at(frameActiveScene));
+				//ColisionChecker::check(m_scenes.at(frameActiveScene));
 
 				// update the scene
 				m_scenes.at(frameActiveScene)->update(timeStep);
@@ -156,17 +169,24 @@ namespace Simply2D
 		m_running = false;
 	}
 
+	bool Application::IsPressed(Keyboard code)
+	{
+		auto kcode = static_cast<SDL_Scancode>(code);
+		assert(kcode < s_Keylength);
+		return s_pKeyState[kcode];
+	}
+
 	void Application::Destroy()
 	{
 		// shutdown scenes
 		s_pInstance->m_scenes.clear();
 
 		// shutdown Renderer
-		RendererImpl* rimpl = static_cast<RendererImpl*>(s_pInstance->s_pRenderer);
+		auto rimpl = static_cast<RendererImpl*>(s_pInstance->s_pRenderer);
 		MM::Delete<RendererImpl>(rimpl);
 
 		// shutdown AssetDatabase
-		AssetDatabaseImpl* aimpl = static_cast<AssetDatabaseImpl*>(s_pInstance->s_pAssetDatabase);
+		auto aimpl = static_cast<AssetDatabaseImpl*>(s_pInstance->s_pAssetDatabase);
 		MM::Delete<AssetDatabaseImpl>(aimpl);
 
 		// delete animator manager
