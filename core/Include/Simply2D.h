@@ -4,6 +4,7 @@
 #include "Base/assets.h"
 #include "Base/resources.h"
 #include "Rendering/renderer.h"
+#include "Audio/audio.h"
 #include "Scene/scene.h"
 #include "Scene/boundingArea.h"
 #include "Scene/gravity.h"
@@ -46,5 +47,10 @@ namespace Simply2D
 	static inline Simply2D::AssetDatabase& assets()
 	{
 		return *Simply2D::Application::GetAssetDatabase();
+	}
+	
+	static inline Simply2D::AudioSystem& audio()
+	{
+		return *Simply2D::Application::GetAudioSystem();
 	}
 }

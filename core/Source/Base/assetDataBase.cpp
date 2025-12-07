@@ -5,6 +5,7 @@
 #include "Base/app.h"
 
 #include "Source/Rendering/renderingBackend.h"
+#include "Source/Audio/audioImpl.h"
 #include "Source/Base/assetDataBase.h"
 
 #include "Memory/memory.h"
@@ -97,6 +98,8 @@ namespace Simply2D
 
 	THandle<Audio> AssetDatabaseImpl::loadAudio(const std::string& vfp)
 	{
+		auto audioSystem = static_cast<AudioSystemImpl*>(Application::GetAudioSystem());
+
 		static constexpr TArray<const char*, 2> supported = { ".wav", ".mp3" };
 
 		for (auto ext : supported)
@@ -106,7 +109,7 @@ namespace Simply2D
 				return THandle<Audio>(m_loaded.at(rp));
 			else
 			{
-				MIX_Audio* audio = MIX_LoadAudio(nullptr, rp.c_str(), true);
+				MIX_Audio* audio = MIX_LoadAudio(audioSystem->GetMixer(), rp.c_str(), false);
 				if (audio)
 				{
 					THandle<Audio> handle = m_audio.Insert(std::move(audio));

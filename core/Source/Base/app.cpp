@@ -4,6 +4,7 @@
 #include "Source/Base/assetDataBase.h"
 #include "Source/Base/gameTime.h"
 #include "Source/Rendering/renderingBackend.h"
+#include "Source/Audio/audioImpl.h"
 #include "Source/Animation/animatorManager.h"
 #include "Source/Systems/colisionChecker.h"
 
@@ -35,14 +36,12 @@ namespace Simply2D
 			SDL_INIT_GAMEPAD))
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to initialize %s", SDL_GetError());
 
-		if (!MIX_Init())
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to initialize %s", SDL_GetError());
-
-		if (!TTF_Init())
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to initialize %s", SDL_GetError());
+		//if (!TTF_Init())
+		//	SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[SDL] failed to initialize %s", SDL_GetError());
 
 		AnimatorManager::Create(); 
 		s_pInstance->s_pRenderer = Renderer::Create(specs.renderer);
+		s_pInstance->s_pAudioSystem = AudioSystem::Create(specs.audio);
 		s_pInstance->s_pAssetDatabase = AssetDatabase::Create(specs.assets);
 		s_pInstance->m_running = true;
 	}
@@ -72,7 +71,7 @@ namespace Simply2D
 			}
 		}
 
-		RendererImpl* renderer = static_cast<RendererImpl*>(s_pRenderer);
+		auto renderer = static_cast<RendererImpl*>(s_pRenderer);
 		while (m_running)
 		{
 			currTime = Clock::getTime();
@@ -181,20 +180,23 @@ namespace Simply2D
 		// shutdown scenes
 		s_pInstance->m_scenes.clear();
 
-		// shutdown Renderer
-		auto rimpl = static_cast<RendererImpl*>(s_pInstance->s_pRenderer);
-		MM::Delete<RendererImpl>(rimpl);
-
-		// shutdown AssetDatabase
-		auto aimpl = static_cast<AssetDatabaseImpl*>(s_pInstance->s_pAssetDatabase);
-		MM::Delete<AssetDatabaseImpl>(aimpl);
-
 		// delete animator manager
 		AnimatorManager::Destroy();
 
+		// shutdown AssetDatabase
+		auto assets = static_cast<AssetDatabaseImpl*>(s_pInstance->s_pAssetDatabase);
+		MM::Delete<AssetDatabaseImpl>(assets);
+
+		// shutdown Renderer
+		auto renderer = static_cast<RendererImpl*>(s_pInstance->s_pRenderer);
+		MM::Delete<RendererImpl>(renderer);
+		
+		// shutdown Audio
+		auto audio = static_cast<AudioSystemImpl*>(s_pInstance->s_pAudioSystem);
+		MM::Delete<AudioSystemImpl>(audio);
+
 		// shutdown SDL
-		TTF_Quit();
-		MIX_Quit();
+		//TTF_Quit();
 		SDL_Quit();
 
 		// Delete the application

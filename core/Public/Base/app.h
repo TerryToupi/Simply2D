@@ -3,6 +3,7 @@
 #include "assets.h"
 
 #include "Rendering/renderer.h"
+#include "Audio/audio.h"
 #include "Scene/scene.h"
 
 #include "Types/Arrays.h"
@@ -21,6 +22,7 @@ namespace Simply2D
 		TString identifier = "com.terrytoupi.simply2D-empty";
 		RendererSpecifications renderer;
 		AssetDatabaseSpecifications assets;
+		AudioSystemSpecifications audio;
 	};
 
 	class Application
@@ -35,6 +37,7 @@ namespace Simply2D
 		static inline Application* GetInstance() { return s_pInstance; }
 		static inline Renderer* GetRenderer() { return s_pRenderer; }
 		static inline AssetDatabase* GetAssetDatabase() { return s_pAssetDatabase; }
+		static inline AudioSystem* GetAudioSystem() { return s_pAudioSystem; }
 
 		template<std::derived_from<Scene> TScene>
 		void pushScene(const std::string& scene)
@@ -74,6 +77,7 @@ namespace Simply2D
 		static inline Application*		s_pInstance = nullptr;
 		static inline Renderer*			s_pRenderer = nullptr;
 		static inline AssetDatabase*	s_pAssetDatabase = nullptr;
+		static inline AudioSystem*		s_pAudioSystem = nullptr;
 
 		static inline const bool*	s_pKeyState = nullptr;
 		static inline int			s_Keylength = 0;
