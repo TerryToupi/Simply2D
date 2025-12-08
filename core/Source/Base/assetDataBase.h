@@ -51,6 +51,11 @@ namespace Simply2D
 		TTF_Font*    getFont(THandle<Font> font);
 		json*        getSerializable(THandle<Json> text);
 
+		// Pixel access utilities
+		uint32_t getPixelAt(THandle<Image> image, int x, int y);
+		bool isPixelTransparent(THandle<Image> image, int x, int y);
+		void getImageSize(THandle<Image> image, int& width, int& height);
+
     private: 
         TPool<SDL_Surface*, Simply2D::Image> m_images;
         TPool<MIX_Audio*, Simply2D::Audio>   m_audio;

@@ -12,4 +12,11 @@ public:
 	virtual void update(float ts)			override;
 	virtual void render()					override;
 	virtual void end(float ts)				override;
+
+protected:
+	// Mark brown ground tiles as empty/passable
+	virtual TSet<uint16_t> getEmptyTileIndices() const override;
+
+private:
+	bool m_showGridDebug = false;
 };

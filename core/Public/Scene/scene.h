@@ -5,6 +5,7 @@
 #include "tileSet.h"
 #include "tileLayers.h"
 #include "sprite.h"
+#include "grid.h"
 
 #include "Types/Arrays.h"
 #include "Types/SmartPointers.h"
@@ -83,13 +84,28 @@ namespace Simply2D
 			}
 		}
 
+		GridLayer* getGrid() { return m_grid.get(); }
+		const GridLayer* getGrid() const { return m_grid.get(); }
+
 	protected:
+		// Override this in derived classes to specify which tile IDs should be treated as empty/passable
+		virtual TSet<uint16_t> getEmptyTileIndices() const { return TSet<uint16_t>(); }
+
+		// Compute the collision grid (called automatically in start() if not already computed)
+		void computeGridIfNeeded();
+
 		TVector<Ref<Sprite>> m_sprites;
 		Ref<TileSet>		 m_tileset;
 		TVector<TileLayer>	 m_layers;
 		unsigned			 m_layersCount = 0;
+		Scope<GridLayer>	 m_grid;
 
 	private:
+		// Grid setup data (stored during construction, used after derived class is fully constructed)
+
+		Scope<GridSetupDescriptor> m_gridSetup;
+		bool m_gridComputed = false;
+
 		friend class ColisionSystem;
 	};
 }

@@ -87,18 +87,19 @@ Makefile
 node_modules/
 Pods/
 
-# ---- Import Lybraries ----
-Import/bin
-Import/build
-Import/cmake
-Import/include
-Import/lib
-Import/licenses
-Import/share
-Import/*.natvis
+# ---- Import Libraries ----
+[Ii]mport/bin
+[Ii]mport/build
+[Ii]mport/cmake
+[Ii]mport/include
+[Ii]mport/lib
+[Ii]mport/licenses
+[Ii]mport/share
+[Ii]mport/*.natvis
 
 # ---- CMAKE generation folder ----
 vs2026
 vs2022
 ninja
 xcode
+out

@@ -57,6 +57,7 @@ namespace Simply2D
 		}
 
 		static bool IsPressed(Keyboard code);
+		static bool IsReleased(Keyboard code);
 
 		Application() = default;
 		~Application() = default;
@@ -76,6 +77,7 @@ namespace Simply2D
 		static inline AssetDatabase*	s_pAssetDatabase = nullptr;
 
 		static inline const bool*	s_pKeyState = nullptr;
+		static inline TVector<bool>	s_prevKeyState;
 		static inline int			s_Keylength = 0;
 	};
 }
