@@ -46,6 +46,68 @@ namespace Simply2D
 		return m_serializables.Get(text);
 	}
 
+	uint32_t AssetDatabaseImpl::getPixelAt(THandle<Image> image, int x, int y)
+	{
+		SDL_Surface* surface = getImage(image);
+		if (!surface || x < 0 || y < 0)
+			return 0;
+		if (x >= surface->w || y >= surface->h)
+			return 0;
+
+		SDL_LockSurface(surface);
+
+		uint8_t* pixels = static_cast<uint8_t*>(surface->pixels);
+		int bpp = SDL_BYTESPERPIXEL(surface->format);
+		uint8_t* p = pixels + y * surface->pitch + x * bpp;
+
+		uint32_t color = 0;
+		switch (bpp)
+		{
+		case 1:
+			color = *p;
+			break;
+		case 2:
+			color = *reinterpret_cast<uint16_t*>(p);
+			break;
+		case 3:
+			color = p[0] | (p[1] << 8) | (p[2] << 16);
+			break;
+		case 4:
+			color = *reinterpret_cast<uint32_t*>(p);
+			break;
+		}
+
+		SDL_UnlockSurface(surface);
+		return color;
+	}
+
+	bool AssetDatabaseImpl::isPixelTransparent(THandle<Image> image, int x, int y)
+	{
+		SDL_Surface* surface = getImage(image);
+		if (!surface)
+			return true;
+
+		uint32_t pixel = getPixelAt(image, x, y);
+		const SDL_PixelFormatDetails* formatDetails = SDL_GetPixelFormatDetails(surface->format);
+
+		uint8_t r, g, b, a;
+		SDL_GetRGBA(pixel, formatDetails, nullptr, &r, &g, &b, &a);
+		return a == 0;
+	}
+
+	void AssetDatabaseImpl::getImageSize(THandle<Image> image, int& width, int& height)
+	{
+		SDL_Surface* surface = getImage(image);
+		if (!surface)
+		{
+			width = 0;
+			height = 0;
+			return;
+		}
+		width = surface->w;
+		height = surface->h;
+	}
+
 	THandle<Image> AssetDatabaseImpl::loadImage(const std::string& vfp)
 	{
 		static constexpr TArray<const char*, 3> supported = { ".png", ".bmp", ".jpg"};

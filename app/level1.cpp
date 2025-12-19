@@ -10,26 +10,26 @@ Level1::Level1(const std::string& scene)
 	THandle<Simply2D::Image> image = Simply2D::assets().load<Simply2D::Image>("image://a");
 	Simply2D::assets().unload<Simply2D::Image>("image://a");
 
-	m_kompra = Simply2D::assets().load<Simply2D::Audio>("audio://kompra");
-	m_kippo = Simply2D::assets().load<Simply2D::Audio>("audio://kippo");
-
+	// Compute the grid now that Level1 is fully constructed
+	// This ensures getEmptyTileIndices() virtual dispatch works correctly
+	computeGridIfNeeded();
 }
 
 Level1::~Level1()
 {
-	Simply2D::audio().StopMusic(m_kippo, 200);
 }
 
-void Level1::start()
+TSet<uint16_t> Level1::getEmptyTileIndices() const
 {
-	Simply2D::audio().PlayMusic(m_kippo, -1);
+	return { 154, 16 };
 }
 
 void Level1::event(Simply2D::Event& e)
 {
 	Simply2D::EventDispatcher dispatch(e);
-	dispatch.Dispatch<Simply2D::MouseButtonPressedEvent>([this](Simply2D::MouseButtonPressedEvent& e) { Simply2D::audio().PlaySFX(m_kippo); return true; });
-	dispatch.Dispatch<Simply2D::KeyPressedEvent>([this](Simply2D::KeyPressedEvent& e) { Simply2D::audio().PlaySFX(m_kompra); return true; });
+	dispatch.Dispatch<Simply2D::KeyPressedEvent>([this](Simply2D::KeyPressedEvent& e) { if(e.GetKeyCode() == Simply2D::SCANCODE_G){m_showGridDebug = !m_showGridDebug;} std::cout << e.ToString().c_str() << std::endl; return true;});
+	dispatch.Dispatch<Simply2D::MouseButtonPressedEvent>([this](Simply2D::MouseButtonPressedEvent& e) { std::cout << e.ToString().c_str() << std::endl;  return true; });
+	// dispatch.Dispatch<Simply2D::KeyPressedEvent>([this](Simply2D::KeyPressedEvent& e) { std::cout << e.ToString().c_str() << std::endl;  return true; });
 	dispatch.Dispatch<Simply2D::MouseButtonReleasedEvent>([this](Simply2D::MouseButtonReleasedEvent& e) { std::cout << e.ToString().c_str() << std::endl;  return true; });
 	dispatch.Dispatch<Simply2D::KeyReleasedEvent>([this](Simply2D::KeyReleasedEvent& e) { std::cout << e.ToString().c_str() << std::endl;  return true; });
 }
@@ -42,7 +42,8 @@ void Level1::update(float ts)
 		sprite->update(ts);
 
 	if (Simply2D::app().IsPressed(Simply2D::SCANCODE_0))
-		Simply2D::audio().PlaySFX(m_kippo);
+		std::cout << "0 pressed" << std::endl;
+
 }
 
 void Level1::render()
@@ -75,6 +76,15 @@ void Level1::render()
 		},
 		Span(calls.data(), calls.size())
 	);
+
+	// Render grid debug overlay if enabled
+	if (m_showGridDebug && getGrid())
+	{
+		// Get surface dimensions to match the tile layer scaling
+		int swidth = 0, sheight = 0;
+		Simply2D::gfx().textureSize(SURFACE, swidth, sheight);
+		getGrid()->debugRender(0, 0, swidth, sheight);
+	}
 }
 
 void Level1::end(float ts)

@@ -10,6 +10,8 @@
 
 namespace Simply2D
 {
+	class GridLayer;
+
 	class RendererImpl final : public Renderer
 	{
 	public:
@@ -37,5 +39,6 @@ namespace Simply2D
 		TPool<SDL_Texture*, Texture> m_textures;
 
 		friend class Application;
+		friend class GridLayer;
 	};
 }

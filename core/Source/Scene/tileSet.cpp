@@ -5,7 +5,7 @@
 namespace Simply2D
 {
 	TileSet::TileSet(uint16_t tileWidth, uint16_t tileHeight, THandle<Image> setImage)
-		:	m_tileWidth(tileWidth), m_tileHeight(tileHeight)
+		:	m_tileWidth(tileWidth), m_tileHeight(tileHeight), m_imageHandle(setImage)
 	{
 		m_tileSetTexture = Application::GetRenderer()->createTexture(setImage);
 

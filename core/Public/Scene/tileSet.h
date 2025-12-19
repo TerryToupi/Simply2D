@@ -35,8 +35,11 @@ namespace Simply2D
         uint16_t getTileSetWidth();
         uint16_t getTileSetHeight();
 
+        THandle<Image> imageHandle() const { return m_imageHandle; }
+
     private:
         THandle<Texture> m_tileSetTexture;
+        THandle<Image> m_imageHandle;
 
         uint16_t m_tileWidth = 0;
         uint16_t m_tileHeight = 0;
