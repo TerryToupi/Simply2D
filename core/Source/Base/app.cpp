@@ -80,17 +80,9 @@ namespace Simply2D
 
 			// cache the currently active scene
 			frameActiveScene = m_activeScene;
-
-			// Init keyboard scan codes;
-			{
-				s_pKeyState = SDL_GetKeyboardState(&s_Keylength);
-
-				// Initialize previous state on first frame
-				if (s_prevKeyState.empty())
-				{
-					s_prevKeyState.resize(s_Keylength, false);
-				}
-			}
+			
+			// updating the scancode state
+			s_pKeyState = SDL_GetKeyboardState(&s_Keylength);
 
 			// polling events
 			{
@@ -157,14 +149,6 @@ namespace Simply2D
 				m_scenes.at(frameActiveScene)->end(timeStep);
 			}
 
-			// Update previous keyboard state for next frame
-			{
-				for (int i = 0; i < s_Keylength; ++i)
-				{
-					s_prevKeyState[i] = s_pKeyState[i];
-				}
-			}
-
 #if not defined(NDEBUG)
 			if (statsCounter >= statsTimer)
 			{
@@ -187,14 +171,6 @@ namespace Simply2D
 		auto kcode = static_cast<SDL_Scancode>(code);
 		assert(kcode < s_Keylength);
 		return s_pKeyState[kcode];
-	}
-
-	bool Application::IsReleased(Keyboard code)
-	{
-		auto kcode = static_cast<SDL_Scancode>(code);
-		assert(kcode < s_Keylength);
-		// Released = was pressed last frame but not pressed this frame
-		return s_prevKeyState[kcode] && !s_pKeyState[kcode];
 	}
 
 	void Application::Destroy()
