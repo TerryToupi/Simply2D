@@ -91,6 +91,17 @@ namespace Simply2D
 		// Override this in derived classes to specify which tile IDs should be treated as empty/passable
 		virtual TSet<uint16_t> getEmptyTileIndices() const { return TSet<uint16_t>(); }
 
+		// Override to configure solid detection threshold (0.0 to 1.0)
+		// Returns the minimum ratio of solid pixels required for a grid element to be solid
+		virtual float getSolidRatioThreshold() const { return 0.0f; }
+
+		// Override to configure detection mode (Alpha, Brightness, or Both)
+		virtual GridDetectionMode getDetectionMode() const { return GridDetectionMode::Alpha; }
+
+		// Override to configure brightness threshold (0.0 to 1.0)
+		// Pixels brighter than this are considered empty (light = empty)
+		virtual float getBrightnessThreshold() const { return 0.8f; }
+
 		// Compute the collision grid (called automatically in start() if not already computed)
 		void computeGridIfNeeded();
 

@@ -110,8 +110,11 @@ namespace Simply2D
 
 		auto* assets = static_cast<AssetDatabaseImpl*>(Application::GetAssetDatabase());
 
-		// Now we can safely call getEmptyTileIndices() because the derived class is fully constructed
+		// Now we can safely call virtual methods because the derived class is fully constructed
 		TSet<uint16_t> emptyTileIndices = getEmptyTileIndices();
+		m_grid->config().solidRatioThreshold = getSolidRatioThreshold();
+		m_grid->config().detectionMode = getDetectionMode();
+		m_grid->config().brightnessThreshold = getBrightnessThreshold();
 
 		ComputeGrid(*m_grid, m_gridSetup->tileData, m_gridSetup->mapWidth, m_gridSetup->mapHeight,
 			m_tileset, m_tileset->imageHandle(), assets, emptyTileIndices);

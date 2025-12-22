@@ -54,6 +54,7 @@ namespace Simply2D
 		// Pixel access utilities
 		uint32_t getPixelAt(THandle<Image> image, int x, int y);
 		bool isPixelTransparent(THandle<Image> image, int x, int y);
+		float getPixelBrightness(THandle<Image> image, int x, int y);  // Returns 0.0 (black) to 1.0 (white)
 		void getImageSize(THandle<Image> image, int& width, int& height);
 
     private: 

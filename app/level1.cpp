@@ -21,7 +21,17 @@ Level1::~Level1()
 
 TSet<uint16_t> Level1::getEmptyTileIndices() const
 {
-	return { 154, 16 };
+	return {};  // Not using tile-based empty detection, using brightness instead
+}
+
+Simply2D::GridDetectionMode Level1::getDetectionMode() const
+{
+	return Simply2D::GridDetectionMode::Brightness;  // Use brightness to detect empty vs solid
+}
+
+float Level1::getBrightnessThreshold() const
+{
+	return 0.55f;  // Pixels brighter than 55% are empty (grass is ~60-70%, dirt is ~40-50%)
 }
 
 void Level1::event(Simply2D::Event& e)
@@ -91,3 +101,7 @@ void Level1::end(float ts)
 {
 }
 
+float Level1::getSolidRatioThreshold() const
+{
+    return 0.5f;  // Need >50% dark pixels in 8x8 element to be solid
+}

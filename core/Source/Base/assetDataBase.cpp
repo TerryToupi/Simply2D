@@ -95,6 +95,24 @@ namespace Simply2D
 		return a == 0;
 	}
 
+	float AssetDatabaseImpl::getPixelBrightness(THandle<Image> image, int x, int y)
+	{
+		SDL_Surface* surface = getImage(image);
+		if (!surface)
+			return 1.0f;  // Treat missing surface as bright (empty)
+
+		uint32_t pixel = getPixelAt(image, x, y);
+		const SDL_PixelFormatDetails* formatDetails = SDL_GetPixelFormatDetails(surface->format);
+
+		uint8_t r, g, b, a;
+		SDL_GetRGBA(pixel, formatDetails, nullptr, &r, &g, &b, &a);
+
+		// Calculate perceived brightness using standard luminance formula
+		// (human eye is more sensitive to green, less to blue)
+		float brightness = (0.299f * r + 0.587f * g + 0.114f * b) / 255.0f;
+		return brightness;
+	}
+
 	void AssetDatabaseImpl::getImageSize(THandle<Image> image, int& width, int& height)
 	{
 		SDL_Surface* surface = getImage(image);
