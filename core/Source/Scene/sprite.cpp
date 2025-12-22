@@ -51,20 +51,18 @@ namespace Simply2D
 
 	void Sprite::SetPos(int _x, int _y)
 	{
+		m_x = _x;
+		m_y = _y;
 	}
 
 	int Sprite::GetPosX() const
 	{
-		return 0;
+		return m_x;
 	}
 
 	int Sprite::GetPosY() const
 	{
-		return 0;
-	}
-
-	void Sprite::SetColiderBox(unsigned _w, unsigned _h)
-	{
+		return m_y;
 	}
 
 	void Sprite::SetMotionQuantizerUse(bool v)

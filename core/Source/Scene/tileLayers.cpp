@@ -49,4 +49,15 @@ namespace Simply2D
 	{
 		return m_texture;
 	}
+
+	void TileLayer::filterScrollDistance(uint32_t viewStartCoord, uint32_t viewSize, uint32_t* d, uint32_t maxSize)
+	{
+		auto val = *d + viewStartCoord;
+		if (val < 0)
+			*d = viewStartCoord;
+		else if (viewSize >= maxSize)
+			*d = 0;
+		else if ((val + viewSize) >= maxSize)
+			*d = maxSize - (viewStartCoord + viewSize);
+	}
 }

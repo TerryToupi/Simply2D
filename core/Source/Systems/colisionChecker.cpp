@@ -4,6 +4,10 @@ namespace Simply2D
 {
 	void ColisionSystem::Check(Ref<Scene> scene) const
 	{
+		for (const auto& sprite : scene->GetAll<Sprite>())
+		{
+				
+		}
 	}
 }
 

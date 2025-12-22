@@ -12,6 +12,7 @@
 #include "Scene/sprite.h"
 #include "Scene/tileLayers.h"
 #include "Scene/tileSet.h"
+#include "Scene/Camera.h"
 #include "Animations/animator.h"
 #include "Math/mathUtils.h"
 #include "Memory/memory.h"

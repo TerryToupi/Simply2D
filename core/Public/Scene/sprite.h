@@ -1,8 +1,5 @@
 #pragma once
 
-#include <optional>
-#include <variant>
-
 #include "Math/mathUtils.h"
 #include "Types/String.h"
 #include "Types/Function.h"
@@ -42,7 +39,8 @@ namespace Simply2D
 		void     SetPos(int _x, int _y);
 		int		 GetPosX() const;
 		int		 GetPosY() const;
-		void	 SetColiderBox(unsigned _w, unsigned _h);
+
+		//void	 SetColiderBox(unsigned _w, unsigned _h);
 		void	 SetMotionQuantizerUse(bool v);
 		void	 SetQuanntizerVertHorz(int v, int h);
 
