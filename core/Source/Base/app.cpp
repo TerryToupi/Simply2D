@@ -124,7 +124,7 @@ namespace Simply2D
 				m_scenes.at(frameActiveScene)->begin(timeStep);
 			}
 
-			// updating layers
+			// updating Game logic 
 			{
 				// updating the Animations
 				AnimatorManager::GetInstance()->Progress(currTime);
@@ -149,15 +149,17 @@ namespace Simply2D
 				m_scenes.at(frameActiveScene)->end(timeStep);
 			}
 
-#if not defined(NDEBUG)
-			if (statsCounter >= statsTimer)
+			#if not defined(NDEBUG)
 			{
-				statsCounter = 0.0f;
-				MM::CLIReportStatistics();
+				if (statsCounter >= statsTimer)
+				{
+					statsCounter = 0.0f;
+					MM::CLIReportStatistics();
+				}
+				else
+					statsCounter += timeStep;
 			}
-			else
-				statsCounter += timeStep;
-#endif // !NDEBUG
+			#endif // !NDEBUG
 		}
 	}
 
