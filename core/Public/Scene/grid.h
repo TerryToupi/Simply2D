@@ -15,6 +15,14 @@ namespace Simply2D
 	constexpr GridIndex GRID_EMPTY = 0;
 	constexpr GridIndex GRID_SOLID = 1;
 
+	// Detection mode for determining solid vs empty pixels
+	enum class GridDetectionMode : uint8_t
+	{
+		Alpha,      // Use alpha channel (transparent = empty)
+		Brightness, // Use brightness/luminance (light = empty)
+		Both        // Empty if transparent OR bright
+	};
+
 	struct GridSetupDescriptor {
 		TVector<uint16_t> tileData;
 		uint16_t mapWidth = 0;
@@ -28,10 +36,14 @@ namespace Simply2D
 		uint16_t tileHeight = 32;
 		uint16_t gridBlockColumns = 4;
 		uint16_t gridBlockRows = 4;
+		float solidRatioThreshold = 0.0f;   // 0.0 to 1.0: ratio of solid pixels required for solid element
+		float brightnessThreshold = 0.8f;   // 0.0 to 1.0: pixels brighter than this are empty (light = empty)
+		GridDetectionMode detectionMode = GridDetectionMode::Alpha;
 
 		uint16_t gridElementWidth() const { return tileWidth / gridBlockColumns; }
 		uint16_t gridElementHeight() const { return tileHeight / gridBlockRows; }
 		uint16_t elementsPerTile() const { return gridBlockColumns * gridBlockRows; }
+		uint16_t pixelsPerElement() const { return gridElementWidth() * gridElementHeight(); }
 	};
 
 	class TileColorsHolder
@@ -70,6 +82,7 @@ namespace Simply2D
 		uint16_t gridHeight() const { return m_mapHeight * m_config.gridBlockRows; }
 		uint16_t mapWidth() const { return m_mapWidth; }
 		uint16_t mapHeight() const { return m_mapHeight; }
+		GridConfig& config() { return m_config; }
 		const GridConfig& config() const { return m_config; }
 
 	private:
@@ -94,7 +107,6 @@ namespace Simply2D
 		Ref<TileSet> tileSet,
 		THandle<Image> tilesetImage,
 		AssetDatabaseImpl* assets,
-		const TSet<uint16_t>& emptyTileIndices,
-		uint8_t solidThreshold = 0
+		const TSet<uint16_t>& emptyTileIndices
 	);
 }

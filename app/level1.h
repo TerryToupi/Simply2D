@@ -14,7 +14,10 @@ public:
 	virtual void end(float ts)				override;
 
 protected:
-	// Mark brown ground tiles as empty/passable
+	// Grid configuration overrides
+	virtual Simply2D::GridDetectionMode getDetectionMode() const override;
+	virtual float getBrightnessThreshold() const override;
+	virtual float getSolidRatioThreshold() const override;
 	virtual TSet<uint16_t> getEmptyTileIndices() const override;
 
 private:

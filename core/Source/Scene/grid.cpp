@@ -212,8 +212,7 @@ namespace Simply2D
 		Ref<TileSet> tileSet,
 		THandle<Image> tilesetImage,
 		AssetDatabaseImpl* assets,
-		const TSet<uint16_t>& emptyTileIndices,
-		uint8_t solidThreshold)
+		const TSet<uint16_t>& emptyTileIndices)
 	{
 		int imageWidth = 0, imageHeight = 0;
 		assets->getImageSize(tilesetImage, imageWidth, imageHeight);
@@ -268,8 +267,7 @@ namespace Simply2D
 
 					int solidCount = 0;
 
-					// Count solid pixels in this grid element
-					// For tiles not in the empty set, count ALL non-transparent pixels as solid
+					// Count solid pixels in this grid element based on detection mode
 					for (uint16_t py = 0; py < cfg.gridElementHeight(); ++py)
 					{
 						for (uint16_t px = 0; px < cfg.gridElementWidth(); ++px)
@@ -277,7 +275,23 @@ namespace Simply2D
 							int pixelX = tile.x + elemX + px;
 							int pixelY = tile.y + elemY + py;
 
-							if (!assets->isPixelTransparent(tilesetImage, pixelX, pixelY))
+							bool isEmptyPixel = false;
+
+							switch (cfg.detectionMode)
+							{
+							case GridDetectionMode::Alpha:
+								isEmptyPixel = assets->isPixelTransparent(tilesetImage, pixelX, pixelY);
+								break;
+							case GridDetectionMode::Brightness:
+								isEmptyPixel = assets->getPixelBrightness(tilesetImage, pixelX, pixelY) > cfg.brightnessThreshold;
+								break;
+							case GridDetectionMode::Both:
+								isEmptyPixel = assets->isPixelTransparent(tilesetImage, pixelX, pixelY) ||
+									assets->getPixelBrightness(tilesetImage, pixelX, pixelY) > cfg.brightnessThreshold;
+								break;
+							}
+
+							if (!isEmptyPixel)
 							{
 								++solidCount;
 							}
@@ -288,8 +302,10 @@ namespace Simply2D
 					uint16_t gridCol = tileCol * cfg.gridBlockColumns + (elemIdx % cfg.gridBlockColumns);
 					uint16_t gridRow = tileRow * cfg.gridBlockRows + (elemIdx / cfg.gridBlockColumns);
 
+					// Use ratio-based threshold: solid if (solidCount / totalPixels) > threshold
+					float ratio = static_cast<float>(solidCount) / cfg.pixelsPerElement();
 					grid.setElement(gridCol, gridRow,
-						solidCount > solidThreshold ? GRID_SOLID : GRID_EMPTY);
+						ratio > cfg.solidRatioThreshold ? GRID_SOLID : GRID_EMPTY);
 				}
 			}
 		}
