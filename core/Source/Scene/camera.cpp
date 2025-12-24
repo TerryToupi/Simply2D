@@ -29,16 +29,16 @@ namespace Simply2D
 		Application::GetRenderer()->destroyTexture(m_texture);
 	}
 
-	void Camera::Scroll(uint32_t dx, uint32_t dy, uint32_t speedX, uint32_t speedY, TileLayer& layer)
+	void Camera::Scroll(uint32_t dx, uint32_t dy, Span<TileLayer&> layers)
 	{
 		uint32_t cpyDx(dx);
 		uint32_t cpyDy(dy);
 
-		cpyDx *= speedX;
-		cpyDy *= speedY;
-
-		layer.filterScrollDistanceX(m_viewPort.x, m_viewPort.w, &cpyDx);
-		layer.filterScrollDistanceY(m_viewPort.y, m_viewPort.h, &cpyDy);
+		for (auto& layer : layers)
+		{
+			layer.filterScrollDistanceX(m_viewPort.x, m_viewPort.w, &cpyDx);
+			layer.filterScrollDistanceY(m_viewPort.y, m_viewPort.h, &cpyDy);
+		}
 	
 		m_viewPort.x += cpyDx;
 		m_viewPort.y += cpyDy;

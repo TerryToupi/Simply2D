@@ -9,15 +9,14 @@
 
 namespace Simply2D
 {
-
 	class Camera
 	{
 	public:
 		Camera(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
 		~Camera();
 
-		void Scroll(uint32_t dx, uint32_t dy, uint32_t speedX, uint32_t speedY, TileLayer& layer);
-		void BlitSprite(Rect& pos, Animator& animation);
+		void Scroll(uint32_t dx, uint32_t dy, Span<TileLayer&> layers);
+		void BlitSprite(Rect& pos, Animator& animator);
 		void BlitTileLayer();
 
 		void ResetTexture();
