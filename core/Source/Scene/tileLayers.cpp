@@ -60,4 +60,14 @@ namespace Simply2D
 		else if ((val + viewSize) >= maxSize)
 			*d = maxSize - (viewStartCoord + viewSize);
 	}
+
+	void TileLayer::filterScrollDistanceX(uint32_t viewStartCoord, uint32_t viewSize, uint32_t* d)
+	{
+		filterScrollDistance(viewStartCoord, viewSize, d, getPixelWidth());
+	}
+
+	void TileLayer::filterScrollDistanceY(uint32_t viewStartCoord, uint32_t viewSize, uint32_t* d)
+	{
+		filterScrollDistance(viewStartCoord, viewSize, d, getPixelHeight());
+	}
 }

@@ -27,6 +27,9 @@ namespace Simply2D
 
 		void filterScrollDistance(uint32_t viewStartCoord, uint32_t viewSize, uint32_t* d, uint32_t maxSize);
 
+		void filterScrollDistanceX(uint32_t viewStartCoord, uint32_t viewSize, uint32_t* d);
+		void filterScrollDistanceY(uint32_t viewStartCoord, uint32_t viewSize, uint32_t* d);
+
 		uint32_t getPixelWidth() const { return m_specs.width * m_tileSet->getTileWidth(); }
 		uint32_t getPixelHeight() const { return m_specs.height	* m_tileSet->getTileWidth(); }
 

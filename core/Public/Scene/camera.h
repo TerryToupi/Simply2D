@@ -1,27 +1,14 @@
 #pragma once
 
+#include "Math/mathUtils.h"
 #include "Types/Span.h"
 #include "Types/Handle.h"
 #include "Base/resources.h"
 #include "Scene/tileLayers.h"
+#include "Animations/animator.h"
 
 namespace Simply2D
 {
-	struct ViewPort
-	{
-		uint32_t x = 0;
-		uint32_t y = 0;
-		uint32_t w = 0;
-		uint32_t h = 0;
-
-		ViewPort() = default;
-
-		ViewPort(uint32_t _x, uint32_t _y, uint32_t _w, uint32_t _h)
-			:	x(_x), y(_y), w(_w), h(_h) { }
-
-		ViewPort(uint32_t _w, uint32_t _h)
-			:	x(0), y(0), w(_w), h(_h) { }
-	};
 
 	class Camera
 	{
@@ -29,13 +16,17 @@ namespace Simply2D
 		Camera(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
 		~Camera();
 
-		void Scroll(const uint32_t dx, const uint32_t dy, Span<TileLayer*> layers);
+		void Scroll(uint32_t dx, uint32_t dy, uint32_t speedX, uint32_t speedY, TileLayer& layer);
+		void BlitSprite(Rect& pos, Animator& animation);
+		void BlitTileLayer();
 
-		ViewPort getViewPort() const { return m_viewPort; }
+		void ResetTexture();
+
+		Rect getViewPort() const { return m_viewPort; }
 		THandle<Texture> texture() const { return m_texture; }
 
 	private:
-		ViewPort		 m_viewPort;
+		Rect m_viewPort;
 		THandle<Texture> m_texture;
 	};
 }

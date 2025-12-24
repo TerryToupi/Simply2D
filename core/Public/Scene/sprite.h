@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Types/Handle.h"
+#include "Base/resources.h"
+
 #include "Math/mathUtils.h"
 #include "Types/String.h"
 #include "Types/Function.h"
@@ -7,6 +10,8 @@
 #include "boundingArea.h"
 #include "motionQuantizer.h"
 #include "gravity.h"
+
+#include "Scene/camera.h"
 
 namespace Simply2D
 {
@@ -21,9 +26,10 @@ namespace Simply2D
 
 	// scripting
 	public:
-		virtual void begin(float ts)  { }
-		virtual void update(float ts) { }
-		virtual void end(float ts)    { }
+		virtual void begin(float ts)	 { }
+		virtual void update(float ts)	 { }
+		virtual void render(Camera& cam) { }
+		virtual void end(float ts)		 { }
 
 		virtual BoundingArea* OnGetCollider() { return nullptr; }
 		virtual	void		  OnCollision(Sprite& other) { }

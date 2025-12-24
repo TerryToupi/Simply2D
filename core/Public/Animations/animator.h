@@ -57,6 +57,10 @@ namespace Simply2D
 		void SetOnStart(OnStart f) { m_onStart = f; }
 		void SetOnAction(OnAction f) { m_onAction = f; }
 
+		Animation* GetActiveAnim() const { return m_anim; }
+		uint32_t   GetCurrFrame()  const { return m_currFrame; }
+		uint32_t   GetCurrRep()	   const { return m_currRep; }
+
 	private:
 		double				m_lastTime = 0;
 		animatorstate_t		m_state = ANIMATOR_FINISHED;

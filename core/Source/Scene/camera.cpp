@@ -1,8 +1,18 @@
 #include "Scene/camera.h"
 #include "Base/app.h"
 
+#include "Source/Rendering/clipper.h"
+
 namespace Simply2D
 {
+	static inline Clipper MakeClipper(Camera* camera)
+	{
+		return Clipper().SetView(
+		[camera](void) -> const Rect&
+			{ return static_cast<Rect>(camera->getViewPort()); }
+		);
+	}
+
 	Camera::Camera(uint32_t x, uint32_t y, uint32_t w, uint32_t h)
 		: m_viewPort(x, y, w, h)
 	{
@@ -19,18 +29,60 @@ namespace Simply2D
 		Application::GetRenderer()->destroyTexture(m_texture);
 	}
 
-	void Camera::Scroll(const uint32_t dx, const uint32_t dy, Span<TileLayer*> layers)
+	void Camera::Scroll(uint32_t dx, uint32_t dy, uint32_t speedX, uint32_t speedY, TileLayer& layer)
 	{
 		uint32_t cpyDx(dx);
 		uint32_t cpyDy(dy);
 
-		for (const auto& layer : layers)
-		{
-			layer->filterScrollDistance(m_viewPort.x, m_viewPort.w, &cpyDx, layer->getPixelWidth());
-			layer->filterScrollDistance(m_viewPort.y, m_viewPort.h, &cpyDy, layer->getPixelHeight());
-		}
+		cpyDx *= speedX;
+		cpyDy *= speedY;
+
+		layer.filterScrollDistanceX(m_viewPort.x, m_viewPort.w, &cpyDx);
+		layer.filterScrollDistanceY(m_viewPort.y, m_viewPort.h, &cpyDy);
 	
 		m_viewPort.x += cpyDx;
 		m_viewPort.y += cpyDy;
+	}
+
+	void Camera::BlitSprite(Rect& pos, Animator& animator)
+	{
+		Rect clippedBox;
+		Rect dpyPos;
+		
+		if (MakeClipper(this).Clip(pos, { 0, 0, m_viewPort.w, m_viewPort.h }, &dpyPos, &clippedBox))
+		{
+			Rect clippedFrame
+			{
+				animator.GetActiveAnim()->frames[animator.GetCurrFrame()].x - clippedBox.x,
+				animator.GetActiveAnim()->frames[animator.GetCurrFrame()].y - clippedBox.y,
+				clippedBox.w,
+				clippedBox.h
+			};
+
+			Application::GetRenderer()->draw({
+				.target = m_texture, 
+				.loadOp = LoadOp::LOAD, 
+				.storeOp = StoreOp::STORE
+				},
+				{
+					{
+						.texture = animator.GetActiveAnim()->texture,
+						.blend = Blend::BLEND,
+						.src = clippedFrame,
+						.dist = dpyPos
+					}
+				}
+			);
+		}
+	}
+
+	void Camera::ResetTexture()
+	{
+		Application::GetRenderer()->draw({
+				.target = m_texture,
+				.loadOp = Simply2D::LoadOp::CLEAR,
+				.storeOp = Simply2D::StoreOp::CLEAR,
+				.clearColor = 255,
+			}, Span<DrawCall>());
 	}
 }

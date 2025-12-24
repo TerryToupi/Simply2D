@@ -94,12 +94,12 @@ namespace Simply2D
 		for (const auto& call : calls)
 		{
 			std::array<SDL_FRect, 1> src = { 
-				(float)call.src[0],(float)call.src[1], 
-				(float)call.src[2], (float)call.src[3] 
+				(float)call.src.x,(float)call.src.y, 
+				(float)call.src.w, (float)call.src.h
 			};
 			std::array<SDL_FRect, 1> dist = { 
-				(float)call.dist[0], (float)call.dist[1], 
-				(float)call.dist[2], (float)call.dist[3] 
+				(float)call.dist.x, (float)call.dist.y,
+				(float)call.dist.w, (float)call.dist.h
 			};
 		
 			SDL_Texture* texture = getTexture(call.texture);
